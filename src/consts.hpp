@@ -8,8 +8,6 @@ const f32 EPS = 1e-9f;
 const s32 SIMULATION_FPS = 120;
 const f32 SIMULATION_DELTA_TIME = 1.0f / static_cast<f32>(SIMULATION_FPS);
 
-enum Orientation { FORWARD, REVERSE, LEFT, RIGHT, HOLD };
-
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 const float CAR_ENGINE_ACCELERATION = 80;
