@@ -1,36 +1,36 @@
 #include "car.hpp"
 
-#include <iostream>
+Car::Car(sf::Vector2f position, sf::Vector2f direction) :
+    rigidbody{ position, direction, CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG } {
 
-Car::Car(sf::Vector2f initialPosition, sf::Vector2f initialDirection) : properties{ initialPosition, initialDirection } {
   shape.setSize({ CAR_WIDTH, CAR_HEIGHT });
   shape.setOrigin({ CAR_WIDTH * 0.5, CAR_HEIGHT * 0.5 });
-  shape.setPosition(initialPosition);
+  shape.setPosition(position);
 }
 
-void Car::rotate(float deltaTime) {
-  float angle = angularVelocity * deltaTime;
-
-  if (turnLeft) shape.rotate(to_deg(-angle)), properties.rotate(-angle);
-  if (turnRight) shape.rotate(to_deg(angle)), properties.rotate(angle);
-}
-
-void Car::simulate(float deltaTime) {
+void Car::update(float deltaTime) {
   float accelerationValue = 0.0;
 
-  bool isGoingForward = dotProduct(properties.linearVelocity, properties.direction) >= 0;
+  bool isGoingForward = rigidbody.isGoingForward();
 
   if (goReverse) {
     if (isGoingForward) accelerationValue = brakeAcceleration;
     else accelerationValue = reverseAcceleration;
   } else if (goForward) accelerationValue = engineAcceleration;
 
-  properties.simulate(deltaTime, accelerationValue);
+  float deltaAngularVelocity = 0.0f;
+  if (turnLeft)  deltaAngularVelocity = -angularVelocity;
+  if (turnRight) deltaAngularVelocity = angularVelocity;
 
-  shape.setPosition(properties.position);
+  rigidbody.update(deltaTime, accelerationValue, deltaAngularVelocity);
+
+  shape.setPosition(rigidbody.position);
+  shape.setRotation(rigidbody.getRotation());
 }
 
-void Car::update(float deltaTime) {
-  rotate(deltaTime);
-  simulate(deltaTime);
+void Car::resolveCollision(sf::Vector2f collisionVector) {
+  rigidbody.resolveCollision(collisionVector);
+
+  shape.setPosition(rigidbody.position);
+  shape.setRotation(rigidbody.getRotation());
 }

@@ -3,9 +3,17 @@
 #include "types.hpp"
 #include "car.hpp"
 #include "particle-system.hpp"
+#include "physics.hpp"
 
 class Game {
 public:
+  Game();
+
+  void update();
+  void render();
+  void handleEvents();
+  f32  getTime() const;
+
   sf::Clock totalTime;
   sf::Clock clock;
   Car car;
@@ -16,10 +24,5 @@ public:
   sf::Texture texture;
   sf::Sprite sprite;
 
-  Game();
-
-  void update();
-  void render();
-  void handleEvents();
-  f32  getTime() const;
+  sf::Line line {{ { 600, 500 }, { 600, 100 } }};
 };

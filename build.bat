@@ -4,7 +4,8 @@ set OUT_EXE=ld47
 
 set TARGET=x64
 
-set FLAGS=/std:c++latest /W4 /wd4305 /FC /MP /EHsc /permissive-
+set FLAGS=/std:c++latest /W4 /FC /MP /EHsc /permissive-
+set LD_FLAGS=
 
 if "%1" == "run" (
   pushd build
@@ -22,6 +23,7 @@ if "%1" == "release" (
   echo [Debug build]
   @REM set FLAGS=%FLAGS% /Zi /MDd /Od
   set FLAGS=%FLAGS% /Od /Zi
+  set LD_FLAGS=%LD_FLAGS% /DEBUG
 )
 echo[
 
@@ -85,7 +87,7 @@ REM timer
 for /f "tokens=*" %%a in ('timeutil %LAST_TIME%') do set COMPILE_DELTA_TIME=%%a
 for /f "tokens=*" %%a in ('timeutil') do set LAST_TIME=%%a
 
-link %OBJ_DIR%/*.obj %LIBS% /OUT:%OUT_DIR%\%OUT_EXE%.exe /INCREMENTAL:NO /subsystem:console /CGTHREADS:8 /NOLOGO
+link %OBJ_DIR%/*.obj %LIBS% /OUT:%OUT_DIR%\%OUT_EXE%.exe /INCREMENTAL:NO /subsystem:console /CGTHREADS:8 /NOLOGO %LD_FLAGS%
 
 REM timer
 for /f "tokens=*" %%a in ('timeutil %LAST_TIME%') do set LINK_DELTA_TIME=%%a

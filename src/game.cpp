@@ -1,9 +1,9 @@
 #include "game.hpp"
+
 #include "sfml.hpp"
+#include "physics.hpp"
 
-#include <iostream>
-
-const std::string PATH_TO_IMAGE = "./imgs/test-circuit.jpg";
+const std::string PATH_TO_IMAGE = "assets/gfx/test-circuit.jpg";
 
 Game::Game() : car{ INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION } {
   sf::ContextSettings settings;
@@ -32,6 +32,7 @@ void Game::update() {
 
     smokeParticles.update(deltaTime);
     car.update(deltaTime);
+    physics::resolveCollisions(*this);
 
     smokeParticles.emissionFromCar(car);
 
@@ -42,13 +43,17 @@ void Game::update() {
 void Game::render() {
   window.clear();
 
-  // test
-  window.draw(sprite);
-
   window.draw(car.shape);
+
+  // test
+  //window.draw(sprite);
 
   for(auto& particle : smokeParticles.particles) 
     window.draw(particle.shape);
+
+  //
+  sf::Vertex verts[] = { line[0], line[1] };
+  window.draw(verts, 2, sf::Lines);
 
   window.display();
 }
@@ -82,6 +87,9 @@ void Game::handleEvents() {
         case sf::Keyboard::Escape:
           window.close();
           break;
+
+        case sf::Keyboard::J:
+          car.rigidbody.applyPointAngularVelocity(1.0f);
 
         default:
           break;
