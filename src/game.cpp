@@ -3,20 +3,33 @@
 #include "sfml.hpp"
 #include "physics.hpp"
 
-const std::string PATH_TO_IMAGE = "assets/gfx/test-circuit.jpg";
+Game::Game() :
+    car { INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION },
+    circuit { *this },
+    smokeParticles { *this }
+{
 
-Game::Game() : car{ INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION } {
   sf::ContextSettings settings;
   settings.antialiasingLevel = ANTI_ALIASING_LEVEL;
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
-  // test
-  if(texture.loadFromFile(PATH_TO_IMAGE)) {
-    texture.setSmooth(true);
-    sprite.setTexture(texture);
-    sprite.setScale(2.5, 2);
-  }
+  circuit.setWalls(
+    {
+      {{ {  50.0f,  50.0f }, {  50.0f, 550.0f } }},
+      {{ {  50.0f, 550.0f }, { 750.0f, 550.0f } }},
+      {{ { 750.0f, 550.0f }, { 750.0f,  50.0f } }},
+      {{ { 750.0f,  50.0f }, {  50.0f,  50.0f } }},
+
+      {{ { 120.0f, 120.0f }, { 680.0f, 120.0f } }},
+      {{ { 680.0f, 120.0f }, { 680.0f, 480.0f } }},
+      {{ { 680.0f, 480.0f }, { 120.0f, 480.0f } }},
+      {{ { 120.0f, 480.0f }, { 120.0f, 120.0f } }}
+    }
+  );
+
+  circuit.setTexture("assets/gfx/track-test.png");
+
 
   clock.restart();
   totalTime.restart();
@@ -41,17 +54,9 @@ void Game::update() {
 void Game::render() {
   window.clear();
 
+  circuit.render();
+  smokeParticles.render();
   window.draw(car.shape);
-
-  // test
-  //window.draw(sprite);
-
-  for(auto& particle : smokeParticles.particles) 
-    window.draw(particle.shape);
-
-  //
-  sf::Vertex verts[] = { line[0], line[1] };
-  window.draw(verts, 2, sf::Lines);
 
   window.display();
 }

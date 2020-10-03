@@ -1,13 +1,15 @@
 #include "particle-system.hpp"
+
 #include <random>
+#include "game.hpp"
 
-std::random_device rd;
-
-ParticleSystem::ParticleSystem() {
+ParticleSystem::ParticleSystem(Game& game) : game { game } {
   while (particles.size() != MAX_NUM_PARTICLES) particles.push_back(Particle());
 }
 
-void ParticleSystem::renew() {
+void ParticleSystem::update(float deltaTime) {
+  for (auto& particle : particles) particle.update(deltaTime);
+
   std::vector<Particle> newParticle;
   for (auto& particle : particles)
     if (!particle.isExpired) newParticle.push_back(particle);
@@ -16,11 +18,6 @@ void ParticleSystem::renew() {
     newParticle.push_back(Particle());
 
   particles = newParticle;
-}
-
-void ParticleSystem::update(float deltaTime) {
-  for (auto& particle : particles) particle.update(deltaTime);
-  renew();
 }
 
 void ParticleSystem::emissionFromCar(Car& car) {
@@ -59,4 +56,9 @@ void ParticleSystem::emissionFromCar(Car& car) {
 
     particle.wasLaunched = true;
   }
+}
+
+void ParticleSystem::render() {
+  for(auto& particle : particles)
+    if (particle.wasLaunched) game.window.draw(particle.shape);
 }

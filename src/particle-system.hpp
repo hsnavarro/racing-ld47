@@ -1,13 +1,18 @@
+#pragma once
+
 #include "particle.hpp"
+
+class Game;
 
 class ParticleSystem {
 public:
-  ParticleSystem();
+  ParticleSystem(Game&);
 
-  void renew();
   void update(float);
-  void draw();
+  void render();
   void emissionFromCar(Car&);
 
   std::vector<Particle> particles;
+
+  Game& game;
 };

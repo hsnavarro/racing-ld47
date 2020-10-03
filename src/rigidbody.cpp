@@ -68,7 +68,7 @@ void Rigidbody::resolveCollision(sf::Vector2f collisionVector) {
     crossProduct(linearVelocity, getUnitVector(collisionVector));
 
   float deltaAngularVelocity =
-    -0.02f *
+    -0.01f *
     alignedCollisionAmount *
     crossProduct(getUnitVector(linearVelocity), getUnitVector(collisionVector));
 

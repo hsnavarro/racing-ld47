@@ -27,6 +27,7 @@ inline f32 getMagnitude(sf::Vector2f v) {
 }
 
 inline sf::Vector2f getUnitVector(sf::Vector2f v) {
+  if (getMagnitude(v) < EPS) return v;
   return v / getMagnitude(v);
 }
 

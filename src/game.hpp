@@ -4,6 +4,7 @@
 #include "car.hpp"
 #include "particle-system.hpp"
 #include "physics.hpp"
+#include "circuit.hpp"
 
 class Game {
 public:
@@ -14,15 +15,11 @@ public:
   void handleEvents();
   f32  getTime() const;
 
+  sf::RenderWindow window;
   sf::Clock totalTime;
   sf::Clock clock;
   Car car;
-  sf::RenderWindow window;
+  Circuit circuit;
+
   ParticleSystem smokeParticles;
-
-  // test
-  sf::Texture texture;
-  sf::Sprite sprite;
-
-  sf::Line line {{ { 600, 500 }, { 600, 100 } }};
 };

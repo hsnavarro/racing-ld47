@@ -6,8 +6,12 @@
 #include "algebra.hpp"
 #include "types.hpp"
 
+const size_t COLLISION_CHECKS_MAX = 10;
+
 class Game;
 class Car;
+
+bool carIntersectsLine(const Car&, sf::Line);
 
 namespace physics {
 
