@@ -1,6 +1,8 @@
 #include "game.hpp"
 #include "sfml.hpp"
 
+#include <iostream>
+
 const std::string PATH_TO_IMAGE = "./imgs/test-circuit.jpg";
 
 Game::Game() : car{ INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION } {
@@ -8,6 +10,8 @@ Game::Game() : car{ INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION } {
   settings.antialiasingLevel = ANTI_ALIASING_LEVEL;
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
+
+  ParticleSystem smokeParticles;
 
   // test
   if(texture.loadFromFile(PATH_TO_IMAGE)) {
@@ -25,7 +29,12 @@ void Game::update() {
 
   while (frameDuration > 0.0) {
     float deltaTime = std::min(frameDuration, SIMULATION_DELTA_TIME);
+
+    smokeParticles.update(deltaTime);
     car.update(deltaTime);
+
+    smokeParticles.emissionFromCar(car);
+
     frameDuration -= deltaTime;
   }
 }
@@ -37,6 +46,9 @@ void Game::render() {
   window.draw(sprite);
 
   window.draw(car.shape);
+
+  for(auto& particle : smokeParticles.particles) 
+    window.draw(particle.shape);
 
   window.display();
 }

@@ -2,6 +2,7 @@
 
 #include "types.hpp"
 #include "car.hpp"
+#include "particle-system.hpp"
 
 class Game {
 public:
@@ -9,6 +10,7 @@ public:
   sf::Clock clock;
   Car car;
   sf::RenderWindow window;
+  ParticleSystem smokeParticles;
 
   // test
   sf::Texture texture;

@@ -1,5 +1,7 @@
 #include "car.hpp"
 
+#include <iostream>
+
 Car::Car(sf::Vector2f initialPosition, sf::Vector2f initialDirection) : properties{ initialPosition, initialDirection } {
   shape.setSize({ CAR_WIDTH, CAR_HEIGHT });
   shape.setOrigin({ CAR_WIDTH * 0.5, CAR_HEIGHT * 0.5 });
