@@ -29,16 +29,18 @@ void ParticleSystem::emissionFromCar(Car& car) {
 
   const auto transform = car.shape.getTransform();
 
-  const sf::Vector2f bottomLeftPoint = transform.transformPoint(car.shape.getPoint(1));
-  const sf::Vector2f bottomRightPoint = transform.transformPoint(car.shape.getPoint(0));
+  const sf::Vector2f bottomLeftPoint = transform.transformPoint(car.shape.getPoint(3));
+  const sf::Vector2f bottomRightPoint = transform.transformPoint(car.shape.getPoint(2));
 
   const sf::Vector2f direction = bottomRightPoint - bottomLeftPoint;
 
   std::uniform_real_distribution<> doubleRand(0.0, 1.0);
 
-  int numberOfParticles = particles.size();
-  const float PARTICLES_EMISSION_RATIO = 1 / 2500.0; 
-  int particlesLaunched = PARTICLES_EMISSION_RATIO * module(car.properties.linearVelocity) * numberOfParticles; 
+  int numberOfParticles = static_cast<int>(particles.size());
+  const float PARTICLES_EMISSION_RATIO = 1 / 2500.0f;
+  int particlesLaunched = static_cast<int>(PARTICLES_EMISSION_RATIO *
+                                           getMagnitude(car.rigidbody.linearVelocity) *
+                                           numberOfParticles);
 
   for(auto& particle : particles) {
     if(particle.wasLaunched) continue;
@@ -47,12 +49,12 @@ void ParticleSystem::emissionFromCar(Car& car) {
     particlesLaunched--;
 
     const sf::Vector2f particlePosition = bottomLeftPoint + float(doubleRand(generator)) * direction;
-    particle.properties.position = particlePosition;
-    particle.properties.direction = -car.properties.direction;
-   
+    particle.rigidbody.position = particlePosition;
+    particle.rigidbody.direction = -car.rigidbody.direction;
+
     const float ballRadius = particle.shape.getRadius();
 
-    particle.shape.setOrigin(ballRadius * 0.5, ballRadius * 0.5);
+    particle.shape.setOrigin(ballRadius * 0.5f, ballRadius * 0.5f);
     particle.shape.setPosition(particlePosition);
 
     particle.wasLaunched = true;

@@ -14,7 +14,7 @@ public:
 
   void update(float);
 
-  RigidBody properties;
+  Rigidbody rigidbody;
   sf::CircleShape shape;
   float lifeTime;
   bool isExpired = false;

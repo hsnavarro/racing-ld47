@@ -12,7 +12,7 @@ const float CAR_REVERSE_ACCELERATION = -20;
 const float CAR_ANGULAR_VELOCITY = 2;
 
 const float CAR_FORWARD_DRAG = 0.02f;
-const float CAR_LATERAL_DRAG = 0.9999f;
+//const float CAR_LATERAL_DRAG = 0.9999f;
 const float CAR_ANGULAR_DRAG = 0.99f;
 
 const int CAR_WIDTH  = 10;

@@ -5,9 +5,11 @@
 Particle::Particle() {
   std::random_device randomDevice;
   std::mt19937 generator(randomDevice());
-  std::uniform_real_distribution<> lifeTimeRand(0, MAX_PARTICLE_LIFE_TIME);
+
+  std::uniform_real_distribution<float> lifeTimeRand(0, MAX_PARTICLE_LIFE_TIME);
   lifeTime = lifeTimeRand(generator);
-  std::uniform_real_distribution<> particleRadiusRand(0, MAX_PARTICLE_RADIUS);
+
+  std::uniform_real_distribution<float> particleRadiusRand(0, MAX_PARTICLE_RADIUS);
   shape.setRadius(particleRadiusRand(generator));
 }
 

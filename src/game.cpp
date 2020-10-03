@@ -11,8 +11,6 @@ Game::Game() : car{ INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION } {
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
-  ParticleSystem smokeParticles;
-
   // test
   if(texture.loadFromFile(PATH_TO_IMAGE)) {
     texture.setSmooth(true);

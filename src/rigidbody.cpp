@@ -6,15 +6,15 @@
 
 #include <cstdio>
 
+Rigidbody::Rigidbody() {}
+
 Rigidbody::Rigidbody(sf::Vector2f position,
                      sf::Vector2f direction,
                      float forwardDrag,
-                     float lateralDrag,
                      float angularDrag) :
     position { position },
     direction { direction },
     kForwardDrag { forwardDrag },
-    kLateralDrag { lateralDrag },
     kAngularDrag { angularDrag }
 {}
 
