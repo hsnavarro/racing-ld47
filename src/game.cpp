@@ -16,6 +16,15 @@ Game::Game() :
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
+  if (!font.loadFromFile("assets/fonts/arial.ttf")) {
+    printf("fail to load font!\n");
+  }
+
+  clock.restart();
+  totalTime.restart();
+  lapTime.restart();
+
+  // Test
   circuit.setWalls(
     {
       {{ {  50.0f,  50.0f }, {  50.0f, 550.0f } }},
@@ -40,10 +49,7 @@ Game::Game() :
   );
 
   circuit.setTexture("assets/gfx/track-test.png");
-
-
-  clock.restart();
-  totalTime.restart();
+  circuit.setLapTimeLimit(10.0f);
 }
 
 void Game::update() {
@@ -70,6 +76,13 @@ void Game::render() {
   circuit.render();
   smokeParticles.render();
   window.draw(car.shape);
+
+  // UI
+  char text[10];
+  snprintf(text, 10, "%.2f", lapTime.getElapsedTime().asSeconds());
+  sf::Text lapTimeText(text, font, 30);
+  lapTimeText.setPosition(10.0f, 10.0f);
+  window.draw(lapTimeText);
 
   window.display();
 }
@@ -119,5 +132,6 @@ f32 Game::getTime() const {
 }
 
 void Game::completeLap() {
-  printf("Lap complete\n");
+  circuit.resetCheckpoints();
+  lapTime.restart();
 }

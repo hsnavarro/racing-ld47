@@ -22,6 +22,10 @@ void Circuit::setTexture(const std::string& path) {
   }
 }
 
+void Circuit::setLapTimeLimit(float timeLimit) {
+  lapTimeLimit = timeLimit;
+}
+
 void Circuit::update(float) {
   if (currentCheckpoint >= checkpoints.size())
     return;

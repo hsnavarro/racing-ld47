@@ -15,6 +15,7 @@ public:
   void setWalls(std::vector<sf::Line>);
   void setCheckpoints(std::vector<sf::Line>);
   void setTexture(const std::string&);
+  void setLapTimeLimit(float);
 
   void update(float);
   void render() const;
@@ -27,6 +28,7 @@ public:
   sf::Texture texture;
   sf::Sprite sprite;
 
+  float lapTimeLimit;
   size_t currentCheckpoint = 0;
 
   Game& game;

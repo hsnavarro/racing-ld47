@@ -18,8 +18,12 @@ public:
   void completeLap();
 
   sf::RenderWindow window;
+  sf::Font font;
+
   sf::Clock totalTime;
   sf::Clock clock;
+  sf::Clock lapTime;
+
   Car car;
   Circuit circuit;
 
