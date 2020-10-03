@@ -12,18 +12,8 @@ void RigidBody::rotate(float angle) {
   ::rotate(linearVelocity, angle);
 }
 
-void RigidBody::simulate(float deltaTime, Orientation orientation) {
-  float accelerationValue;
-
-  bool isGoingForward = dotProduct(linearVelocity, direction) >= 0;
-
-  if (orientation == FORWARD) accelerationValue = acceleration;
-  else if (orientation == REVERSE) {
-    if (isGoingForward) accelerationValue = brakeAcceleration;
-    else accelerationValue = reverseAcceleration;
-  } else if (orientation == HOLD) accelerationValue = 0.0;
-
-  sf::Vector2f accelerationVector = accelerationValue * direction;
+void RigidBody::simulate(float deltaTime, float acceleration) {
+  sf::Vector2f accelerationVector = acceleration * direction;
 
   accelerationVector -= 0.1f * linearVelocity;
 

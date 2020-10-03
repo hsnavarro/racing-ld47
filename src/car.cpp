@@ -7,16 +7,23 @@ Car::Car(sf::Vector2f initialPosition, sf::Vector2f initialDirection) : properti
 }
 
 void Car::rotate(float deltaTime) {
-  float angle = properties.angularVelocity * deltaTime;
+  float angle = angularVelocity * deltaTime;
 
   if (turnLeft) shape.rotate(to_deg(-angle)), properties.rotate(-angle);
   if (turnRight) shape.rotate(to_deg(angle)), properties.rotate(angle);
 }
 
 void Car::simulate(float deltaTime) {
-  if (goReverse) properties.simulate(deltaTime, REVERSE);
-  else if (goForward) properties.simulate(deltaTime, FORWARD);
-  else properties.simulate(deltaTime, HOLD);
+  float accelerationValue = 0.0;
+
+  bool isGoingForward = dotProduct(properties.linearVelocity, properties.direction) >= 0;
+
+  if (goReverse) {
+    if (isGoingForward) accelerationValue = brakeAcceleration;
+    else accelerationValue = reverseAcceleration;
+  } else if (goForward) accelerationValue = engineAcceleration;
+
+  properties.simulate(deltaTime, accelerationValue);
 
   shape.setPosition(properties.position);
 }

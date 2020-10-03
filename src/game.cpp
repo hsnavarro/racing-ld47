@@ -13,7 +13,7 @@ Game::Game() : car{ INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION } {
   if(texture.loadFromFile(PATH_TO_IMAGE)) {
     texture.setSmooth(true);
     sprite.setTexture(texture);
-    sprite.setScale(3.0, 2.5);
+    sprite.setScale(2.5, 2);
   }
 
   clock.restart();
