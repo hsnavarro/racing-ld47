@@ -30,22 +30,28 @@ and end in different positions)
 
 # Todo
 
-- Physics
-  - Car movement
-    - Simple movement
-  - Collisions
-    - Car-Walls
-    - Car-Shadows
-- Track
-  - Walls
-  - Checkpoints
-- Particle system
-  - Smoke/dirt
-  - Tire tracks
-- Graphics
-- Sounds
-  - Car throttle
-  - Collision
+- [ ] Physics
+  - [x] Car movement
+  - [ ] Collisions
+    - [x] Car-Walls
+    - [ ] Car-Shadows
+- [ ] Circuit
+  - [x] Walls
+  - [x] Checkpoints
+  - [ ] Expansion
+- [ ] Particle system
+  - [x] Smoke/dirt
+  - [ ] Tire tracks
+- [ ] Graphics
+  - [ ] Car
+  - [ ] Circuits
+- [ ] Sounds
+  - [ ] Car engine
+  - [ ] Car break
+  - [ ] Collision
+- [ ] Shadows
+  - [ ] Save movement
+  - [ ] Replay
 
 # Extra ideas
 
