@@ -1,7 +1,21 @@
 #include "game.hpp"
+#include "sfml.hpp"
+
+const std::string PATH_TO_IMAGE = "./imgs/test-circuit.jpg";
 
 Game::Game() : car{ INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION } {
-  window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game");
+  sf::ContextSettings settings;
+  settings.antialiasingLevel = ANTI_ALIASING_LEVEL;
+  window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
+  window.setFramerateLimit(DISPLAY_FPS);
+
+  // test
+  if(texture.loadFromFile(PATH_TO_IMAGE)) {
+    texture.setSmooth(true);
+    sprite.setTexture(texture);
+    sprite.setScale(3.0, 2.5);
+  }
+
 }
 
 void Game::update(float timeElapsed) {
@@ -10,6 +24,10 @@ void Game::update(float timeElapsed) {
 
 void Game::render() {
   window.clear();
+
+  // test
+  window.draw(sprite);
+
   window.draw(car.shape);
   window.display();
 }

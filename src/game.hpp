@@ -7,6 +7,10 @@ public:
   Car car;
   sf::RenderWindow window;
 
+  // test
+  sf::Texture texture;
+  sf::Sprite sprite;
+
   Game();
 
   void update(float timeElapsed);
