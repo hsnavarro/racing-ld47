@@ -92,15 +92,6 @@ void resolveCollisions(Game& game) {
     if (!collided) break;
     game.car.resolveCollision(minimumCollisionVector);
   }
-
-  /*
-  // Todo(naum): update when track is done
-  const auto collOpt = getCollisionVector(game.car, game.line);
-  if (collOpt) {
-    const auto collVec = collOpt.value();
-    game.car.resolveCollision(collVec);
-  }
-  */
 }
 
 }

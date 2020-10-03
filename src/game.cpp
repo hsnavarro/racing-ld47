@@ -3,6 +3,8 @@
 #include "sfml.hpp"
 #include "physics.hpp"
 
+#include <cstdio>
+
 Game::Game() :
     car { INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION },
     circuit { *this },
@@ -28,6 +30,15 @@ Game::Game() :
     }
   );
 
+  circuit.setCheckpoints(
+    {
+      {{ { 400.0f,  50.0f }, { 400.0f, 120.0f } }},
+      {{ { 680.0f, 300.0f }, { 750.0f, 300.0f } }},
+      {{ { 400.0f, 480.0f }, { 400.0f, 550.0f } }},
+      {{ {  50.0f, 300.0f }, { 120.0f, 300.0f } }}
+    }
+  );
+
   circuit.setTexture("assets/gfx/track-test.png");
 
 
@@ -43,7 +54,9 @@ void Game::update() {
 
     smokeParticles.update(deltaTime);
     car.update(deltaTime);
+
     physics::resolveCollisions(*this);
+    circuit.update(deltaTime);
 
     smokeParticles.emissionFromCar(car);
 
@@ -103,4 +116,8 @@ void Game::handleEvents() {
 
 f32 Game::getTime() const {
   return totalTime.getElapsedTime().asSeconds();
+}
+
+void Game::completeLap() {
+  printf("Lap complete\n");
 }

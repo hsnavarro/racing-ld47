@@ -13,7 +13,9 @@ public:
   void update();
   void render();
   void handleEvents();
+
   f32  getTime() const;
+  void completeLap();
 
   sf::RenderWindow window;
   sf::Clock totalTime;

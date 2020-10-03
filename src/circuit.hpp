@@ -17,7 +17,9 @@ public:
   void setTexture(const std::string&);
 
   void update(float);
-  void render();
+  void render() const;
+
+  void resetCheckpoints();
 
   std::vector<sf::Line> walls;
   std::vector<sf::Line> checkpoints;

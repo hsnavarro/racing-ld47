@@ -2,6 +2,8 @@
 
 #include "game.hpp"
 
+#include <cstdio>
+
 Circuit::Circuit(Game& game) : game { game }
 {}
 
@@ -27,16 +29,33 @@ void Circuit::update(float) {
   if (carIntersectsLine(game.car, checkpoints[currentCheckpoint])) {
     currentCheckpoint++;
     if (currentCheckpoint == checkpoints.size()) {
-      // completed track
+      game.completeLap();
     }
   }
 }
 
-void Circuit::render() {
+void Circuit::render() const {
   game.window.draw(sprite);
 
   for (auto wall : walls) {
     sf::Vertex verts[] = { wall[0], wall[1] };
     game.window.draw(verts, 2, sf::Lines);
   }
+
+  for (size_t i = 0; i < checkpoints.size(); i++) {
+    const auto& checkpoint = checkpoints[i];
+
+    const sf::Color color = (currentCheckpoint > i) ? sf::Color::Green : sf::Color::Blue;
+
+    sf::Vertex verts[] = {
+      { checkpoint[0], color },
+      { checkpoint[1], color }
+    };
+
+    game.window.draw(verts, 2, sf::Lines);
+  }
+}
+
+void Circuit::resetCheckpoints() {
+  currentCheckpoint = 0;
 }
