@@ -1,9 +1,12 @@
 #pragma once
 
+#include "types.hpp"
 #include "car.hpp"
 
 class Game {
 public:
+  sf::Clock totalTime;
+  sf::Clock clock;
   Car car;
   sf::RenderWindow window;
 
@@ -13,7 +16,8 @@ public:
 
   Game();
 
-  void update(float timeElapsed);
+  void update();
   void render();
-  void handleEvent(sf::Event& event);
+  void handleEvents();
+  f32  getTime() const;
 };
