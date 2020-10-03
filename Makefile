@@ -1,6 +1,7 @@
 CXX = g++
 
-CXXFLAGS = -std=c++17 \
+CXXFLAGS = -Wall \
+				-std=c++17 \
 				-lsfml-graphics \
 				-lsfml-window \
 		    -lsfml-system \
