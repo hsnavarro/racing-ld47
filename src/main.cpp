@@ -14,6 +14,8 @@ int main() {
   while (game.window.isOpen()) {
     float frameTime = clock.restart().asSeconds();
 
+    while (game.window.pollEvent(event)) game.handleEvent(event);
+
     while (frameTime > 0.0) {
       float deltaTime = std::min(frameTime, timeToUpdateSimulation);
       game.update(deltaTime);
@@ -22,8 +24,5 @@ int main() {
 
     game.render();
 
-    while (game.window.pollEvent(event)) {
-      game.handleEvent(event);
-    }
   }
 }
