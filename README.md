@@ -34,24 +34,32 @@ and end in different positions)
   - [x] Car movement
   - [ ] Collisions
     - [x] Car-Walls
-    - [ ] Car-Shadows
+    - [ ] Car-Shadows (Naum)
+
 - [ ] Circuit
   - [x] Walls
   - [x] Checkpoints
   - [ ] Expansion
+
 - [ ] Particle system
   - [x] Smoke/dirt
   - [ ] Tire tracks
+
+- [ ] Shadows (Navarro)
+  - [ ] Save movement
+  - [ ] Replay
+
+- [ ] Camera
+  - [ ] Follow player car
+
 - [ ] Graphics
   - [ ] Car
   - [ ] Circuits
+
 - [ ] Sounds
   - [ ] Car engine
   - [ ] Car break
   - [ ] Collision
-- [ ] Shadows
-  - [ ] Save movement
-  - [ ] Replay
 
 # Extra ideas
 
@@ -63,3 +71,4 @@ and end in different positions)
 - Car destruction
 - Track grass
 - Multiplayer battleroyale
+- Minimap
