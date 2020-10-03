@@ -1,11 +1,17 @@
 #pragma once
 
 #include "sfml.hpp"
+#include "types.hpp"
+
+const f32 EPS = 1e-9f;
+
+const s32 SIMULATION_FPS = 120;
+const f32 SIMULATION_DELTA_TIME = 1.0f / static_cast<f32>(SIMULATION_FPS);
 
 enum Orientation { FORWARD, REVERSE, LEFT, RIGHT, HOLD };
 
-const int SCREEN_WIDTH = 1000;
-const int SCREEN_HEIGHT = 800;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 600;
 const float CAR_ACCELERATION = 80;
 const float CAR_BRAKE_ACCELERATION = -150;
 const float CAR_REVERSE_ACCELERATION = -20;
@@ -14,7 +20,6 @@ const float CAR_ANGULAR_VELOCITY = 2;
 const int CAR_WIDTH = 10;
 const int CAR_HEIGHT = 20;
 
-const int SIMULATION_FPS = 120;
 const int DISPLAY_FPS = 60;
 
 const int ANTI_ALIASING_LEVEL = 8;

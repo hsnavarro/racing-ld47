@@ -50,29 +50,30 @@ void Game::handleEvents() {
       bool keepActive = (event.type == sf::Event::KeyPressed);
 
       switch (event.key.code) {
-      case sf::Keyboard::W:
-        car.goForward = keepActive;
-        break;
+        case sf::Keyboard::W:
+          car.goForward = keepActive;
+          break;
 
-      case sf::Keyboard::S:
-        car.goReverse = keepActive;
-        break;
+        case sf::Keyboard::S:
+          car.goReverse = keepActive;
+          break;
 
-      case sf::Keyboard::A:
-        car.turnLeft = keepActive;
-        break;
+        case sf::Keyboard::A:
+          car.turnLeft = keepActive;
+          break;
 
-      case sf::Keyboard::D:
-        car.turnRight = keepActive;
-        break;
+        case sf::Keyboard::D:
+          car.turnRight = keepActive;
+          break;
 
-      // Todo(naum): remove on release
-      case sf::Keyboard::Escape:
-        window.close();
-        break;
+        // Todo(naum): remove on release
+        case sf::Keyboard::Escape:
+          window.close();
+          break;
+
+        default:
+          break;
       }
-    default:
-      break;
     }
   }
 }
