@@ -9,7 +9,7 @@ int main() {
   sf::Clock clock;
   sf::Event event;
 
-  float timeToUpdateSimulation = (1 / 200.0);
+  float timeToUpdateSimulation = (1 / float(SIMULATION_FPS));
 
   while (game.window.isOpen()) {
     float frameTime = clock.restart().asSeconds();
