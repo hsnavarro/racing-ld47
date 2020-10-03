@@ -6,12 +6,12 @@ enum Orientation { FORWARD, REVERSE, LEFT, RIGHT, HOLD };
 
 const int SCREEN_WIDTH = 1000;
 const int SCREEN_HEIGHT = 800;
-const float CAR_ACCELERATION = 40;
-const float CAR_DECELERATION = -60;
+const float CAR_ACCELERATION = 80;
+const float CAR_DECELERATION = -150;
 
-const float CAR_ANGULAR_VELOCITY = 1.5;
-const int CAR_WIDTH = 20;
-const int CAR_HEIGHT = 100;
+const float CAR_ANGULAR_VELOCITY = 2;
+const int CAR_WIDTH = 10;
+const int CAR_HEIGHT = 20;
 
 const int SIMULATION_FPS = 120;
 
