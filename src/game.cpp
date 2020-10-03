@@ -36,6 +36,9 @@ void Game::handleEvent(sf::Event& event) {
     case sf::Keyboard::D:
       car.turnRight = keepActive;
       break;
+
+    default:
+      break;
     }
   }
 }

@@ -16,5 +16,5 @@ public:
   RigidBody(sf::Vector2f, sf::Vector2f);
 
   void rotate(float);
-  void simulate(float, int);
+  void simulate(float, Orientation);
 };

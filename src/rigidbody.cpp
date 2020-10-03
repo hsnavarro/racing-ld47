@@ -1,5 +1,6 @@
 #include "rigidbody.hpp"
 #include "algebra.hpp"
+#include "consts.hpp"
 
 RigidBody::RigidBody(sf::Vector2f initialPosition, sf::Vector2f initialDirection) {
   position = initialPosition;
@@ -11,17 +12,20 @@ void RigidBody::rotate(float angle) {
   linearVelocity = module(linearVelocity) * direction;
 }
 
-void RigidBody::simulate(float time, int orientation) {
-  float accelerationValue = 0;
+void RigidBody::simulate(float deltaTime, Orientation orientation) {
+  float accelerationValue;
 
   if (orientation == FORWARD) accelerationValue = acceleration;
   else if (orientation == REVERSE) accelerationValue = deceleration;
+  else if (orientation == HOLD) accelerationValue = 0.0;
+
+  accelerationValue -= 0.1 * module(linearVelocity);
 
   sf::Vector2f accelerationVector = accelerationValue * direction;
 
-  if (orientation == REVERSE and module(linearVelocity) < module(accelerationVector)) {
-    linearVelocity = { 0.0f, 0.0f };
-  } else linearVelocity += accelerationVector * time;
+  linearVelocity += accelerationVector * deltaTime;
 
-  position += linearVelocity * time;
+  if(dotProduct(linearVelocity, direction) < 0) linearVelocity = { 0.0f, 0.0f };
+
+  position += linearVelocity * deltaTime;
 }
