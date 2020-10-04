@@ -44,6 +44,5 @@ privDefer<F> defer_func(F f) {
 #define defer(code)   auto DEFER_3(_defer_) = defer_func([&](){code;})
 
 #ifndef _MSC_VER
-#undef fscanf_s
 #define fscanf_s fscanf
 #endif

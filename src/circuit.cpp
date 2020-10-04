@@ -304,6 +304,8 @@ void Circuit::loadAtlas() {
 
   // Read atlas map
   FILE* file;
+
+#ifdef _MSC_VER
   auto err = fopen_s(&file, "assets/circuits/atlas.map", "r");
   if (!file) {
 
@@ -314,6 +316,14 @@ void Circuit::loadAtlas() {
 
     return;
   }
+#else
+  file = fopen
+  file = fopen("assets/circuits/atlas.map", "r");
+  if (!file) {
+    printf("Could not load atlas map\n");
+    return;
+  }
+#endif
 
   defer(fclose(file));
 
