@@ -67,7 +67,7 @@ set OBJ_DIR=%OUT_DIR%\obj
 set SYM_DIR=%OUT_DIR%\sym
 
 REM timer
-for /f "tokens=*" %%a in ('timeutil') do set LAST_TIME=%%a
+for /f "tokens=*" %%a in ('.\scripts\timeutil.py') do set LAST_TIME=%%a
 
 rmdir /s /q %OUT_DIR%
 
@@ -78,20 +78,20 @@ for %%I in (%FOLDERS%) do xcopy /sei %%I %OUT_DIR%\%%I > nul
 for %%I in (%FILES%) do xcopy %%I %OUT_DIR% > nul
 
 REM timer
-for /f "tokens=*" %%a in ('timeutil %LAST_TIME%') do set COPY_DELTA_TIME=%%a
-for /f "tokens=*" %%a in ('timeutil') do set LAST_TIME=%%a
+for /f "tokens=*" %%a in ('.\scripts\timeutil.py %LAST_TIME%') do set COPY_DELTA_TIME=%%a
+for /f "tokens=*" %%a in ('.\scripts\timeutil.py') do set LAST_TIME=%%a
 
 rem cl /nologo %FLAGS% %INCS% %SRCS% %DEFS% /Fe%OUT_DIR%\%OUT_EXE%.exe /Fo%OBJ_DIR%\ /Fd%OUT_DIR%\ /link %LIBS%
 cl /nologo /c %FLAGS% %INCS% %SRCS% %DEFS% /Fo%OBJ_DIR%\ /Fd%OUT_DIR%\
 
 REM timer
-for /f "tokens=*" %%a in ('timeutil %LAST_TIME%') do set COMPILE_DELTA_TIME=%%a
-for /f "tokens=*" %%a in ('timeutil') do set LAST_TIME=%%a
+for /f "tokens=*" %%a in ('.\scripts\timeutil.py %LAST_TIME%') do set COMPILE_DELTA_TIME=%%a
+for /f "tokens=*" %%a in ('.\scripts\timeutil.py') do set LAST_TIME=%%a
 
 link %OBJ_DIR%/*.obj %LIBS% /OUT:%OUT_DIR%\%OUT_EXE%.exe /INCREMENTAL:NO /subsystem:console /CGTHREADS:8 /NOLOGO %LD_FLAGS%
 
 REM timer
-for /f "tokens=*" %%a in ('timeutil %LAST_TIME%') do set LINK_DELTA_TIME=%%a
+for /f "tokens=*" %%a in ('.\scripts\timeutil.py %LAST_TIME%') do set LINK_DELTA_TIME=%%a
 
 echo[
 echo [Stats]

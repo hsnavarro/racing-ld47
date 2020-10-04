@@ -96,3 +96,8 @@ void Car::tireTrackEmission() {
   leftTireTracks.emissionFromPoint(bottomLeftPoint, -rigidbody.direction);
   rightTireTracks.emissionFromPoint(bottomRightPoint, -rigidbody.direction);
 }
+
+void Car::setPosition(sf::Vector2f pos) {
+  shape.setPosition(pos);
+  rigidbody.position = pos;
+}

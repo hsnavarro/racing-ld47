@@ -51,7 +51,7 @@ enum Direction { FUTURE, PAST };
 
 CarState predictState(CarState& currentState, float deltaTime, Direction direction) {
 
-  float multiplier = direction == FUTURE ? 1 : -1;
+  float multiplier = direction == FUTURE ? 1.0f : -1.0f;
 
   sf::Vector2f& currentStateDirection = currentState.rigidbody.direction;
   sf::Vector2f& currentStatePosition = currentState.rigidbody.position;

@@ -36,31 +36,11 @@ Game::Game() :
   ghosts.push_back(Ghost(*this));
 
   // Test
-  circuit.setWalls(
-    {
-      {{ {  50.0f,  50.0f }, {  50.0f, 550.0f } }},
-      {{ {  50.0f, 550.0f }, { 750.0f, 550.0f } }},
-      {{ { 750.0f, 550.0f }, { 750.0f,  50.0f } }},
-      {{ { 750.0f,  50.0f }, {  50.0f,  50.0f } }},
-
-      {{ { 120.0f, 120.0f }, { 680.0f, 120.0f } }},
-      {{ { 680.0f, 120.0f }, { 680.0f, 480.0f } }},
-      {{ { 680.0f, 480.0f }, { 120.0f, 480.0f } }},
-      {{ { 120.0f, 480.0f }, { 120.0f, 120.0f } }}
-    }
-  );
-
-  circuit.setCheckpoints(
-    {
-      {{ { 400.0f,  50.0f }, { 400.0f, 120.0f } }},
-      {{ { 680.0f, 300.0f }, { 750.0f, 300.0f } }},
-      {{ { 400.0f, 480.0f }, { 400.0f, 550.0f } }},
-      {{ {  50.0f, 300.0f }, { 120.0f, 300.0f } }}
-    }
-  );
-
-  circuit.setTexture("assets/gfx/track-test.png");
+  Circuit::loadAtlas();
+  circuit.loadFromFile("assets/circuits/test.cir");
   circuit.setLapTimeLimit(50.0f);
+
+  circuit.startRace();
 }
 
 void Game::update() {
@@ -149,8 +129,7 @@ void Game::handleEvents() {
           break;
 
         case sf::Keyboard::J:
-          car.rigidbody.applyPointAngularVelocity(1.0f);
-          break;
+          car.rigidbody.applyPointAngularVelocity(10.0f);
 
         default:
           break;

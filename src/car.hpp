@@ -36,6 +36,8 @@ public:
   void smokeEmission();
   void tireTrackEmission();
 
+  void setPosition(sf::Vector2f);
+
 public:
   Rigidbody rigidbody;
   sf::RectangleShape shape;

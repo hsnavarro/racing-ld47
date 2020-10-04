@@ -16,4 +16,4 @@ const int ANTI_ALIASING_LEVEL = 8;
 
 // For testing
 const sf::Vector2f INITIAL_CAR_POSITION = { SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5 };
-const sf::Vector2f INITIAL_CAR_DIRECTION = { 0, 1 };
+const sf::Vector2f INITIAL_CAR_DIRECTION = { 0, -1 };
