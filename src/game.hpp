@@ -25,6 +25,7 @@ public:
   sf::View camera;
   sf::View ui;
   float currentZoom = 10.0f;
+  sf::View minimap;
 
   sf::Clock totalTime;
   sf::Clock clock;

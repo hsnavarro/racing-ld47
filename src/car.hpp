@@ -29,7 +29,8 @@ public:
 
   void update(float);
   void updateParticles(float);
-  void render();
+  void render(const sf::View& view);
+  void renderIcon(const sf::View& view);
 
   void resolveCollision(sf::Vector2<f64> collisionVector);
 
@@ -42,6 +43,7 @@ public:
 public:
   Rigidbody rigidbody;
   sf::RectangleShape shape;
+  sf::CircleShape icon;
   Game& game;
 
   ParticleSystem smokeParticles, leftTireTracks, rightTireTracks;

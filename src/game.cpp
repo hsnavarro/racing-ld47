@@ -19,13 +19,22 @@ Game::Game() :
 
   sf::View cameraView;
   sf::View uiView;
+  sf::View minimapView;
   //TODO: encapsulate UI stuff
+  //
   uiView.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
   uiView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+
   cameraView.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
   cameraView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+
+  minimapView.setSize(2*SCREEN_WIDTH,2*SCREEN_HEIGHT);
+  minimapView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+  minimapView.setViewport(sf::FloatRect(0.80f, 0.05f, 0.40f, 0.40f));
+
   camera = cameraView;
   ui = uiView;
+  minimap = minimapView;
 
   if (!font.loadFromFile("assets/fonts/Monocons.ttf")) {
     printf("fail to load font!\n");
@@ -70,9 +79,12 @@ void Game::update() {
 void Game::render() {
   window.clear();
 
-  circuit.render();
-  for(auto& ghost : ghosts) ghost.render(window);
-  car.render();
+  circuit.render(camera);
+  for(auto& ghost : ghosts) ghost.render();
+  car.render(camera);
+
+  circuit.render(minimap);
+  car.renderIcon(minimap);
 
   // UI
   char text[30];

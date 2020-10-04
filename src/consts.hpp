@@ -17,6 +17,9 @@ const int ANTI_ALIASING_LEVEL = 8;
 const float UI_DEFAULT_MARGIN = 10.0f;
 const int UI_DEFAULT_FONT_SIZE = 15;
 
+const float ICON_RADIUS = 30.0f;
+const sf::Color ICON_COLOUR{255,0,0,255};
+
 // For testing
 const sf::Vector2f INITIAL_CAR_POSITION = { SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5 };
 const sf::Vector2f INITIAL_CAR_DIRECTION = { 0, -1 };

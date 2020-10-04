@@ -53,7 +53,7 @@ public:
   void setLapTimeLimit(float);
 
   void update(float);
-  void render() const;
+  void render(const sf::View&) const;
 
   void resetCheckpoints();
   void startRace();

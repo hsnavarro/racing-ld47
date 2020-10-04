@@ -174,7 +174,9 @@ void Circuit::update(float) {
   }
 }
 
-void Circuit::render() const {
+void Circuit::render(const sf::View& view) const {
+  game.window.setView(view);
+
   // Todo(naum): save as a texture
   for (size_t i = 0; i < tiles.size(); i++) {
     const auto& row = tiles[i];

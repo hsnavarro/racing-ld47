@@ -14,6 +14,8 @@ Car::Car(sf::Vector2f position, sf::Vector2f direction, Game& _game) :
   shape.setSize({ CAR_WIDTH, CAR_HEIGHT });
   shape.setOrigin({ CAR_WIDTH * 0.5, CAR_HEIGHT * 0.5 });
   shape.setPosition(position);
+  icon.setRadius(ICON_RADIUS);
+  icon.setFillColor(ICON_COLOUR);
 }
 
 void Car::update(float deltaTime) {
@@ -50,6 +52,7 @@ void Car::update(float deltaTime) {
   rigidbody.update(deltaTime, accelerationValue, deltaAngularVelocity);
 
   shape.setPosition(to_vector2f(rigidbody.position));
+  icon.setPosition(to_vector2f(rigidbody.position));
   ::rotate(rigidbody.direction, -undoAngle);
   shape.setRotation(getRotation(to_vector2f(rigidbody.direction)));
 }
@@ -63,7 +66,8 @@ void Car::updateParticles(float deltaTime) {
   tireTrackEmission();
 }
 
-void Car::render() {
+void Car::render(const sf::View& view) {
+  game.window.setView(view);
   leftTireTracks.render();
   rightTireTracks.render();
   game.window.draw(shape);
@@ -81,6 +85,12 @@ void Car::render() {
     sf::Color::Green,
     game.window
   );
+}
+
+void Car::renderIcon(const sf::View& view) {
+  game.window.setView(view);
+  auto position = rigidbody.position;
+  game.window.draw(icon);
 }
 
 void Car::resolveCollision(sf::Vector2<f64> collisionVector) {
