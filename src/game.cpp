@@ -2,6 +2,7 @@
 
 #include "sfml.hpp"
 #include "physics.hpp"
+#include "algebra.hpp"
 
 #include <cstdio>
 
@@ -23,7 +24,6 @@ Game::Game() :
   uiView.setCenter(SCREEN_WIDTH+SCREEN_WIDTH/2,SCREEN_HEIGHT+SCREEN_HEIGHT/2);
   cameraView.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
   cameraView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-  cameraView.zoom(0.5f);
   camera = cameraView;
 
   if (!font.loadFromFile("assets/fonts/arial.ttf")) {
@@ -104,10 +104,15 @@ void Game::render() {
 
 void Game::placeCamera() {
   camera.setCenter(car.rigidbody.position);
+
+  //TODO(Naum): add sigmoid
+  float zoomValue = 0.002f * getMagnitude(car.rigidbody.linearVelocity) + 0.5f;
+  camera.setSize(zoomValue*SCREEN_SIZE);
 }
 
 void Game::handleEvents() {
   sf::Event event;
+  sf::Vector2f size;
   while (window.pollEvent(event)) {
     if (event.type == sf::Event::Closed) window.close();
 
@@ -138,6 +143,7 @@ void Game::handleEvents() {
 
         case sf::Keyboard::J:
           car.rigidbody.applyPointAngularVelocity(1.0f);
+          break;
 
         default:
           break;
