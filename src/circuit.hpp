@@ -50,13 +50,14 @@ public:
   Circuit(Game&);
 
   bool loadFromFile(const std::string&);
-  void setLapTimeLimit(float);
 
   void update(float);
   void render(const sf::View&) const;
 
   void resetCheckpoints();
   void startRace();
+
+  /**/ void setLapTimeLimit(float);
 
   static void loadAtlas();
 

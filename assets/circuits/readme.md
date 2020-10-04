@@ -37,3 +37,15 @@ treat the checkpoint order if we allowed checkpoints on merges.
 [tile_type]
 m type_a type_b
 ```
+
+
+# circuit files
+
+```
+time_limit_in_sec
+height width
+type_11 type_12 type_13 ... type_1w
+type_21 type_22 type_23 ... type_2w
+...
+type_h1 type_h2 type_h3 ... type_hw
+```

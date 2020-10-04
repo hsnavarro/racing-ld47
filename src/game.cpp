@@ -8,8 +8,7 @@
 #include "utils.hpp"
 
 Game::Game() :
-    car { INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION, *this },
-    circuit { *this }
+    car { INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION, *this }
 {
 
   sf::ContextSettings settings;
@@ -44,14 +43,23 @@ Game::Game() :
   totalTime.restart();
   lapTime.restart();
 
-  // Test
+  // Circuits
   Circuit::loadAtlas();
-  //circuit.loadFromFile("assets/circuits/test.cir");
-  circuit.loadFromFile("assets/circuits/small.cir");
-  //circuit.loadFromFile("assets/circuits/cross.cir");
-  circuit.setLapTimeLimit(50.0f);
 
-  circuit.startRace();
+  {
+    Circuit circuit {*this};
+    circuit.loadFromFile("assets/circuits/progress-0.cir");
+    circuits.push_back(circuit);
+  }
+
+  {
+    Circuit circuit {*this};
+    circuit.loadFromFile("assets/circuits/progress-1.cir");
+    circuits.push_back(circuit);
+  }
+
+  currentCircuit = &circuits[0];
+  currentCircuit->startRace();
 
   placeCamera();
 }
@@ -67,7 +75,8 @@ void Game::update() {
     car.update(deltaTime);
 
     physics::resolveCollisions(*this);
-    circuit.update(deltaTime);
+    if (currentCircuit)
+      currentCircuit->update(deltaTime);
 
     displayDeltaTime -= deltaTime;
   }
@@ -79,7 +88,14 @@ void Game::update() {
 void Game::render() {
   window.clear();
 
-  circuit.render(camera);
+  /*
+  for (size_t i = 0; i < currentCircuitIndex; i++)
+    circuits[i].render();
+    */
+
+  if (currentCircuit)
+    currentCircuit->render(camera);
+
   for(auto& ghost : ghosts) ghost.render(window);
   car.render(camera);
 
@@ -179,7 +195,8 @@ void Game::handleEvents() {
         break;
 
         case sf::Keyboard::R:
-          circuit.startRace();
+          currentCircuit = &circuits[0];
+          currentCircuit->startRace();
           ghosts.clear();
         break;
 
@@ -195,12 +212,26 @@ f32 Game::getTime() const {
 }
 
 void Game::completeLap() {
-  circuit.resetCheckpoints();
-  float lapTimeTaken = lapTime.restart().asSeconds();
+  if (!currentCircuit) return;
 
-  lastLapTime = lapTimeTaken;
+  lastLapTime = lapTime.restart().asSeconds();
 
-  currentGhost.completeLap(lapTimeTaken);
-  if(lapTimeTaken <= circuit.lapTimeLimit) newGhosts.push_back(currentGhost);
+  currentCircuit->resetCheckpoints();
+  currentGhost.completeLap(lastLapTime);
+
+
+  // successful lap
+  if (lastLapTime <= currentCircuit->lapTimeLimit) {
+    newGhosts.push_back(currentGhost);
+
+    currentCircuitIndex++;
+    if (currentCircuitIndex == circuits.size()) {
+      printf("win!\n");
+      currentCircuit = nullptr;
+    } else {
+      currentCircuit = &circuits[currentCircuitIndex];
+    }
+  }
+
   currentGhost.clear();
 }

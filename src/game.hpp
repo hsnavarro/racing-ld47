@@ -33,7 +33,10 @@ public:
   float lastLapTime = -1.0f;
 
   Car car;
-  Circuit circuit;
+
+  Circuit* currentCircuit = nullptr;
+  std::vector<Circuit> circuits;
+  size_t currentCircuitIndex = 0;
 
   Ghost currentGhost;
   std::vector<Ghost> ghosts;
