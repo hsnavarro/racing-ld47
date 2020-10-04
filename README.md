@@ -45,12 +45,12 @@ and end in different positions)
   - [x] Smoke/dirt
   - [ ] Tire tracks
 
-- [ ] Shadows (Navarro)
-  - [ ] Save movement
-  - [ ] Replay
+- [x] Shadows (Navarro)
+  - [x] Save movement
+  - [x] Replay
 
-- [ ] Camera
-  - [ ] Follow player car
+- [x] Camera
+  - [x] Follow player car
 
 - [ ] Graphics
   - [ ] Car

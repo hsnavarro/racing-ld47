@@ -20,19 +20,31 @@ void Car::update(float deltaTime) {
     if (isDriftActive) accelerationValue = engineDriftAcceleration;
     else accelerationValue = engineAcceleration;
   }
+
+  float undoAngle = 0.0f;
+
   float deltaAngularVelocity = 0.0f;
   if (turnLeft) {
-    if (isDriftActive) deltaAngularVelocity = -angularDriftVelocity;
+    if (isDriftActive) {
+      deltaAngularVelocity = -angularDriftVelocity;
+      undoAngle = PI32 / 6.0f;
+      ::rotate(rigidbody.direction, undoAngle);
+    }
     else deltaAngularVelocity = -angularVelocity;
   }
   if (turnRight) {
-    if (isDriftActive) deltaAngularVelocity = angularDriftVelocity;
+    if (isDriftActive) {
+      deltaAngularVelocity = angularDriftVelocity;
+      undoAngle = - PI32 / 6.0f;
+      ::rotate(rigidbody.direction, undoAngle);
+    }
     else deltaAngularVelocity = angularVelocity;
   }
 
   rigidbody.update(deltaTime, accelerationValue, deltaAngularVelocity);
 
   shape.setPosition(rigidbody.position);
+  ::rotate(rigidbody.direction, -undoAngle);
   shape.setRotation(getRotation(rigidbody.direction));
 }
 

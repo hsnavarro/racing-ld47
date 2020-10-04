@@ -6,7 +6,7 @@
 #include "consts.hpp"
 
 const float CAR_ENGINE_ACCELERATION  = 80;
-const float CAR_ENGINE_DRIFT_ACCELERATION = 60;
+const float CAR_ENGINE_DRIFT_ACCELERATION = 50;
 const float CAR_BRAKE_ACCELERATION   = -200;
 const float CAR_REVERSE_ACCELERATION = -20;
 
