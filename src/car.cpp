@@ -5,15 +5,16 @@
 #include "game.hpp"
 #include "particle-system.hpp"
 
-Car::Car(sf::Vector2f position, sf::Vector2f direction, Game& _game) :
-  rigidbody{ to_vector2f64(position), to_vector2f64(direction), CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
-  game{ _game },
-  smokeParticles{ ParticleType::SMOKE, _game },
-  leftTireTracks{ ParticleType::TIRE_TRACK , _game },
-  rightTireTracks{ ParticleType::TIRE_TRACK, _game } {
+Car::Car(Game& game_) :
+    rigidbody { CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
+    game { game_ },
+    smokeParticles { ParticleType::SMOKE, game_ },
+    leftTireTracks { ParticleType::TIRE_TRACK , game_ },
+    rightTireTracks { ParticleType::TIRE_TRACK, game_ } {
+
   shape.setSize({ CAR_WIDTH, CAR_HEIGHT });
   shape.setOrigin({ CAR_WIDTH * 0.5, CAR_HEIGHT * 0.5 });
-  shape.setPosition(position);
+
   icon.setRadius(ICON_RADIUS);
   icon.setFillColor(ICON_COLOUR);
 }

@@ -10,7 +10,7 @@ const f64 COLLISION_LINEAR_TO_ANGULAR = 0.001;
 class Rigidbody {
 public:
   Rigidbody();
-  Rigidbody(sf::Vector2<f64>, sf::Vector2<f64>, f64, f64, f64);
+  Rigidbody(f64, f64, f64);
 
   void update(f64, f64, f64);
   void resolveCollision(sf::Vector2<f64> collisionVector);

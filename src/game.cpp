@@ -7,33 +7,16 @@
 #include "algebra.hpp"
 #include "utils.hpp"
 
-Game::Game() :
-    car { INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION, *this }
-{
+Game::Game() : car { *this }, ui { *this } {}
 
+void Game::setup() {
   sf::ContextSettings settings;
   settings.antialiasingLevel = ANTI_ALIASING_LEVEL;
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
-  sf::View cameraView;
-  sf::View uiView;
-  sf::View minimapView;
-  //TODO: encapsulate UI stuff
-  //
-  uiView.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
-  uiView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-
-  cameraView.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
-  cameraView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-
-  minimapView.setSize(2*SCREEN_WIDTH,2*SCREEN_HEIGHT);
-  minimapView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
-  minimapView.setViewport(sf::FloatRect(0.80f, 0.05f, 0.40f, 0.40f));
-
-  camera = cameraView;
-  ui = uiView;
-  minimap = minimapView;
+  camera.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
+  camera.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
   if (!font.loadFromFile("assets/fonts/Monocons.ttf")) {
     printf("fail to load font!\n");
@@ -104,6 +87,7 @@ void Game::update() {
 void Game::render() {
   window.clear();
 
+  // Circuit
   /*
   for (size_t i = 0; i < currentCircuitIndex; i++)
     circuits[i].render();
@@ -115,48 +99,11 @@ void Game::render() {
   for(auto& ghost : ghosts) ghost.render(window);
   car.render(camera);
 
-  if (currentCircuit)
-    currentCircuit->render(minimap);
-  car.renderIcon(minimap);
+  //
+  ui.render();
 
-  // UI
-  char text[30];
-
+  //
   placeCamera();
-
-  window.setView(ui);
-
-  const auto maximumSize = [this] {
-    sf::Text tmp("000.00s", font, UI_DEFAULT_FONT_SIZE);
-    return tmp.getLocalBounds().width;
-  }();
-
-  float verticalOffset = 0.0f;
-
-  snprintf(text, 30, "%.2fs", lapTime.getElapsedTime().asSeconds());
-  sf::Text lapTimeText(text, font, UI_DEFAULT_FONT_SIZE);
-  drawTextRight(lapTimeText, maximumSize, 10.0f, window);
-
-  verticalOffset += UI_DEFAULT_MARGIN + lapTimeText.getLocalBounds().height;
-
-  if (lastLapTime > 0.0f) {
-    snprintf(text, 30, "%.2fs", lastLapTime);
-    sf::Text lastLapText(text, font, UI_DEFAULT_FONT_SIZE);
-    drawTextRight(lastLapText, maximumSize, 10.0f+verticalOffset, window);
-    verticalOffset += UI_DEFAULT_MARGIN + lastLapText.getLocalBounds().height;
-  }
-
-
-  if (currentCircuit) {
-    snprintf(text, 30, "%.2fs", currentCircuit->lapTimeLimit);
-    sf::Text lapTimeLimitText(text, font, UI_DEFAULT_FONT_SIZE);
-    drawTextRight(lapTimeLimitText, maximumSize, 10.0f+verticalOffset, window);
-  }
-
-  snprintf(text, 30, "%.2f px/s", getMagnitude(car.rigidbody.linearVelocity));
-  sf::Text speedText(text, font, UI_DEFAULT_FONT_SIZE);
-  drawTextRight(speedText, SCREEN_WIDTH - 10.0f, SCREEN_HEIGHT - 40.0f, window);
-
   window.setView(camera);
   window.display();
 }

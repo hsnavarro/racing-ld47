@@ -6,10 +6,13 @@
 #include "physics.hpp"
 #include "circuit.hpp"
 #include "ghost.hpp"
+#include "ui.hpp"
 
 class Game {
 public:
   Game();
+
+  void setup();
 
   void update();
   void render();
@@ -22,10 +25,11 @@ public:
 public:
   sf::RenderWindow window;
   sf::Font font;
+  UI ui;
+
   sf::View camera;
-  sf::View ui;
   float currentZoom = 10.0f;
-  sf::View minimap;
+
 
   sf::Clock totalTime;
   sf::Clock clock;

@@ -8,13 +8,9 @@
 
 Rigidbody::Rigidbody() {}
 
-Rigidbody::Rigidbody(sf::Vector2<f64> _position,
-                     sf::Vector2<f64> _direction,
-                     f64 forwardDrag,
+Rigidbody::Rigidbody(f64 forwardDrag,
                      f64 lateralDrag,
                      f64 angularDrag) :
-    position { _position },
-    direction { _direction },
     kForwardDrag { forwardDrag },
     kLateralDrag { lateralDrag },
     kAngularDrag { angularDrag }

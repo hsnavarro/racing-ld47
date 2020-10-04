@@ -27,7 +27,7 @@ class Game;
 
 class Car {
 public:
-  Car(sf::Vector2f, sf::Vector2f, Game&);
+  Car(Game&);
 
   void update(float);
   void updateParticles(float);
