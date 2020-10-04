@@ -34,6 +34,8 @@ Game::Game() :
   totalTime.restart();
   lapTime.restart();
 
+  ghosts.push_back(Ghost(*this));
+
   // Test
   circuit.setWalls(
     {
@@ -59,7 +61,7 @@ Game::Game() :
   );
 
   circuit.setTexture("assets/gfx/track-test.png");
-  circuit.setLapTimeLimit(10.0f);
+  circuit.setLapTimeLimit(50.0f);
 }
 
 void Game::update() {
@@ -78,6 +80,8 @@ void Game::update() {
 
     frameDuration -= deltaTime;
   }
+
+  ghosts.back().addState();
 }
 
 void Game::render() {
@@ -85,6 +89,7 @@ void Game::render() {
 
   circuit.render();
   smokeParticles.render();
+  for(auto& ghost : ghosts) ghost.render();
   window.draw(car.shape);
 
   // UI
@@ -158,5 +163,8 @@ f32 Game::getTime() const {
 
 void Game::completeLap() {
   circuit.resetCheckpoints();
-  lapTime.restart();
+  float lapTimeTaken = lapTime.restart().asSeconds();
+
+  if(lapTimeTaken <= circuit.lapTimeLimit) ghosts.back().completeLap(lapTimeTaken);
+  else ghosts.back().reset();
 }

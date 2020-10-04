@@ -5,6 +5,7 @@
 #include "particle-system.hpp"
 #include "physics.hpp"
 #include "circuit.hpp"
+#include "ghost.hpp"
 
 class Game {
 public:
@@ -29,6 +30,8 @@ public:
 
   Car car;
   Circuit circuit;
+
+  std::vector<Ghost> ghosts;
 
   ParticleSystem smokeParticles;
 };

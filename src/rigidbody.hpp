@@ -19,7 +19,6 @@ public:
   void applyPointLinearVelocity(sf::Vector2f);
 
   bool isGoingForward() const;
-  float getRotation() const;
 
 public:
   sf::Vector2f position = { 0.0f, 0.0f };

@@ -64,8 +64,10 @@ void Rigidbody::resolveCollision(sf::Vector2f collisionVector) {
   const auto alignedCollisionAmount =
     dotProduct(linearVelocity, getUnitVector(collisionVector));
 
+  /*
   const auto perpendicularCollisionAmount =
     crossProduct(linearVelocity, getUnitVector(collisionVector));
+  */
 
   float deltaAngularVelocity =
     -0.01f *
@@ -83,8 +85,4 @@ void Rigidbody::resolveCollision(sf::Vector2f collisionVector) {
 
 bool Rigidbody::isGoingForward() const {
   return dotProduct(linearVelocity, direction) >= 0;
-}
-
-float Rigidbody::getRotation() const {
-  return to_deg(std::atan2(direction.x, -direction.y));
 }

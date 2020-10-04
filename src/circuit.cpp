@@ -32,6 +32,11 @@ void Circuit::update(float) {
 
   if (carIntersectsLine(game.car, checkpoints[currentCheckpoint])) {
     currentCheckpoint++;
+    if(currentCheckpoint == 1) {
+      int lastGhostIndex = game.ghosts.size() - 1;
+      if(lastGhostIndex >= 1) game.ghosts[lastGhostIndex - 1].activateRendering();
+    }
+
     if (currentCheckpoint == checkpoints.size()) {
       game.completeLap();
     }

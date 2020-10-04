@@ -50,3 +50,6 @@ inline bool linesIntersect(sf::Line a, sf::Line b) {
   return !(a_b0 * a_b1 > 0 or b_a0 * b_a1 > 0);
 }
 
+inline float getRotation(sf::Vector2f& a) {
+  return to_deg(std::atan2(a.x, -a.y));
+}
