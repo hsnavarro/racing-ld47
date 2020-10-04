@@ -45,7 +45,8 @@ set LIBS=^
   /libpath:%SFML_LIB% ^
   sfml-window.lib ^
   sfml-graphics.lib ^
-  sfml-system.lib
+  sfml-system.lib ^
+  sfml-audio.lib
 
 set INCS=^
   /I%DEP_INC%
