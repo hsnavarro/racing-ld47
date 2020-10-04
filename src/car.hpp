@@ -6,12 +6,12 @@
 #include "consts.hpp"
 
 const float CAR_ENGINE_ACCELERATION  = 80;
-const float CAR_BRAKE_ACCELERATION   = -150;
+const float CAR_BRAKE_ACCELERATION   = -200;
 const float CAR_REVERSE_ACCELERATION = -20;
 
 const float CAR_ANGULAR_VELOCITY = 2;
 
-const float CAR_FORWARD_DRAG = 0.02f;
+const float CAR_FORWARD_DRAG = 0.4f;
 //const float CAR_LATERAL_DRAG = 0.9999f;
 const float CAR_ANGULAR_DRAG = 0.99f;
 
