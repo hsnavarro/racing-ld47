@@ -192,10 +192,12 @@ void Circuit::render() const {
   }
 
   // render walls
+  /*
   for (auto wall : walls) {
     sf::Vertex verts[] = { { wall[0], sf::Color::White }, { wall[1], sf::Color::White } };
     game.window.draw(verts, 2, sf::Lines);
   }
+  */
 
   // render checkpoints
   for (size_t i = 0; i < checkpoints.size(); i++) {

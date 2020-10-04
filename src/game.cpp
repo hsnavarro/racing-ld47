@@ -90,9 +90,11 @@ void Game::render() {
   sf::Text lapTimeText(text, font, UI_DEFAULT_FONT_SIZE);
   drawTextRight(lapTimeText, maximumSize, 10.0f, window);
 
-  snprintf(text, 30, "%.2fs", lastLapTime);
-  sf::Text lastLapText(text, font, UI_DEFAULT_FONT_SIZE);
-  drawTextRight(lastLapText, maximumSize, 10.0f+UI_DEFAULT_MARGIN+lapTimeText.getLocalBounds().height, window);
+  if (lastLapTime > 0.0f) {
+    snprintf(text, 30, "%.2fs", lastLapTime);
+    sf::Text lastLapText(text, font, UI_DEFAULT_FONT_SIZE);
+    drawTextRight(lastLapText, maximumSize, 10.0f+UI_DEFAULT_MARGIN+lapTimeText.getLocalBounds().height, window);
+  }
 
   snprintf(text, 30, "%.2f px/s", getMagnitude(car.rigidbody.linearVelocity));
   sf::Text speedText(text, font, UI_DEFAULT_FONT_SIZE);
@@ -148,6 +150,10 @@ void Game::handleEvents() {
 
         case sf::Keyboard::J:
           car.rigidbody.applyPointAngularVelocity(10.0f);
+        break;
+
+        case sf::Keyboard::K:
+          car.rigidbody.applyPointAngularVelocity(-10.0f);
         break;
 
         case sf::Keyboard::R:

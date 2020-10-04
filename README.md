@@ -30,11 +30,11 @@ and end in different positions)
 
 # Todo
 
-- [ ] Physics
+- [x] Physics
   - [x] Car movement
-  - [ ] Collisions
+  - [x] Collisions
     - [x] Car-Walls
-    - [ ] Car-Shadows (Naum)
+    - [x] Car-Shadows (Naum)
 
 - [ ] Circuit
   - [x] Walls
@@ -52,6 +52,10 @@ and end in different positions)
 - [x] Camera
   - [x] Follow player car
 
+- [ ] Minimap
+- [ ] Drift
+  - [ ] Burst?
+
 - [ ] Graphics
   - [ ] Car
   - [ ] Circuits
@@ -63,12 +67,10 @@ and end in different positions)
 
 # Extra ideas
 
-- Realistic car movement
-- Drift
 - Nitro
 - Rollback: go back in time x seconds
-- Power ups? attacks?
 - Car destruction
-- Track grass
 - Multiplayer battleroyale
-- Minimap
+- x Power ups? attacks?
+- x Track grass
+- x Realistic car movement
