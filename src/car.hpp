@@ -15,7 +15,7 @@ const float CAR_ANGULAR_VELOCITY = 2;
 const float CAR_DRIFT_ANGULAR_VELOCITY = 3;
 
 const f64 CAR_FORWARD_DRAG = 0.3;
-const f64 CAR_LATERAL_DRAG = 1.5;
+const f64 CAR_LATERAL_DRAG = 2;
 const f64 CAR_ANGULAR_DRAG = 1;
 
 const int CAR_WIDTH  = 10;

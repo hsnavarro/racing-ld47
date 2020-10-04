@@ -49,14 +49,12 @@ void Car::update(float deltaTime) {
     } else deltaAngularVelocity = angularVelocity;
   }
 
-  if (IS_DRIFTING_BURST_ENABLED) {
-    bool wasDrifting = isDrifting;
-    updateDriftingStatus();
-    if (!isDrifting and wasDrifting) {
-      if (driftTime.getElapsedTime().asSeconds() > DRIFT_BURST_TIME_THRESHOLD) {
-        auto const unit = getUnitVector(rigidbody.direction);
-        rigidbody.applyPointLinearVelocity(BURST_FORCE*unit);
-      }
+  bool wasDrifting = isDrifting;
+  updateDriftingStatus();
+  if constexpr (IS_DRIFTING_BURST_ENABLED) {
+    if (!isDrifting and wasDrifting and driftTime.getElapsedTime().asSeconds() > DRIFT_BURST_TIME_THRESHOLD) {
+      auto const unit = getUnitVector(rigidbody.direction);
+      rigidbody.applyPointLinearVelocity(BURST_FORCE*unit);
     }
   }
 
@@ -127,7 +125,7 @@ void Car::smokeEmission() {
 void Car::updateDriftingStatus() {
   const bool wasDrifting = isDrifting;
   const auto angle = to_deg64(acos(dotProduct(getUnitVector(rigidbody.direction), getUnitVector(rigidbody.linearVelocity))));
-  isDrifting = angle > 60.0 and getMagnitude(rigidbody.linearVelocity) > 40.0 ;
+  isDrifting = angle > DRIFT_ANGLE and getMagnitude(rigidbody.linearVelocity) > DRIFT_MIN_VELOCITY;
 
   if (isDrifting and !wasDrifting) {
     driftTime.restart();

@@ -17,10 +17,12 @@ const int ANTI_ALIASING_LEVEL = 8;
 const float UI_DEFAULT_MARGIN = 10.0f;
 const int UI_DEFAULT_FONT_SIZE = 15;
 
+const float DRIFT_ANGLE = 40.0f;
+const float DRIFT_MIN_VELOCITY = 20.0f;
+
+const bool IS_DRIFTING_BURST_ENABLED = false;
 const float DRIFT_BURST_TIME_THRESHOLD = 0.4f;
 const auto BURST_FORCE = 100.0;
-
-const bool IS_DRIFTING_BURST_ENABLED = true;
 
 const float ICON_RADIUS = 30.0f;
 const sf::Color ICON_COLOUR{255,0,0,255};
