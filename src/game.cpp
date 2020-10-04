@@ -20,10 +20,11 @@ Game::Game() :
   sf::View uiView;
   //TODO: encapsulate UI stuff
   uiView.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
-  uiView.setCenter(SCREEN_WIDTH+SCREEN_WIDTH/2,SCREEN_HEIGHT+SCREEN_HEIGHT/2);
+  uiView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
   cameraView.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
   cameraView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
   camera = cameraView;
+  ui = uiView;
 
   if (!font.loadFromFile("assets/fonts/arial.ttf")) {
     printf("fail to load font!\n");
@@ -86,7 +87,7 @@ void Game::render() {
 
   snprintf(text, 10, "%.2f p/s", getMagnitude(car.rigidbody.linearVelocity));
   sf::Text speedText(text, font, 30);
-  speedText.setPosition(SCREEN_WIDTH, SCREEN_HEIGHT);
+  speedText.setPosition(SCREEN_WIDTH-120, SCREEN_HEIGHT-40);
   window.draw(speedText);
 
   window.setView(camera);
