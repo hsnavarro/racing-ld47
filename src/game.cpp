@@ -81,16 +81,20 @@ void Game::render() {
   window.setView(ui);
 
   const auto maximumSize = [this] {
-    sf::Text tmp("000.00 s", font, 20);
+    sf::Text tmp("000.00s", font, UI_DEFAULT_FONT_SIZE);
     return tmp.getLocalBounds().width;
   }();
 
-  snprintf(text, 30, "%.2f s", lapTime.getElapsedTime().asSeconds());
-  sf::Text lapTimeText(text, font, 20);
-  drawTextRight(lapTimeText, maximumSize + 5.0f, 10.0f, window);
+  snprintf(text, 30, "%.2fs", lapTime.getElapsedTime().asSeconds());
+  sf::Text lapTimeText(text, font, UI_DEFAULT_FONT_SIZE);
+  drawTextRight(lapTimeText, maximumSize, 10.0f, window);
+
+  snprintf(text, 30, "%.2fs", lastLapTime);
+  sf::Text lastLapText(text, font, UI_DEFAULT_FONT_SIZE);
+  drawTextRight(lastLapText, maximumSize, 10.0f+UI_DEFAULT_MARGIN+lapTimeText.getLocalBounds().height, window);
 
   snprintf(text, 30, "%.2f px/s", getMagnitude(car.rigidbody.linearVelocity));
-  sf::Text speedText(text, font, 20);
+  sf::Text speedText(text, font, UI_DEFAULT_FONT_SIZE);
   drawTextRight(speedText, SCREEN_WIDTH - 10.0f, SCREEN_HEIGHT - 40.0f, window);
 
   window.setView(camera);
@@ -157,6 +161,8 @@ f32 Game::getTime() const {
 void Game::completeLap() {
   circuit.resetCheckpoints();
   float lapTimeTaken = lapTime.restart().asSeconds();
+
+  lastLapTime = lapTimeTaken;
 
   currentGhost.completeLap(lapTimeTaken);
   if(lapTimeTaken <= circuit.lapTimeLimit) ghosts.push_back(currentGhost);

@@ -27,6 +27,7 @@ public:
   sf::Clock totalTime;
   sf::Clock clock;
   sf::Clock lapTime;
+  float lastLapTime;
 
   Car car;
   Circuit circuit;
