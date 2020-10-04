@@ -5,27 +5,28 @@
 #include "consts.hpp"
 #include "algebra.hpp"
 
-const float COLLISION_LINEAR_TO_ANGULAR = 0.001f;
+const f64 COLLISION_LINEAR_TO_ANGULAR = 0.001;
 
 class Rigidbody {
 public:
   Rigidbody();
-  Rigidbody(sf::Vector2f, sf::Vector2f, float, float);
+  Rigidbody(sf::Vector2<f64>, sf::Vector2<f64>, f64, f64, f64);
 
-  void update(float, float, float);
-  void resolveCollision(sf::Vector2f collisionVector);
+  void update(f64, f64, f64);
+  void resolveCollision(sf::Vector2<f64> collisionVector);
 
-  void applyPointAngularVelocity(float);
-  void applyPointLinearVelocity(sf::Vector2f);
+  void applyPointAngularVelocity(f64);
+  void applyPointLinearVelocity(sf::Vector2<f64>);
 
   bool isGoingForward() const;
 
 public:
-  sf::Vector2f position = { 0.0f, 0.0f };
-  sf::Vector2f direction = { 0.0f, 1.0f };
-  sf::Vector2f linearVelocity = { 0.0f, 0.0f };
-  float angularVelocity = 0.0f;
+  sf::Vector2<f64> position = { 0.0, 0.0 };
+  sf::Vector2<f64> direction = { 0.0, -1.0 };
+  sf::Vector2<f64> linearVelocity = { 0.0, 0.0 };
+  f64 angularVelocity = 0.0;
 
-  float kForwardDrag = 0.1f;
-  float kAngularDrag = 0.9f;
+  f64 kForwardDrag = 0.3;
+  f64 kLateralDrag = 1.5;
+  f64 kAngularDrag = 0.9;
 };

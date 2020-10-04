@@ -15,26 +15,26 @@ void Ghost::addState() {
   lastStates.push_back({ car.rigidbody, car.shape, currentLapTime });
 }
 
-sf::Vector2f interpolateVectors(sf::Vector2f currentFrameVector, sf::Vector2f nextFrameVector, float interpolationRatio) {
+static sf::Vector2<f64> interpolateVectors(sf::Vector2<f64> currentFrameVector, sf::Vector2<f64> nextFrameVector, f64 interpolationRatio) {
   return interpolationRatio * nextFrameVector + (1 - interpolationRatio) * currentFrameVector;
 }
 
-void applyTransformation(sf::RectangleShape& shape, sf::Vector2f& position, sf::Vector2f& direction) {
-  shape.setPosition(position);
-  shape.setRotation(getRotation(direction));
+void applyTransformation(sf::RectangleShape& shape, sf::Vector2<f64>& position, sf::Vector2<f64>& direction) {
+  shape.setPosition(to_vector2f(position));
+  shape.setRotation(getRotation(to_vector2f(direction)));
 }
 
-CarState Ghost::interpolateStates(CarState& currentFrame, CarState& nextFrame, float interpolationTime) {
+CarState Ghost::interpolateStates(CarState& currentFrame, CarState& nextFrame, f64 interpolationTime) {
 
-  float interpolationRatio = (interpolationTime - currentFrame.time) / (nextFrame.time - currentFrame.time);
+  f64 interpolationRatio = (interpolationTime - currentFrame.time) / (nextFrame.time - currentFrame.time);
 
-  sf::Vector2f interPosition = interpolateVectors(currentFrame.shape.getPosition(), nextFrame.shape.getPosition(), interpolationRatio);
-  sf::Vector2f interDirection = interpolateVectors(currentFrame.rigidbody.direction, nextFrame.rigidbody.direction, interpolationRatio);
-  sf::Vector2f interLinearVelocity = interpolateVectors(currentFrame.rigidbody.linearVelocity, nextFrame.rigidbody.linearVelocity, interpolationRatio);
+  sf::Vector2<f64> interPosition = interpolateVectors(to_vector2f64(currentFrame.shape.getPosition()), to_vector2f64(nextFrame.shape.getPosition()), interpolationRatio);
+  sf::Vector2<f64> interDirection = interpolateVectors(currentFrame.rigidbody.direction, nextFrame.rigidbody.direction, interpolationRatio);
+  sf::Vector2<f64> interLinearVelocity = interpolateVectors(currentFrame.rigidbody.linearVelocity, nextFrame.rigidbody.linearVelocity, interpolationRatio);
 
   interDirection = getUnitVector(interDirection);
 
-  float interTime = interpolationTime;
+  float interTime = static_cast<float>(interpolationTime);
 
   Rigidbody interRigidbody;
   interRigidbody.position = interPosition;
@@ -49,13 +49,13 @@ CarState Ghost::interpolateStates(CarState& currentFrame, CarState& nextFrame, f
 
 enum Direction { FUTURE, PAST };
 
-CarState predictState(CarState& currentState, float deltaTime, Direction direction) {
+CarState predictState(CarState& currentState, f64 deltaTime, Direction direction) {
 
-  float multiplier = direction == FUTURE ? 1.0f : -1.0f;
+  f64 multiplier = direction == FUTURE ? 1.0 : -1.0;
 
-  sf::Vector2f& currentStateDirection = currentState.rigidbody.direction;
-  sf::Vector2f& currentStatePosition = currentState.rigidbody.position;
-  sf::Vector2f& currentStateLinearVelocity = currentState.rigidbody.direction;
+  auto& currentStateDirection = currentState.rigidbody.direction;
+  auto& currentStatePosition = currentState.rigidbody.position;
+  auto& currentStateLinearVelocity = currentState.rigidbody.direction;
 
   CarState statePredicted;
 
@@ -66,7 +66,7 @@ CarState predictState(CarState& currentState, float deltaTime, Direction directi
   statePredicted.shape = currentState.shape;
   applyTransformation(statePredicted.shape, statePredicted.rigidbody.position, statePredicted.rigidbody.direction);
 
-  statePredicted.time = currentState.time + multiplier * deltaTime;
+  statePredicted.time = static_cast<float>(currentState.time + multiplier * deltaTime);
 
   return statePredicted;
 }

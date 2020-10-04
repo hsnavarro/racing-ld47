@@ -38,6 +38,8 @@ Game::Game() :
   // Test
   Circuit::loadAtlas();
   circuit.loadFromFile("assets/circuits/test.cir");
+  //circuit.loadFromFile("assets/circuits/small.cir");
+  //circuit.loadFromFile("assets/circuits/cross.cir");
   circuit.setLapTimeLimit(50.0f);
 
   circuit.startRace();
@@ -72,24 +74,30 @@ void Game::render() {
 
   // UI
   char text[10];
-  snprintf(text, 10, "%.2f", lapTime.getElapsedTime().asSeconds());
 
   placeCamera();
 
   window.setView(ui);
+
+  snprintf(text, 10, "%.2f", lapTime.getElapsedTime().asSeconds());
   sf::Text lapTimeText(text, font, 30);
   lapTimeText.setPosition(10.0f, 10.0f);
   window.draw(lapTimeText);
+
+  snprintf(text, 10, "%.2f p/s", getMagnitude(car.rigidbody.linearVelocity));
+  sf::Text speedText(text, font, 30);
+  speedText.setPosition(SCREEN_WIDTH, SCREEN_HEIGHT);
+  window.draw(speedText);
 
   window.setView(camera);
   window.display();
 }
 
 void Game::placeCamera() {
-  camera.setCenter(car.rigidbody.position);
+  camera.setCenter(to_vector2f(car.rigidbody.position));
 
   //TODO(Naum): add sigmoid
-  float zoomValue = 0.002f * getMagnitude(car.rigidbody.linearVelocity) + 0.5f;
+  float zoomValue = static_cast<float>(0.002 * getMagnitude(car.rigidbody.linearVelocity) + 0.5);
   camera.setSize(zoomValue*SCREEN_SIZE);
 }
 

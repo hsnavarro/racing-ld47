@@ -58,8 +58,8 @@ void ParticleSystem::emissionFromPoint(const sf::Vector2f& point, const sf::Vect
 
     particlesLaunched--;
 
-    particle.rigidbody.position = point;
-    particle.rigidbody.direction = -direction;;
+    particle.rigidbody.position = to_vector2f64(point);
+    particle.rigidbody.direction = -to_vector2f64(direction);
 
     particle.setPosition(point);
     particle.wasLaunched = true;
@@ -84,8 +84,8 @@ void ParticleSystem::emissionFromLine(const sf::Vector2f& a, const sf::Vector2f&
     particlesLaunched--;
 
     const sf::Vector2f particlePosition = a + float(doubleRand(generator)) * lineDirection;
-    particle.rigidbody.position = particlePosition;
-    particle.rigidbody.direction = -direction;
+    particle.rigidbody.position = to_vector2f64(particlePosition);
+    particle.rigidbody.direction = -to_vector2f64(direction);
 
     particle.setPosition(particlePosition);
     particle.wasLaunched = true;

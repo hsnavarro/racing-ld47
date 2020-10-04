@@ -19,8 +19,10 @@ const f64 PI   = 3.141592653589793238463;
 const f32 PI32 = 3.141592653589793238463f;
 
 inline f64 to_deg64(f64 r) { return 180.0 * r / PI; }
+inline f64 to_deg(f64 r) { return 180.0 * r / PI; }
 inline f32 to_deg  (f32 r) { return 180.0f * r / PI32; }
 inline f64 to_rad64(f64 r) { return PI * r / 180.0; }
+inline f64 to_rad(f64 r) { return PI * r / 180.0; }
 inline f32 to_rad  (f32 r) { return PI32 * r / 180.0f; }
 
 

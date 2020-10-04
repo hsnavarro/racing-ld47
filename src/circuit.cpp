@@ -184,18 +184,18 @@ void Circuit::render() const {
   }
 
   // render walls
-  /*
   for (auto wall : walls) {
     sf::Vertex verts[] = { { wall[0], sf::Color::White }, { wall[1], sf::Color::White } };
     game.window.draw(verts, 2, sf::Lines);
   }
-  */
 
   // render checkpoints
   for (size_t i = 0; i < checkpoints.size(); i++) {
     const auto& checkpoint = checkpoints[i];
 
-    const sf::Color color = (currentCheckpoint > i) ? sf::Color::Green : sf::Color::Blue;
+    sf::Color color { 0, 0, 0, 192 };
+    if (currentCheckpoint >  i) color = sf::Color::Green;
+    if (currentCheckpoint == i) color = sf::Color::Blue;
 
     sf::Vertex verts[] = {
       { checkpoint[0], color },
@@ -205,7 +205,7 @@ void Circuit::render() const {
     game.window.draw(verts, 2, sf::Lines);
   }
 
-  // Render lines
+  // Render grid
   /*
   sf::Vertex verts[2];
   verts[0] = sf::Vertex({ 0.0f, 0.0f });
@@ -255,7 +255,7 @@ void Circuit::startRace() {
   game.car.setPosition(
     {
       static_cast<float>(CIRCUIT_TILE_SIZE * (initialPosX + 0.5f)),
-      static_cast<float>(CIRCUIT_TILE_SIZE * (initialPosY + 0.5f)),
+      static_cast<float>(CIRCUIT_TILE_SIZE * (initialPosY + 0.8f)),
     }
   );
   resetCheckpoints();

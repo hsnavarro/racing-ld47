@@ -16,13 +16,13 @@ class Ghost {
 public:
   Ghost(Game&);
 
-  CarState interpolateStates(CarState&, CarState&, float);
+  CarState interpolateStates(CarState&, CarState&, f64);
   void addState();
   CarState getState(float);
-  
+
   void activateRendering();
   void render();
-  
+
   void reset();
   void completeLap(float);
 

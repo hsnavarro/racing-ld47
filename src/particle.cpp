@@ -5,8 +5,10 @@
 Particle::Particle(float _lifeTime, float particleWidth, float particleHeight, ParticleType _type) : type{ _type } , lifeTime{ _lifeTime } {
   if (_type == ParticleType::SMOKE) {
     circleShape.setRadius(particleWidth);
+    circleShape.setFillColor({ 0, 0, 0, 92 });
   } else {
     rectangleShape.setSize({ particleWidth, particleHeight });
+    rectangleShape.setFillColor({ 0, 0, 0, 230 });
   }
 }
 

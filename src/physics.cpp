@@ -90,7 +90,7 @@ void resolveCollisions(Game& game) {
     }
 
     if (!collided) break;
-    game.car.resolveCollision(minimumCollisionVector);
+    game.car.resolveCollision(to_vector2f64(minimumCollisionVector));
   }
 }
 

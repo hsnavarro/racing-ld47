@@ -14,9 +14,9 @@ const float CAR_REVERSE_ACCELERATION = -20;
 const float CAR_ANGULAR_VELOCITY = 2;
 const float CAR_DRIFT_ANGULAR_VELOCITY = 3;
 
-const float CAR_FORWARD_DRAG = 0.4f;
-//const float CAR_LATERAL_DRAG = 0.9999f;
-const float CAR_ANGULAR_DRAG = 0.99f;
+const f64 CAR_FORWARD_DRAG = 0.3;
+const f64 CAR_LATERAL_DRAG = 1.5;
+const f64 CAR_ANGULAR_DRAG = 1;
 
 const int CAR_WIDTH  = 10;
 const int CAR_HEIGHT = 20;
@@ -31,7 +31,7 @@ public:
   void updateParticles(float);
   void render();
 
-  void resolveCollision(sf::Vector2f collisionVector);
+  void resolveCollision(sf::Vector2<f64> collisionVector);
 
   void smokeEmission();
   void tireTrackEmission();
