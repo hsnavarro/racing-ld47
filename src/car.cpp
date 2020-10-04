@@ -106,7 +106,7 @@ void Car::smokeEmission() {
 void Car::tireTrackEmission() {
   const auto angle = to_deg64(acos(dotProduct(getUnitVector(rigidbody.direction), getUnitVector(rigidbody.linearVelocity))));
 
-  if (!goReverse and (angle < 60.0f or getMagnitude(rigidbody.linearVelocity) < 80.0f)) return;
+  if (!goReverse and angle < 60.0f) return;
 
   const auto transform = shape.getTransform();
 
