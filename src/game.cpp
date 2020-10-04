@@ -7,9 +7,8 @@
 #include <cstdio>
 
 Game::Game() :
-    car { INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION },
-    circuit { *this },
-    smokeParticles { *this }
+    car { INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION, *this },
+    circuit { *this }
 {
 
   sf::ContextSettings settings;
@@ -67,20 +66,20 @@ Game::Game() :
 void Game::update() {
   f32 frameDuration = clock.restart().asSeconds();
 
-  while (frameDuration > 0.0) {
-    float deltaTime = std::min(frameDuration, SIMULATION_DELTA_TIME);
+  float displayDeltaTime = frameDuration;
 
-    smokeParticles.update(deltaTime);
+  while (displayDeltaTime > 0.0) {
+    float deltaTime = std::min(displayDeltaTime, SIMULATION_DELTA_TIME);
+
     car.update(deltaTime);
 
     physics::resolveCollisions(*this);
     circuit.update(deltaTime);
 
-    smokeParticles.emissionFromCar(car);
-
-    frameDuration -= deltaTime;
+    displayDeltaTime -= deltaTime;
   }
 
+  car.updateParticles(frameDuration);
   ghosts.back().addState();
 }
 
@@ -88,9 +87,8 @@ void Game::render() {
   window.clear();
 
   circuit.render();
-  smokeParticles.render();
   for(auto& ghost : ghosts) ghost.render();
-  window.draw(car.shape);
+  car.render();
 
   // UI
   char text[10];

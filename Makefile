@@ -1,6 +1,8 @@
 CXX = g++
 
 CXXFLAGS = -Wall \
+				-Wshadow \
+				-Wextra \
 				-std=c++17 \
 				-lsfml-graphics \
 				-lsfml-window \

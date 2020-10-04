@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-Ghost::Ghost(Game& game) : game(game) {
+Ghost::Ghost(Game& _game) : game{ _game } {
   timeActive.restart();
 };
 
@@ -53,22 +53,22 @@ CarState predictState(CarState& currentState, float deltaTime, Direction directi
 
   float multiplier = direction == FUTURE ? 1 : -1;
 
-    sf::Vector2f& currentStateDirection = currentState.rigidbody.direction;
-    sf::Vector2f& currentStatePosition = currentState.rigidbody.position;
-    sf::Vector2f& currentStateLinearVelocity = currentState.rigidbody.direction;
+  sf::Vector2f& currentStateDirection = currentState.rigidbody.direction;
+  sf::Vector2f& currentStatePosition = currentState.rigidbody.position;
+  sf::Vector2f& currentStateLinearVelocity = currentState.rigidbody.direction;
 
-    CarState statePredicted;
+  CarState statePredicted;
 
-    statePredicted.rigidbody.linearVelocity = currentStateLinearVelocity + multiplier * deltaTime * CAR_ENGINE_ACCELERATION * currentStateDirection;
-    statePredicted.rigidbody.direction = currentStateDirection;
-    statePredicted.rigidbody.position = currentStatePosition + multiplier * deltaTime * currentStateLinearVelocity;
+  statePredicted.rigidbody.linearVelocity = currentStateLinearVelocity + multiplier * deltaTime * CAR_ENGINE_ACCELERATION * currentStateDirection;
+  statePredicted.rigidbody.direction = currentStateDirection;
+  statePredicted.rigidbody.position = currentStatePosition + multiplier * deltaTime * currentStateLinearVelocity;
 
-    statePredicted.shape = currentState.shape;
-    applyTransformation(statePredicted.shape, statePredicted.rigidbody.position, statePredicted.rigidbody.direction);
+  statePredicted.shape = currentState.shape;
+  applyTransformation(statePredicted.shape, statePredicted.rigidbody.position, statePredicted.rigidbody.direction);
 
-    statePredicted.time = currentState.time + multiplier * deltaTime;
+  statePredicted.time = currentState.time + multiplier * deltaTime;
 
-    return statePredicted;
+  return statePredicted;
 }
 
 CarState Ghost::getState(float lapTime) {
@@ -87,14 +87,14 @@ CarState Ghost::getState(float lapTime) {
   CarState previousState, nextState;
 
   if (futureFrameIndex == 0) {
-    
+
     previousState = predictState(lastStates[futureFrameIndex], lapTime, PAST);
     nextState = lastStates[futureFrameIndex];
 
   } else if (futureFrameIndex == (int)lastStates.size()) {
-    
+
     previousState = lastStates[futureFrameIndex - 1];
-    nextState = predictState(lastStates[futureFrameIndex - 1], timeToCompleteLap - lapTime , FUTURE);
+    nextState = predictState(lastStates[futureFrameIndex - 1], timeToCompleteLap - lapTime, FUTURE);
 
   } else {
 

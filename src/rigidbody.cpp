@@ -8,12 +8,12 @@
 
 Rigidbody::Rigidbody() {}
 
-Rigidbody::Rigidbody(sf::Vector2f position,
-                     sf::Vector2f direction,
+Rigidbody::Rigidbody(sf::Vector2f _position,
+                     sf::Vector2f _direction,
                      float forwardDrag,
                      float angularDrag) :
-    position { position },
-    direction { direction },
+    position { _position },
+    direction { _direction },
     kForwardDrag { forwardDrag },
     kAngularDrag { angularDrag }
 {}

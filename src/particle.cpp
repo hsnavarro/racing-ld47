@@ -2,18 +2,33 @@
 
 #include <random>
 
-Particle::Particle() {
-  std::random_device randomDevice;
-  std::mt19937 generator(randomDevice());
-
-  std::uniform_real_distribution<float> lifeTimeRand(0, MAX_PARTICLE_LIFE_TIME);
-  lifeTime = lifeTimeRand(generator);
-
-  std::uniform_real_distribution<float> particleRadiusRand(0, MAX_PARTICLE_RADIUS);
-  shape.setRadius(particleRadiusRand(generator));
+Particle::Particle(float _lifeTime, float particleWidth, float particleHeight, ParticleType _type) : type{ _type } , lifeTime{ _lifeTime } {
+  if (_type == ParticleType::SMOKE) {
+    circleShape.setRadius(particleWidth);
+  } else {
+    rectangleShape.setSize({ particleWidth, particleHeight });
+  }
 }
 
 void Particle::update(float timeElapsed) {
   lifeTime -= timeElapsed;
   if (lifeTime < 0.0f) isExpired = true;
+}
+
+sf::Shape& Particle::shape() {
+  if(type == ParticleType::SMOKE) return circleShape;
+  return rectangleShape;
+}
+
+void Particle::setPosition(const sf::Vector2f& position) {
+  if (type == ParticleType::SMOKE) {
+    const float circleRadius = circleShape.getRadius();
+    circleShape.setOrigin(circleRadius * 0.5f, circleRadius * 0.5f);
+    circleShape.setPosition(position);
+  } else {
+    const float rectangleWidth = rectangleShape.getSize().x;
+    const float rectangleHeight = rectangleShape.getSize().y;
+    rectangleShape.setOrigin(rectangleWidth * 0.5f, rectangleHeight * 0.5f);
+    rectangleShape.setPosition(position);
+  }
 }

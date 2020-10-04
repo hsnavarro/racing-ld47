@@ -4,7 +4,7 @@
 
 #include <cstdio>
 
-Circuit::Circuit(Game& game) : game { game }
+Circuit::Circuit(Game& _game) : game { _game }
 {}
 
 void Circuit::setWalls(std::vector<sf::Line> walls_) {

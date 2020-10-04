@@ -1,64 +1,100 @@
 #include "particle-system.hpp"
-
-#include <random>
 #include "game.hpp"
 
-ParticleSystem::ParticleSystem(Game& game) : game { game } {
-  while (particles.size() != MAX_NUM_PARTICLES) particles.push_back(Particle());
+#include <random>
+
+Particle createParticle(ParticleType type) {
+
+  if (type == ParticleType::SMOKE) {
+    std::random_device randomDevice;
+    std::mt19937 generator(randomDevice());
+
+    std::uniform_real_distribution<float> lifeTimeRand(0, MAX_PARTICLE_LIFE_TIME);
+    float lifeTime = lifeTimeRand(generator);
+
+    std::uniform_real_distribution<float> particleSizeRand(0, MAX_PARTICLE_SIZE);
+    float particleSize = particleSizeRand(generator);
+
+    return Particle(lifeTime, particleSize, particleSize, type);
+
+  } else {
+
+    float lifeTime = 5.0f;
+    float particleSize = 2.0;
+
+    return Particle(lifeTime, particleSize, particleSize, type);
+  }
+}
+
+ParticleSystem::ParticleSystem(ParticleType type, Game& _game) : particlesType{ type }, game{ _game } {
+  while (particles.size() != MAX_NUM_PARTICLES_GENERATED) {
+    particles.push_back(createParticle(particlesType));
+  }
 }
 
 void ParticleSystem::update(float deltaTime) {
   for (auto& particle : particles) particle.update(deltaTime);
 
-  std::vector<Particle> newParticle;
+  std::vector<Particle> newParticles;
   for (auto& particle : particles)
-    if (!particle.isExpired) newParticle.push_back(particle);
+    if (!particle.isExpired) newParticles.push_back(particle);
 
-  while (newParticle.size() != MAX_NUM_PARTICLES)
-    newParticle.push_back(Particle());
+  for(int i = 0; i < MAX_NUM_PARTICLES_GENERATED; i++) {
+    if(MAX_NUM_PARTICLES == (int) newParticles.size() ) break;
+    newParticles.push_back(createParticle(particlesType));
+  }
 
-  particles = newParticle;
+  particles = newParticles;
 }
 
-void ParticleSystem::emissionFromCar(Car& car) {
-  std::random_device randomDevice;
-  std::mt19937 generator(randomDevice());
-
-  const auto transform = car.shape.getTransform();
-
-  const sf::Vector2f bottomLeftPoint = transform.transformPoint(car.shape.getPoint(3));
-  const sf::Vector2f bottomRightPoint = transform.transformPoint(car.shape.getPoint(2));
-
-  const sf::Vector2f direction = bottomRightPoint - bottomLeftPoint;
-
-  std::uniform_real_distribution<> doubleRand(0.0, 1.0);
+void ParticleSystem::emissionFromPoint(const sf::Vector2f& point, const sf::Vector2f& direction, float emissionRate) {
 
   int numberOfParticles = static_cast<int>(particles.size());
-  const float PARTICLES_EMISSION_RATIO = 1 / 2500.0f;
-  int particlesLaunched = static_cast<int>(PARTICLES_EMISSION_RATIO *
-                                           getMagnitude(car.rigidbody.linearVelocity) *
-                                           numberOfParticles);
+  int particlesLaunched = static_cast<int>(emissionRate * numberOfParticles);
 
-  for(auto& particle : particles) {
-    if(particle.wasLaunched) continue;
-    if(!particlesLaunched) return;
+  for (auto& particle : particles) {
+    if (particle.wasLaunched) continue;
+    if (!particlesLaunched) return;
 
     particlesLaunched--;
 
-    const sf::Vector2f particlePosition = bottomLeftPoint + float(doubleRand(generator)) * direction;
-    particle.rigidbody.position = particlePosition;
-    particle.rigidbody.direction = -car.rigidbody.direction;
+    particle.rigidbody.position = point;
+    particle.rigidbody.direction = -direction;;
 
-    const float ballRadius = particle.shape.getRadius();
-
-    particle.shape.setOrigin(ballRadius * 0.5f, ballRadius * 0.5f);
-    particle.shape.setPosition(particlePosition);
-
+    particle.setPosition(point);
     particle.wasLaunched = true;
   }
 }
 
+void ParticleSystem::emissionFromLine(const sf::Vector2f& a, const sf::Vector2f& b, const sf::Vector2f& direction, float emissionRate) {
+
+  const sf::Vector2f lineDirection = b - a;
+
+  std::random_device randomDevice;
+  std::mt19937 generator(randomDevice());
+  std::uniform_real_distribution<> doubleRand(0.0, 1.0);
+
+  int numberOfParticles = static_cast<int>(particles.size());
+  int particlesLaunched = static_cast<int>(emissionRate * numberOfParticles);
+
+  for (auto& particle : particles) {
+    if (particle.wasLaunched) continue;
+    if (!particlesLaunched) return;
+
+    particlesLaunched--;
+
+    const sf::Vector2f particlePosition = a + float(doubleRand(generator)) * lineDirection;
+    particle.rigidbody.position = particlePosition;
+    particle.rigidbody.direction = -direction;
+
+    particle.setPosition(particlePosition);
+    particle.wasLaunched = true;
+  }
+
+}
+
 void ParticleSystem::render() {
-  for(auto& particle : particles)
-    if (particle.wasLaunched) game.window.draw(particle.shape);
+  for (auto& particle : particles) {
+    if (particle.wasLaunched) game.window.draw(particle.shape());
+  }
 }

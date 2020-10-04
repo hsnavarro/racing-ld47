@@ -32,6 +32,4 @@ public:
   Circuit circuit;
 
   std::vector<Ghost> ghosts;
-
-  ParticleSystem smokeParticles;
 };

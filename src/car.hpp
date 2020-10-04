@@ -4,6 +4,7 @@
 #include "rigidbody.hpp"
 #include "types.hpp"
 #include "consts.hpp"
+#include "particle-system.hpp"
 
 const float CAR_ENGINE_ACCELERATION  = 80;
 const float CAR_ENGINE_DRIFT_ACCELERATION = 50;
@@ -20,17 +21,27 @@ const float CAR_ANGULAR_DRAG = 0.99f;
 const int CAR_WIDTH  = 10;
 const int CAR_HEIGHT = 20;
 
+class Game;
+
 class Car {
 public:
-  Car(sf::Vector2f, sf::Vector2f);
+  Car(sf::Vector2f, sf::Vector2f, Game&);
 
   void update(float);
+  void updateParticles(float);
+  void render();
 
   void resolveCollision(sf::Vector2f collisionVector);
+
+  void smokeEmission();
+  void tireTrackEmission();
 
 public:
   Rigidbody rigidbody;
   sf::RectangleShape shape;
+  Game& game;
+
+  ParticleSystem smokeParticles, leftTireTracks, rightTireTracks;
 
   bool turnRight = false;
   bool turnLeft = false;
