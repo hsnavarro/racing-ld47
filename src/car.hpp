@@ -6,10 +6,12 @@
 #include "consts.hpp"
 
 const float CAR_ENGINE_ACCELERATION  = 80;
+const float CAR_ENGINE_DRIFT_ACCELERATION = 60;
 const float CAR_BRAKE_ACCELERATION   = -200;
 const float CAR_REVERSE_ACCELERATION = -20;
 
 const float CAR_ANGULAR_VELOCITY = 2;
+const float CAR_DRIFT_ANGULAR_VELOCITY = 3;
 
 const float CAR_FORWARD_DRAG = 0.4f;
 //const float CAR_LATERAL_DRAG = 0.9999f;
@@ -34,10 +36,13 @@ public:
   bool turnLeft = false;
   bool goForward = false;
   bool goReverse = false;
+  bool isDriftActive = false;
 
   // These are constants!
   float engineAcceleration = CAR_ENGINE_ACCELERATION;
+  float engineDriftAcceleration = CAR_ENGINE_DRIFT_ACCELERATION;
   float brakeAcceleration = CAR_BRAKE_ACCELERATION;
   float reverseAcceleration = CAR_REVERSE_ACCELERATION;
   float angularVelocity = CAR_ANGULAR_VELOCITY;
+  float angularDriftVelocity = CAR_DRIFT_ANGULAR_VELOCITY;
 };

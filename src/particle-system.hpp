@@ -2,6 +2,8 @@
 
 #include "particle.hpp"
 
+const int MAX_NUM_PARTICLES = 15;
+
 class Game;
 
 class ParticleSystem {

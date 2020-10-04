@@ -5,8 +5,7 @@
 #include "consts.hpp"
 
 const float MAX_PARTICLE_RADIUS = 2.5;
-const int MAX_PARTICLE_LIFE_TIME = 1;
-const int MAX_NUM_PARTICLES = 25;
+const float MAX_PARTICLE_LIFE_TIME = 0.3;
 
 class Particle {
 public:

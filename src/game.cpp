@@ -141,6 +141,10 @@ void Game::handleEvents() {
           car.turnRight = keepActive;
           break;
 
+        case sf::Keyboard::Space:
+          car.isDriftActive = keepActive;
+          break;
+
         // Todo(naum): remove on release
         case sf::Keyboard::Escape:
           window.close();
