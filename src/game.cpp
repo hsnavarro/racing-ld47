@@ -99,7 +99,7 @@ void Game::render() {
   for(auto& ghost : ghosts) ghost.render(window);
   car.render(camera);
 
-  circuit.render(minimap);
+  currentCircuit->render(minimap);
   car.renderIcon(minimap);
 
   // UI
@@ -130,9 +130,11 @@ void Game::render() {
   }
 
 
-  snprintf(text, 30, "%.2fs", circuit.lapTimeLimit);
-  sf::Text lapTimeLimitText(text, font, UI_DEFAULT_FONT_SIZE);
-  drawTextRight(lapTimeLimitText, maximumSize, 10.0f+verticalOffset, window);
+  if (currentCircuit) {
+    snprintf(text, 30, "%.2fs", currentCircuit->lapTimeLimit);
+    sf::Text lapTimeLimitText(text, font, UI_DEFAULT_FONT_SIZE);
+    drawTextRight(lapTimeLimitText, maximumSize, 10.0f+verticalOffset, window);
+  }
 
   snprintf(text, 30, "%.2f px/s", getMagnitude(car.rigidbody.linearVelocity));
   sf::Text speedText(text, font, UI_DEFAULT_FONT_SIZE);
