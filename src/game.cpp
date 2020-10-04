@@ -80,7 +80,7 @@ void Game::render() {
   window.clear();
 
   circuit.render(camera);
-  for(auto& ghost : ghosts) ghost.render();
+  for(auto& ghost : ghosts) ghost.render(window);
   car.render(camera);
 
   circuit.render(minimap);
@@ -98,15 +98,25 @@ void Game::render() {
     return tmp.getLocalBounds().width;
   }();
 
+  float verticalOffset = 0.0f;
+
   snprintf(text, 30, "%.2fs", lapTime.getElapsedTime().asSeconds());
   sf::Text lapTimeText(text, font, UI_DEFAULT_FONT_SIZE);
   drawTextRight(lapTimeText, maximumSize, 10.0f, window);
 
+  verticalOffset += UI_DEFAULT_MARGIN + lapTimeText.getLocalBounds().height;
+
   if (lastLapTime > 0.0f) {
     snprintf(text, 30, "%.2fs", lastLapTime);
     sf::Text lastLapText(text, font, UI_DEFAULT_FONT_SIZE);
-    drawTextRight(lastLapText, maximumSize, 10.0f+UI_DEFAULT_MARGIN+lapTimeText.getLocalBounds().height, window);
+    drawTextRight(lastLapText, maximumSize, 10.0f+verticalOffset, window);
+    verticalOffset += UI_DEFAULT_MARGIN + lastLapText.getLocalBounds().height;
   }
+
+
+  snprintf(text, 30, "%.2fs", circuit.lapTimeLimit);
+  sf::Text lapTimeLimitText(text, font, UI_DEFAULT_FONT_SIZE);
+  drawTextRight(lapTimeLimitText, maximumSize, 10.0f+verticalOffset, window);
 
   snprintf(text, 30, "%.2f px/s", getMagnitude(car.rigidbody.linearVelocity));
   sf::Text speedText(text, font, UI_DEFAULT_FONT_SIZE);
