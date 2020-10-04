@@ -15,6 +15,8 @@ Circuit::Circuit(Game& _game) : game { _game }
 
 bool Circuit::loadFromFile(const std::string& path) {
   FILE* file;
+
+#ifdef _MSC_VER
   auto err = fopen_s(&file, path.c_str(), "r");
   if (!file) {
 
@@ -25,6 +27,13 @@ bool Circuit::loadFromFile(const std::string& path) {
 
     return false;
   }
+#else
+  file = fopen(path.c_str(), "r");
+  if (!file) {
+    printf("Could not load circuit: %s\n", path.c_str());
+    return false;
+  }
+#endif
 
   defer(fclose(file));
 
