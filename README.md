@@ -41,9 +41,9 @@ and end in different positions)
   - [x] Checkpoints
   - [ ] Expansion
 
-- [ ] Particle system
+- [x] Particle system
   - [x] Smoke/dirt
-  - [ ] Tire tracks
+  - [x] Tire tracks
 
 - [x] Shadows (Navarro)
   - [x] Save movement
