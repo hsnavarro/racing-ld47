@@ -121,3 +121,8 @@ void Car::setPosition(sf::Vector2f pos) {
   shape.setPosition(pos);
   rigidbody.position = to_vector2f64(pos);
 }
+
+void Car::move(sf::Vector2f deltaPos) {
+  rigidbody.position += to_vector2f64(deltaPos);
+  shape.setPosition(to_vector2f(rigidbody.position));
+}

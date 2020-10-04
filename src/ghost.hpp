@@ -14,24 +14,24 @@ struct CarState {
 
 class Ghost {
 public:
-  Ghost(Game&);
+  Ghost();
 
-  CarState interpolateStates(CarState&, CarState&, f64);
-  void addState();
-  CarState getState(float);
+  CarState interpolateStates(CarState&, CarState&, f64) const;
+  void addState(const Game&);
+  CarState getState(float) const;
+  CarState getCurrentState() const;
 
   void activateRendering();
-  void render();
+  void render(sf::RenderWindow&);
   void reset();
 
   void clear();
   void completeLap(float);
 
+public:
   std::vector<CarState> lastStates;
   sf::Clock timeActive;
 
   bool isRendered = false;
   float timeToCompleteLap;
-
-  Game &game;
 };

@@ -26,13 +26,11 @@ bool carIntersectsLine(const Car& car, sf::Line line) {
   return false;
 }
 
-namespace physics {
-
 // This line divides the plane into two semiplanes
 // The "left" plane (CCW) is the region we don't want to be
 // The "right" plane (CW) is the region we want to be
 // The collision vector will be pointing from bad to good planes, if it exists
-std::optional<sf::Vector2f> getCollisionVector(const Car& car, sf::Line line) {
+static std::optional<sf::Vector2f> getCollisionVector(const Car& car, sf::Line line) {
   bool collided = false;
 
   sf::Vector2f collisionVector;
@@ -68,6 +66,34 @@ std::optional<sf::Vector2f> getCollisionVector(const Car& car, sf::Line line) {
   return std::nullopt;
 }
 
+static std::optional<sf::Vector2f> carIntersectsGhost(const Car& car, const Ghost& ghost) {
+  // Generate points since SFML doesn't know how to do it...
+  const auto& shape = ghost.getCurrentState().shape;
+  const auto transform = shape.getTransform();
+  const sf::Vector2f points[4] = {
+    transform.transformPoint(shape.getPoint(0)),
+    transform.transformPoint(shape.getPoint(1)),
+    transform.transformPoint(shape.getPoint(2)),
+    transform.transformPoint(shape.getPoint(3))
+  };
+
+  bool collided = false;
+  sf::Vector2f collisionVector { 1e8f, 1e8f };
+
+  for (int i = 1; i <= 4; i++) {
+    auto opt = getCollisionVector(car, { points[i-1], points[i%4] });
+    if (opt and getMagnitude(opt.value()) < getMagnitude(collisionVector)) {
+      collided = true;
+      collisionVector = opt.value();
+    }
+  }
+
+  if (collided) return collisionVector;
+  return std::nullopt;
+}
+
+namespace physics {
+
 void resolveCollisions(Game& game) {
   for (size_t checks = 0; checks < COLLISION_CHECKS_MAX; checks++) {
     bool collided = false;
@@ -80,7 +106,6 @@ void resolveCollisions(Game& game) {
         collided = true;
 
         const auto collisionVector = collisionVectorOption.value();
-
         if (getMagnitude(minimumCollisionVector) >
             getMagnitude(collisionVector)) {
 
@@ -89,9 +114,33 @@ void resolveCollisions(Game& game) {
       }
     }
 
+
     if (!collided) break;
     game.car.resolveCollision(to_vector2f64(minimumCollisionVector));
   }
+
+  // Ghosts
+  size_t curSize = game.ghosts.size();
+  for (int i = static_cast<int>(game.ghosts.size() - 1); i >= 0; i--) {
+    auto& ghost = game.ghosts[i];
+    const auto collisionVectorOption = carIntersectsGhost(game.car, ghost);
+    if (collisionVectorOption) {
+      const auto collisionVector = collisionVectorOption.value();
+
+      game.car.move(collisionVector);
+
+      const auto ghostVel = ghost.getCurrentState().rigidbody.linearVelocity;
+      const auto deltaVel = ghostVel - game.car.rigidbody.linearVelocity;
+      game.car.rigidbody.applyPointLinearVelocity(1.5 * deltaVel);
+
+      game.newGhosts.push_back(std::move(ghost));
+
+      curSize--;
+      game.ghosts[i] = std::move(game.ghosts[curSize]);
+    }
+  }
+
+  game.ghosts.resize(curSize);
 }
 
 }

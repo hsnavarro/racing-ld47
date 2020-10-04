@@ -37,6 +37,7 @@ public:
   void tireTrackEmission();
 
   void setPosition(sf::Vector2f);
+  void move(sf::Vector2f);
 
 public:
   Rigidbody rigidbody;

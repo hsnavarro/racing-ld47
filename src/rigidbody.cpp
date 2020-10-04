@@ -23,6 +23,8 @@ Rigidbody::Rigidbody(sf::Vector2<f64> _position,
 void Rigidbody::update(f64 deltaTime,
                        f64 linearAcceleration,
                        f64 deltaAngularVelocity) {
+
+
   // rotation
   angularVelocity -= kAngularDrag * angularVelocity * deltaTime;
   if (std::abs(angularVelocity) < std::abs(deltaAngularVelocity)) angularVelocity = 0.0;

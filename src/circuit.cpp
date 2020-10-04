@@ -160,8 +160,12 @@ void Circuit::update(float) {
 
   if (carIntersectsLine(game.car, checkpoints[currentCheckpoint])) {
     currentCheckpoint++;
-    if(currentCheckpoint == 1 and game.ghosts.size() >= 1) {
-      game.ghosts.back().activateRendering();
+    if(currentCheckpoint == 1) {
+      for (auto& ghost : game.newGhosts) {
+        ghost.activateRendering();
+        game.ghosts.push_back(std::move(ghost));
+      }
+      game.newGhosts.clear();
     }
 
     if (currentCheckpoint == checkpoints.size()) {

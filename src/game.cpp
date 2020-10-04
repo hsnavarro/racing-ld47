@@ -9,8 +9,7 @@
 
 Game::Game() :
     car { INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION, *this },
-    circuit { *this },
-    currentGhost { *this }
+    circuit { *this }
 {
 
   sf::ContextSettings settings;
@@ -44,6 +43,8 @@ Game::Game() :
   circuit.setLapTimeLimit(50.0f);
 
   circuit.startRace();
+
+  placeCamera();
 }
 
 void Game::update() {
@@ -63,14 +64,14 @@ void Game::update() {
   }
 
   car.updateParticles(frameDuration);
-  currentGhost.addState();
+  currentGhost.addState(*this);
 }
 
 void Game::render() {
   window.clear();
 
   circuit.render();
-  for(auto& ghost : ghosts) ghost.render();
+  for(auto& ghost : ghosts) ghost.render(window);
   car.render();
 
   // UI
@@ -105,8 +106,9 @@ void Game::placeCamera() {
   camera.setCenter(to_vector2f(car.rigidbody.position));
 
   //TODO(Naum): add sigmoid
-  float zoomValue = static_cast<float>(0.002 * getMagnitude(car.rigidbody.linearVelocity) + 0.5);
-  camera.setSize(zoomValue*SCREEN_SIZE);
+  float targetZoom = static_cast<float>(0.002 * getMagnitude(car.rigidbody.linearVelocity) + 0.5);
+  currentZoom = lerp(currentZoom, targetZoom, 0.2f);
+  camera.setSize(currentZoom * SCREEN_SIZE);
 }
 
 void Game::handleEvents() {
@@ -121,34 +123,40 @@ void Game::handleEvents() {
       switch (event.key.code) {
         case sf::Keyboard::W:
           car.goForward = keepActive;
-          break;
+        break;
 
         case sf::Keyboard::S:
           car.goReverse = keepActive;
-          break;
+        break;
 
         case sf::Keyboard::A:
           car.turnLeft = keepActive;
-          break;
+        break;
 
         case sf::Keyboard::D:
           car.turnRight = keepActive;
-          break;
+        break;
 
         case sf::Keyboard::Space:
           car.isDriftActive = keepActive;
-          break;
+        break;
 
         // Todo(naum): remove on release
         case sf::Keyboard::Escape:
           window.close();
-          break;
+        break;
 
         case sf::Keyboard::J:
           car.rigidbody.applyPointAngularVelocity(10.0f);
+        break;
+
+        case sf::Keyboard::R:
+          circuit.startRace();
+          ghosts.clear();
+        break;
 
         default:
-          break;
+        break;
       }
     }
   }
@@ -165,6 +173,6 @@ void Game::completeLap() {
   lastLapTime = lapTimeTaken;
 
   currentGhost.completeLap(lapTimeTaken);
-  if(lapTimeTaken <= circuit.lapTimeLimit) ghosts.push_back(currentGhost);
+  if(lapTimeTaken <= circuit.lapTimeLimit) newGhosts.push_back(currentGhost);
   currentGhost.clear();
 }

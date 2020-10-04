@@ -19,10 +19,12 @@ public:
   f32  getTime() const;
   void completeLap();
 
+public:
   sf::RenderWindow window;
   sf::Font font;
   sf::View camera;
   sf::View ui;
+  float currentZoom = 10.0f;
 
   sf::Clock totalTime;
   sf::Clock clock;
@@ -34,4 +36,5 @@ public:
 
   Ghost currentGhost;
   std::vector<Ghost> ghosts;
+  std::vector<Ghost> newGhosts;
 };

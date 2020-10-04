@@ -15,12 +15,6 @@ bool carIntersectsLine(const Car&, sf::Line);
 
 namespace physics {
 
-std::optional<sf::Vector2f> getCollisionVector(
-  const Car& car,
-  sf::Line line
-);
-
 void resolveCollisions(Game&);
 
 };
-

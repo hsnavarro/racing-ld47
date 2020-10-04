@@ -4,12 +4,12 @@
 
 #include <iostream>
 
-Ghost::Ghost(Game& _game) : game{ _game } {
+Ghost::Ghost() {
   timeActive.restart();
 };
 
-void Ghost::addState() {
-  Car& car = game.car;
+void Ghost::addState(const Game& game) {
+  const Car& car = game.car;
   float currentLapTime = game.lapTime.getElapsedTime().asSeconds();
 
   lastStates.push_back({ car.rigidbody, car.shape, currentLapTime });
@@ -24,7 +24,7 @@ void applyTransformation(sf::RectangleShape& shape, sf::Vector2<f64>& position, 
   shape.setRotation(getRotation(to_vector2f(direction)));
 }
 
-CarState Ghost::interpolateStates(CarState& currentFrame, CarState& nextFrame, f64 interpolationTime) {
+CarState Ghost::interpolateStates(CarState& currentFrame, CarState& nextFrame, f64 interpolationTime) const {
 
   f64 interpolationRatio = (interpolationTime - currentFrame.time) / (nextFrame.time - currentFrame.time);
 
@@ -49,7 +49,7 @@ CarState Ghost::interpolateStates(CarState& currentFrame, CarState& nextFrame, f
 
 enum Direction { FUTURE, PAST };
 
-CarState predictState(CarState& currentState, f64 deltaTime, Direction direction) {
+static CarState predictState(const CarState& currentState, f64 deltaTime, Direction direction) {
 
   f64 multiplier = direction == FUTURE ? 1.0 : -1.0;
 
@@ -71,12 +71,12 @@ CarState predictState(CarState& currentState, f64 deltaTime, Direction direction
   return statePredicted;
 }
 
-CarState Ghost::getState(float lapTime) {
+CarState Ghost::getState(float lapTime) const {
 
   int futureFrameIndex = (int)lastStates.size();
 
   for (int i = 0; i < (int)lastStates.size(); i++) {
-    CarState& state = lastStates[i];
+    const CarState& state = lastStates[i];
 
     if (state.time > lapTime) {
       futureFrameIndex = i;
@@ -124,13 +124,18 @@ void Ghost::activateRendering() {
   timeActive.restart();
 }
 
-void Ghost::render() {
+void Ghost::render(sf::RenderWindow& window) {
   if (!isRendered) return;
 
+  CarState state = getCurrentState();
+
+  window.draw(state.shape);
+}
+
+CarState Ghost::getCurrentState() const {
   float totalTime = timeActive.getElapsedTime().asSeconds();
-  float lapTime = totalTime - floor(totalTime / timeToCompleteLap) * timeToCompleteLap;
+  float lapTime = 0.0f;
+  if (timeToCompleteLap > EPS) lapTime = totalTime - floor(totalTime / timeToCompleteLap) * timeToCompleteLap;
 
-  CarState state = getState(lapTime);
-
-  game.window.draw(state.shape);
+  return getState(lapTime);
 }
