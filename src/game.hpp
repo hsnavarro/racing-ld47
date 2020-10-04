@@ -13,12 +13,15 @@ public:
   void update();
   void render();
   void handleEvents();
+  void placeCamera();
 
   f32  getTime() const;
   void completeLap();
 
   sf::RenderWindow window;
   sf::Font font;
+  sf::View camera;
+  sf::View ui;
 
   sf::Clock totalTime;
   sf::Clock clock;

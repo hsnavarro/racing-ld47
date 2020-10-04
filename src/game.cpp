@@ -16,6 +16,16 @@ Game::Game() :
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
+  sf::View cameraView;
+  sf::View uiView;
+  //TODO: encapsulate UI stuff
+  uiView.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
+  uiView.setCenter(SCREEN_WIDTH+SCREEN_WIDTH/2,SCREEN_HEIGHT+SCREEN_HEIGHT/2);
+  cameraView.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
+  cameraView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+  cameraView.zoom(0.5f);
+  camera = cameraView;
+
   if (!font.loadFromFile("assets/fonts/arial.ttf")) {
     printf("fail to load font!\n");
   }
@@ -80,11 +90,20 @@ void Game::render() {
   // UI
   char text[10];
   snprintf(text, 10, "%.2f", lapTime.getElapsedTime().asSeconds());
+
+  placeCamera();
+
+  window.setView(ui);
   sf::Text lapTimeText(text, font, 30);
   lapTimeText.setPosition(10.0f, 10.0f);
   window.draw(lapTimeText);
 
+  window.setView(camera);
   window.display();
+}
+
+void Game::placeCamera() {
+  camera.setCenter(car.rigidbody.position);
 }
 
 void Game::handleEvents() {
