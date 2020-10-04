@@ -28,8 +28,13 @@ bool Circuit::loadFromFile(const std::string& path) {
 
   defer(fclose(file));
 
+  size_t minTime;
+  fscanf_s(file, "%zu", &minTime);
+  lapTimeLimit = static_cast<float>(minTime);
+
+
   size_t h, w;
-  fscanf_s(file, "%zu%zu", &h, &w);
+  fscanf_s(file, "%zu %zu", &h, &w);
 
   std::vector<std::vector<Tile>> newTiles;
 

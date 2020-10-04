@@ -1,10 +1,11 @@
 #include "game.hpp"
 
+#include <cstdio>
+
 #include "sfml.hpp"
 #include "physics.hpp"
 #include "algebra.hpp"
-
-#include <cstdio>
+#include "utils.hpp"
 
 Game::Game() :
     car { INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION, *this },
@@ -27,7 +28,7 @@ Game::Game() :
   camera = cameraView;
   ui = uiView;
 
-  if (!font.loadFromFile("assets/fonts/arial.ttf")) {
+  if (!font.loadFromFile("assets/fonts/Monocons.ttf")) {
     printf("fail to load font!\n");
   }
 
@@ -37,8 +38,8 @@ Game::Game() :
 
   // Test
   Circuit::loadAtlas();
-  circuit.loadFromFile("assets/circuits/test.cir");
-  //circuit.loadFromFile("assets/circuits/small.cir");
+  //circuit.loadFromFile("assets/circuits/test.cir");
+  circuit.loadFromFile("assets/circuits/small.cir");
   //circuit.loadFromFile("assets/circuits/cross.cir");
   circuit.setLapTimeLimit(50.0f);
 
@@ -73,21 +74,24 @@ void Game::render() {
   car.render();
 
   // UI
-  char text[10];
+  char text[30];
 
   placeCamera();
 
   window.setView(ui);
 
-  snprintf(text, 10, "%.2f", lapTime.getElapsedTime().asSeconds());
-  sf::Text lapTimeText(text, font, 30);
-  lapTimeText.setPosition(10.0f, 10.0f);
-  window.draw(lapTimeText);
+  const auto maximumSize = [this] {
+    sf::Text tmp("000.00 s", font, 20);
+    return tmp.getLocalBounds().width;
+  }();
 
-  snprintf(text, 10, "%.2f p/s", getMagnitude(car.rigidbody.linearVelocity));
-  sf::Text speedText(text, font, 30);
-  speedText.setPosition(SCREEN_WIDTH-120, SCREEN_HEIGHT-40);
-  window.draw(speedText);
+  snprintf(text, 30, "%.2f s", lapTime.getElapsedTime().asSeconds());
+  sf::Text lapTimeText(text, font, 20);
+  drawTextRight(lapTimeText, maximumSize + 5.0f, 10.0f, window);
+
+  snprintf(text, 30, "%.2f px/s", getMagnitude(car.rigidbody.linearVelocity));
+  sf::Text speedText(text, font, 20);
+  drawTextRight(speedText, SCREEN_WIDTH - 10.0f, SCREEN_HEIGHT - 40.0f, window);
 
   window.setView(camera);
   window.display();
@@ -156,5 +160,5 @@ void Game::completeLap() {
 
   currentGhost.completeLap(lapTimeTaken);
   if(lapTimeTaken <= circuit.lapTimeLimit) ghosts.push_back(currentGhost);
-  currentGhost.reset();
+  currentGhost.clear();
 }

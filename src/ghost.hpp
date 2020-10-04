@@ -22,8 +22,9 @@ public:
 
   void activateRendering();
   void render();
-
   void reset();
+
+  void clear();
   void completeLap(float);
 
   std::vector<CarState> lastStates;

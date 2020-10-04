@@ -73,6 +73,7 @@ void resolveCollisions(Game& game) {
     bool collided = false;
     sf::Vector2 minimumCollisionVector { 1e8f, 1e8f };
 
+    // Walls
     for (auto wall : game.circuit.walls) {
       const auto collisionVectorOption = getCollisionVector(game.car, wall);
       if (collisionVectorOption) {
@@ -85,7 +86,6 @@ void resolveCollisions(Game& game) {
 
           minimumCollisionVector = collisionVector;
         }
-
       }
     }
 

@@ -64,10 +64,10 @@ void Car::updateParticles(float deltaTime) {
 }
 
 void Car::render() {
-  game.window.draw(shape);
-  smokeParticles.render();
   leftTireTracks.render();
   rightTireTracks.render();
+  game.window.draw(shape);
+  smokeParticles.render();
 
   // debug
   drawLine(
@@ -106,7 +106,7 @@ void Car::smokeEmission() {
 void Car::tireTrackEmission() {
   const auto angle = to_deg64(acos(dotProduct(getUnitVector(rigidbody.direction), getUnitVector(rigidbody.linearVelocity))));
 
-  if (!goReverse and angle < 60.0f) return;
+  if (!goReverse and (angle < 60.0 or getMagnitude(rigidbody.linearVelocity) < 40.0)) return;
 
   const auto transform = shape.getTransform();
 

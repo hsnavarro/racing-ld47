@@ -108,6 +108,10 @@ CarState Ghost::getState(float lapTime) {
 
 void Ghost::reset() {
   timeActive.restart();
+}
+
+void Ghost::clear() {
+  timeActive.restart();
   lastStates.clear();
 }
 
