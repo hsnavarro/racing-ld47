@@ -317,7 +317,6 @@ void Circuit::loadAtlas() {
     return;
   }
 #else
-  file = fopen
   file = fopen("assets/circuits/atlas.map", "r");
   if (!file) {
     printf("Could not load atlas map\n");
