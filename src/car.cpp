@@ -49,6 +49,17 @@ void Car::update(float deltaTime) {
     } else deltaAngularVelocity = angularVelocity;
   }
 
+  if (IS_DRIFTING_BURST_ENABLED) {
+    bool wasDrifting = isDrifting;
+    updateDriftingStatus();
+    if (!isDrifting and wasDrifting) {
+      if (driftTime.getElapsedTime().asSeconds() > DRIFT_BURST_TIME_THRESHOLD) {
+        auto const unit = getUnitVector(rigidbody.direction);
+        rigidbody.applyPointLinearVelocity(BURST_FORCE*unit);
+      }
+    }
+  }
+
   rigidbody.update(deltaTime, accelerationValue, deltaAngularVelocity);
 
   shape.setPosition(to_vector2f(rigidbody.position));
@@ -113,10 +124,18 @@ void Car::smokeEmission() {
   smokeParticles.emissionFromLine(bottomLeftPoint, bottomRightPoint, -to_vector2f(rigidbody.direction), emissionRate);
 }
 
-void Car::tireTrackEmission() {
+void Car::updateDriftingStatus() {
+  const bool wasDrifting = isDrifting;
   const auto angle = to_deg64(acos(dotProduct(getUnitVector(rigidbody.direction), getUnitVector(rigidbody.linearVelocity))));
+  isDrifting = angle > 60.0 and getMagnitude(rigidbody.linearVelocity) > 40.0 ;
 
-  if (!goReverse and (angle < 60.0 or getMagnitude(rigidbody.linearVelocity) < 40.0)) return;
+  if (isDrifting and !wasDrifting) {
+    driftTime.restart();
+  }
+}
+
+void Car::tireTrackEmission() {
+  if (!goReverse and !isDrifting) return;
 
   const auto transform = shape.getTransform();
 

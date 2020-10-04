@@ -29,6 +29,7 @@ public:
 
   void update(float);
   void updateParticles(float);
+  void updateDriftingStatus();
   void render(const sf::View& view);
   void renderIcon(const sf::View& view);
 
@@ -53,6 +54,8 @@ public:
   bool goForward = false;
   bool goReverse = false;
   bool isDriftActive = false;
+  bool isDrifting = false;
+  sf::Clock driftTime;
 
   // These are constants!
   float engineAcceleration = CAR_ENGINE_ACCELERATION;
