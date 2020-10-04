@@ -31,5 +31,6 @@ public:
   Car car;
   Circuit circuit;
 
+  Ghost currentGhost;
   std::vector<Ghost> ghosts;
 };

@@ -8,7 +8,8 @@
 
 Game::Game() :
     car { INITIAL_CAR_POSITION, INITIAL_CAR_DIRECTION, *this },
-    circuit { *this }
+    circuit { *this },
+    currentGhost { *this }
 {
 
   sf::ContextSettings settings;
@@ -33,8 +34,6 @@ Game::Game() :
   clock.restart();
   totalTime.restart();
   lapTime.restart();
-
-  ghosts.push_back(Ghost(*this));
 
   // Test
   Circuit::loadAtlas();
@@ -63,7 +62,7 @@ void Game::update() {
   }
 
   car.updateParticles(frameDuration);
-  ghosts.back().addState();
+  currentGhost.addState();
 }
 
 void Game::render() {
@@ -155,6 +154,7 @@ void Game::completeLap() {
   circuit.resetCheckpoints();
   float lapTimeTaken = lapTime.restart().asSeconds();
 
-  if(lapTimeTaken <= circuit.lapTimeLimit) ghosts.back().completeLap(lapTimeTaken);
-  else ghosts.back().reset();
+  currentGhost.completeLap(lapTimeTaken);
+  if(lapTimeTaken <= circuit.lapTimeLimit) ghosts.push_back(currentGhost);
+  currentGhost.reset();
 }

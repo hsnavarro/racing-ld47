@@ -113,7 +113,6 @@ void Ghost::reset() {
 
 void Ghost::completeLap(float timeTaken) {
   timeToCompleteLap = timeTaken;
-  game.ghosts.push_back(Ghost(game));
 }
 
 void Ghost::activateRendering() {
