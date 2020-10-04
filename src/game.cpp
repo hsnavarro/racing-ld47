@@ -58,6 +58,12 @@ Game::Game() :
     circuits.push_back(circuit);
   }
 
+  {
+    Circuit circuit {*this};
+    circuit.loadFromFile("assets/circuits/progress-2.cir");
+    circuits.push_back(circuit);
+  }
+
   currentCircuit = &circuits[0];
   currentCircuit->startRace();
 
@@ -99,7 +105,8 @@ void Game::render() {
   for(auto& ghost : ghosts) ghost.render(window);
   car.render(camera);
 
-  currentCircuit->render(minimap);
+  if (currentCircuit)
+    currentCircuit->render(minimap);
   car.renderIcon(minimap);
 
   // UI
@@ -197,8 +204,10 @@ void Game::handleEvents() {
         break;
 
         case sf::Keyboard::R:
-          currentCircuit = &circuits[0];
-          currentCircuit->startRace();
+          if (currentCircuit) {
+            currentCircuit = &circuits[0];
+            currentCircuit->startRace();
+          }
           ghosts.clear();
         break;
 
