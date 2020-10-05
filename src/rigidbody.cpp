@@ -84,3 +84,10 @@ void Rigidbody::resolveCollision(sf::Vector2<f64> collisionVector) {
 bool Rigidbody::isGoingForward() const {
   return dotProduct(linearVelocity, direction) >= 0;
 }
+
+void Rigidbody::reset() {
+  position = { 0.0, 0.0 };
+  direction = { 0.0, -1.0 };
+  linearVelocity = { 0.0, 0.0 };
+  angularVelocity = 0.0;
+}

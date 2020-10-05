@@ -36,10 +36,10 @@ and end in different positions)
     - [x] Car-Walls
     - [x] Car-Shadows (Naum)
 
-- [ ] Circuit
+- [x] Circuit
   - [x] Walls
   - [x] Checkpoints
-  - [ ] Expansion
+  - [x] Expansion
 
 - [x] Particle system
   - [x] Smoke/dirt
@@ -52,10 +52,6 @@ and end in different positions)
 - [x] Camera
   - [x] Follow player car
 
-- [ ] Minimap
-- [ ] Drift
-  - [ ] Burst?
-
 - [ ] Graphics
   - [ ] Car
   - [ ] Circuits
@@ -66,6 +62,10 @@ and end in different positions)
   - [ ] Collision
 
 # Extra ideas
+
+- [x] Minimap
+- [x] Drift
+  - [x] Burst?
 
 - Nitro
 - Rollback: go back in time x seconds

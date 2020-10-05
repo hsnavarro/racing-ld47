@@ -179,7 +179,10 @@ void Car::tireTrackEmission() {
 }
 
 void Car::setPosition(sf::Vector2f pos) {
+  rigidbody.reset();
+
   shape.setPosition(pos);
+  shape.setRotation(getRotation(to_vector2f(rigidbody.direction)));
   rigidbody.position = to_vector2f64(pos);
 }
 

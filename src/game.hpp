@@ -11,30 +11,42 @@
 
 class Game {
 public:
-  Game();
-
-  void setup();
-
-  void update();
-  void render();
-  void handleEvents();
-  void placeCamera();
-
-  f32  getTime() const;
-  void completeLap();
+  enum class State {
+    MAIN_MENU,
+    RACING,
+    END_GAME
+  };
 
 public:
-  Audio backgroundMusic;
+  Game();
+
+  void run();
+  void setup();
+
+  void setupRacing();
+  void updateRacing();
+  void renderRacing();
+
+  void handleEvents();
+  void handleEventRacing(sf::Event&);
+
+  void completeLap();
+
+  void placeCamera();
+
+public:
+  State state = State::MAIN_MENU;
+  bool onCountdown;
+
   sf::RenderWindow window;
-  sf::Font font;
   UI ui;
+
+  Audio backgroundMusic;
 
   sf::View camera;
   float currentZoom = 10.0f;
 
-
-  sf::Clock totalTime;
-  sf::Clock clock;
+  sf::Clock frameClock;
   sf::Clock lapTime;
   float lastLapTime = -1.0f;
 

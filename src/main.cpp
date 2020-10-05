@@ -6,11 +6,5 @@
 
 int main() {
   Game game;
-
-  game.setup();
-  while (game.window.isOpen()) {
-    game.handleEvents();
-    game.update();
-    game.render();
-  }
+  game.run();
 }

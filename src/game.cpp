@@ -9,6 +9,36 @@
 
 Game::Game() : backgroundMusic { BACKGROUND_MUSIC_FILE }, ui { *this }, car { *this } {}
 
+void Game::run() {
+  setup();
+  while (window.isOpen()) {
+    switch (state) {
+      case State::MAIN_MENU: {
+        printf("main menu!\n");
+        setupRacing();
+        state = State::RACING;
+      }
+      break;
+
+      case State::RACING: {
+        handleEvents();
+        updateRacing();
+        renderRacing();
+      }
+      break;
+
+      case State::END_GAME: {
+        handleEvents();
+        //updateRacing();
+        renderRacing();
+      }
+      break;
+    }
+
+    window.display();
+  }
+}
+
 void Game::setup() {
   sf::ContextSettings settings;
   settings.antialiasingLevel = ANTI_ALIASING_LEVEL;
@@ -21,12 +51,7 @@ void Game::setup() {
   camera.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
   camera.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
 
-  if (!font.loadFromFile("assets/fonts/Monocons.ttf")) {
-    printf("fail to load font!\n");
-  }
-
-  clock.restart();
-  totalTime.restart();
+  frameClock.restart();
   lapTime.restart();
 
   // Circuits
@@ -59,35 +84,46 @@ void Game::setup() {
     circuit.loadFromFile("assets/circuits/progress-2.cir");
     circuits.push_back(circuit);
   }
+}
 
+void Game::setupRacing() {
   currentCircuit = &circuits[0];
   currentCircuit->startRace();
-
   placeCamera();
+  ghosts.clear();
+  onCountdown = true;
+
+  ui.setup();
 }
 
-void Game::update() {
-  f32 frameDuration = clock.restart().asSeconds();
+void Game::updateRacing() {
+  ui.update();
 
-  float displayDeltaTime = frameDuration;
+  if (onCountdown) {
+    lapTime.restart();
+  } else {
+    f32 frameDuration = frameClock.restart().asSeconds();
 
-  while (displayDeltaTime > 0.0) {
-    float deltaTime = std::min(displayDeltaTime, SIMULATION_DELTA_TIME);
+    float displayDeltaTime = frameDuration;
 
-    car.update(deltaTime);
+    while (displayDeltaTime > 0.0) {
+      float deltaTime = std::min(displayDeltaTime, SIMULATION_DELTA_TIME);
 
-    physics::resolveCollisions(*this);
-    if (currentCircuit)
-      currentCircuit->update(deltaTime);
+      car.update(deltaTime);
 
-    displayDeltaTime -= deltaTime;
+      physics::resolveCollisions(*this);
+      if (currentCircuit)
+        currentCircuit->update(deltaTime);
+
+      displayDeltaTime -= deltaTime;
+    }
+
+    car.updateParticles(frameDuration);
+    currentGhost.addState(*this);
   }
-
-  car.updateParticles(frameDuration);
-  currentGhost.addState(*this);
 }
 
-void Game::render() {
+void Game::renderRacing() {
   window.clear();
 
   // Circuit
@@ -102,87 +138,71 @@ void Game::render() {
   for(auto& ghost : ghosts) ghost.render(window);
   car.render(camera);
 
-  //
-  ui.render();
-
-  //
   placeCamera();
+  ui.render();
   window.setView(camera);
-  window.display();
 }
 
-void Game::placeCamera() {
-  camera.setCenter(to_vector2f(car.rigidbody.position));
+void Game::handleEventRacing(sf::Event& event) {
+  if (event.type == sf::Event::KeyPressed or event.type == sf::Event::KeyReleased) {
+    bool keepActive = (event.type == sf::Event::KeyPressed);
 
-  if(IS_VARIABLE_ZOOM_ACTIVE) {
-    //TODO(Naum): add sigmoid
-    float targetZoom = static_cast<float>(0.002 * getMagnitude(car.rigidbody.linearVelocity) + 0.5);
-    currentZoom = lerp(currentZoom, targetZoom, 0.2f);
-  } else currentZoom = 0.5;
+    switch (event.key.code) {
+      case sf::Keyboard::W:
+        car.goForward = keepActive;
+      break;
 
-  camera.setSize(currentZoom * SCREEN_SIZE);
-}
+      case sf::Keyboard::S:
+        car.goReverse = keepActive;
+      break;
 
-void Game::handleEvents() {
-  sf::Event event;
-  sf::Vector2f size;
-  while (window.pollEvent(event)) {
-    if (event.type == sf::Event::Closed) window.close();
+      case sf::Keyboard::A:
+        car.turnLeft = keepActive;
+      break;
 
-    if (event.type == sf::Event::KeyPressed or event.type == sf::Event::KeyReleased) {
-      bool keepActive = (event.type == sf::Event::KeyPressed);
+      case sf::Keyboard::D:
+        car.turnRight = keepActive;
+      break;
 
-      switch (event.key.code) {
-        case sf::Keyboard::W:
-          car.goForward = keepActive;
-        break;
+      case sf::Keyboard::Space:
+        car.isHandBrakeActive = keepActive;
+      break;
 
-        case sf::Keyboard::S:
-          car.goReverse = keepActive;
-        break;
+      case sf::Keyboard::J:
+        car.rigidbody.applyPointAngularVelocity(10.0f);
+      break;
 
-        case sf::Keyboard::A:
-          car.turnLeft = keepActive;
-        break;
+      case sf::Keyboard::K:
+        car.rigidbody.applyPointAngularVelocity(-10.0f);
+      break;
 
-        case sf::Keyboard::D:
-          car.turnRight = keepActive;
-        break;
+      case sf::Keyboard::R:
+        setupRacing();
+      break;
 
-        case sf::Keyboard::Space:
-          car.isHandBrakeActive = keepActive;
-        break;
-
-        // Todo(naum): remove on release
-        case sf::Keyboard::Escape:
-          window.close();
-        break;
-
-        case sf::Keyboard::J:
-          car.rigidbody.applyPointAngularVelocity(10.0f);
-        break;
-
-        case sf::Keyboard::K:
-          car.rigidbody.applyPointAngularVelocity(-10.0f);
-        break;
-
-        case sf::Keyboard::R:
-          if (currentCircuit) {
-            currentCircuit = &circuits[0];
-            currentCircuit->startRace();
-          }
-          ghosts.clear();
-        break;
-
-        default:
-        break;
-      }
+      default:
+      break;
     }
   }
 }
 
-f32 Game::getTime() const {
-  return totalTime.getElapsedTime().asSeconds();
+void Game::handleEvents() {
+  sf::Event event;
+  while (window.pollEvent(event)) {
+    if (event.type == sf::Event::Closed) window.close();
+
+    if (event.type == sf::Event::KeyPressed or event.type == sf::Event::KeyReleased) {
+      switch (event.key.code) {
+        // Todo(naum): remove on release
+        case sf::Keyboard::Escape:
+          window.close();
+        break;
+      }
+    }
+
+    if (state == State::RACING and !onCountdown)
+      handleEventRacing(event);
+  }
 }
 
 void Game::completeLap() {
@@ -200,7 +220,7 @@ void Game::completeLap() {
 
     currentCircuitIndex++;
     if (currentCircuitIndex == circuits.size()) {
-      printf("win!\n");
+      state = State::END_GAME;
       currentCircuit = nullptr;
     } else {
       currentCircuit = &circuits[currentCircuitIndex];
@@ -208,4 +228,15 @@ void Game::completeLap() {
   }
 
   currentGhost.clear();
+}
+
+void Game::placeCamera() {
+  camera.setCenter(to_vector2f(car.rigidbody.position));
+
+  if (IS_VARIABLE_ZOOM_ACTIVE) {
+    float targetZoom = static_cast<float>(0.002 * getMagnitude(car.rigidbody.linearVelocity) + 0.5);
+    currentZoom = lerp(currentZoom, targetZoom, 0.2f);
+  } else currentZoom = 0.5;
+
+  camera.setSize(currentZoom * SCREEN_SIZE);
 }
