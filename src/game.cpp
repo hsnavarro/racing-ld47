@@ -159,7 +159,8 @@ void Game::setupRacing() {
 }
 
 void Game::updateRacing() {
-
+  audioSystem.backgroundMusic.setVolume(70.f);
+  audioSystem.backgroundMusic.play();
   ui.update();
 
   if (onCountdown) {

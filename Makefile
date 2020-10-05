@@ -11,7 +11,7 @@ CXXFLAGS = -Wall \
 
 OUT_DIR = build
 
-OUT_EXE = circuit-escape-ld47
+OUT_EXE = circuit-escape-ld47.out
 
 CPP_FILES = $(wildcard ./src/*.cpp)
 
