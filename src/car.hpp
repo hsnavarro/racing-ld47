@@ -59,7 +59,7 @@ public:
   sf::CircleShape icon;
   Game& game;
 
-  ParticleSystem smokeParticles, leftTireTracks, rightTireTracks;
+  ParticleSystem leftSmokeParticles, rightSmokeParticles, leftTireTracks, rightTireTracks;
 
   f64 collisionVelocity;
 

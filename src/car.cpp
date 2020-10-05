@@ -10,15 +10,16 @@
 Car::Car(Game& game_) :
   rigidbody{ CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
   game{ game_ },
-  smokeParticles{ ParticleType::SMOKE, game_ },
+  leftSmokeParticles{ ParticleType::SMOKE, game_ },
+  rightSmokeParticles{ ParticleType::SMOKE, game_ },
   leftTireTracks{ ParticleType::TIRE_TRACK , game_ },
   rightTireTracks{ ParticleType::TIRE_TRACK, game_ }
 {
 
-  texture.loadFromFile("assets/gfx/car.png");
+  texture.loadFromFile("assets/gfx/car3.png");
   texture.setSmooth(true);
 
-  ghostTexture.loadFromFile("assets/gfx/ghost.png");
+  ghostTexture.loadFromFile("assets/gfx/ghost3.png");
   ghostTexture.setSmooth(true);
 
   shape.setTexture(&texture);
@@ -128,7 +129,8 @@ void Car::update(float deltaTime) {
 }
 
 void Car::updateParticles(float deltaTime) {
-  smokeParticles.update(deltaTime);
+  leftSmokeParticles.update(deltaTime);
+  rightSmokeParticles.update(deltaTime);
 
   smokeEmission();
   tireTrackEmission();
@@ -137,7 +139,8 @@ void Car::updateParticles(float deltaTime) {
 void Car::render(const sf::View& view) {
   game.window.setView(view);
   game.window.draw(shape);
-  smokeParticles.render();
+  leftSmokeParticles.render();
+  rightSmokeParticles.render();
 
   // debug
   /*
@@ -178,7 +181,9 @@ void Car::smokeEmission() {
 
   const float emissionRate = lerp(0.06f, 0.4f, getMagnitude(to_vector2f(rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
 
-  smokeParticles.emissionFromLine(bottomLeftPoint, bottomRightPoint, -to_vector2f(rigidbody.direction), emissionRate);
+  const sf::Vector2f direction = bottomRightPoint - bottomLeftPoint;
+  leftSmokeParticles.emissionFromPoint(bottomLeftPoint + direction * 0.3f, -to_vector2f(rigidbody.direction), emissionRate);
+  rightSmokeParticles.emissionFromPoint(bottomRightPoint - direction * 0.3f , -to_vector2f(rigidbody.direction), emissionRate);
 }
 
 void Car::updateDriftingStatus() {
@@ -218,8 +223,10 @@ void Car::tireTrackEmission() {
   const sf::Vector2f bottomLeftPoint = transform.transformPoint(shape.getPoint(3));
   const sf::Vector2f bottomRightPoint = transform.transformPoint(shape.getPoint(2));
 
-  leftTireTracks.emitToTexture(bottomLeftPoint, game.roadTopRenderTexture);
-  rightTireTracks.emitToTexture(bottomRightPoint, game.roadTopRenderTexture);
+  const sf::Vector2f direction = bottomRightPoint - bottomLeftPoint;
+
+  leftTireTracks.emitToTexture(bottomLeftPoint + direction * 0.2f, game.roadTopRenderTexture);
+  rightTireTracks.emitToTexture(bottomRightPoint - direction * 0.2f, game.roadTopRenderTexture);
 }
 
 void Car::setPosition(sf::Vector2f pos) {

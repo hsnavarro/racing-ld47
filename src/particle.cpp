@@ -5,9 +5,11 @@
 Particle::Particle(float _lifeTime, float particleWidth, float particleHeight, ParticleType _type) : type{ _type } , lifeTime{ _lifeTime } {
   if (_type == ParticleType::SMOKE) {
     circleShape.setRadius(particleWidth);
+    circleShape.setOrigin(particleWidth, particleWidth);
     circleShape.setFillColor({ 0, 0, 0, 92 });
   } else {
     rectangleShape.setSize({ particleWidth, particleHeight });
+    rectangleShape.setOrigin(particleWidth * 0.5f, particleHeight * 0.5f);
     rectangleShape.setFillColor({ 0, 0, 0, 128 });
   }
 }
@@ -25,7 +27,7 @@ sf::Shape& Particle::shape() {
 void Particle::setPosition(const sf::Vector2f& position) {
   if (type == ParticleType::SMOKE) {
     const float circleRadius = circleShape.getRadius();
-    circleShape.setOrigin(circleRadius * 0.5f, circleRadius * 0.5f);
+    circleShape.setOrigin(circleRadius, circleRadius);
     circleShape.setPosition(position);
   } else {
     const float rectangleWidth = rectangleShape.getSize().x;
