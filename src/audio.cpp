@@ -11,9 +11,13 @@ Audio::Audio(std::string fileName) {
 }
 
 void Audio::play() {
-  audio.play();
+  if(!isPlaying()) audio.play(); 
 }
 
 void Audio::setVolume(float volume) {
   audio.setVolume(volume);
+}
+
+bool Audio::isPlaying() {
+  return audio.getStatus() == sf::SoundSource::Playing;
 }

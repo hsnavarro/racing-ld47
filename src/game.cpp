@@ -7,32 +7,32 @@
 #include "algebra.hpp"
 #include "utils.hpp"
 
-Game::Game() : backgroundMusic { BACKGROUND_MUSIC_FILE }, ui { *this }, car { *this } {}
+Game::Game() : audioSystem{ *this }, ui{ *this }, car{ *this } {}
 
 void Game::run() {
   setup();
   while (window.isOpen()) {
     switch (state) {
-      case State::MAIN_MENU: {
-        printf("main menu!\n");
-        setupRacing();
-        state = State::RACING;
-      }
-      break;
+    case State::MAIN_MENU: {
+      printf("main menu!\n");
+      setupRacing();
+      state = State::RACING;
+    }
+                         break;
 
-      case State::RACING: {
-        handleEvents();
-        updateRacing();
-        renderRacing();
-      }
-      break;
+    case State::RACING: {
+      handleEvents();
+      updateRacing();
+      renderRacing();
+    }
+                      break;
 
-      case State::END_GAME: {
-        handleEvents();
-        //updateRacing();
-        renderRacing();
-      }
-      break;
+    case State::END_GAME: {
+      handleEvents();
+      //updateRacing();
+      renderRacing();
+    }
+                        break;
     }
 
     window.display();
@@ -45,11 +45,11 @@ void Game::setup() {
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
-  backgroundMusic.setVolume(75.f);
-  //backgroundMusic.play();
+  //audioSystem.backgroundMusic.setVolume(50.f);
+  //audioSystem.backgroundMusic.play();
 
-  camera.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
-  camera.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+  camera.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+  camera.setCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
   frameClock.restart();
   lapTime.restart();
@@ -68,19 +68,19 @@ void Game::setup() {
   */
 
   {
-    Circuit circuit {*this};
+    Circuit circuit{ *this };
     circuit.loadFromFile("assets/circuits/progress-0.cir");
     circuits.push_back(circuit);
   }
 
   {
-    Circuit circuit {*this};
+    Circuit circuit{ *this };
     circuit.loadFromFile("assets/circuits/progress-1.cir");
     circuits.push_back(circuit);
   }
 
   {
-    Circuit circuit {*this};
+    Circuit circuit{ *this };
     circuit.loadFromFile("assets/circuits/progress-2.cir");
     circuits.push_back(circuit);
   }
@@ -135,7 +135,7 @@ void Game::renderRacing() {
   if (currentCircuit)
     currentCircuit->render(camera);
 
-  for(auto& ghost : ghosts) ghost.render(window);
+  for (auto& ghost : ghosts) ghost.render(window);
   car.render(camera);
 
   placeCamera();
@@ -148,39 +148,40 @@ void Game::handleEventRacing(sf::Event& event) {
     bool keepActive = (event.type == sf::Event::KeyPressed);
 
     switch (event.key.code) {
-      case sf::Keyboard::W:
-        car.goForward = keepActive;
+    case sf::Keyboard::W:
+      car.goForward = keepActive;
       break;
 
-      case sf::Keyboard::S:
-        car.goReverse = keepActive;
+    case sf::Keyboard::S:
+      car.goReverse = keepActive;
       break;
 
-      case sf::Keyboard::A:
-        car.turnLeft = keepActive;
+    case sf::Keyboard::A:
+      car.turnLeft = keepActive;
       break;
 
-      case sf::Keyboard::D:
-        car.turnRight = keepActive;
+    case sf::Keyboard::D:
+      car.turnRight = keepActive;
       break;
 
-      case sf::Keyboard::Space:
-        car.isHandBrakeActive = keepActive;
+    case sf::Keyboard::Space:
+      if (!car.isHandBrakeActive) audioSystem.handbrakefx.play();
+      car.isHandBrakeActive = keepActive;
       break;
 
-      case sf::Keyboard::J:
-        car.rigidbody.applyPointAngularVelocity(10.0f);
+    case sf::Keyboard::J:
+      car.rigidbody.applyPointAngularVelocity(10.0f);
       break;
 
-      case sf::Keyboard::K:
-        car.rigidbody.applyPointAngularVelocity(-10.0f);
+    case sf::Keyboard::K:
+      car.rigidbody.applyPointAngularVelocity(-10.0f);
       break;
 
-      case sf::Keyboard::R:
-        setupRacing();
+    case sf::Keyboard::R:
+      setupRacing();
       break;
 
-      default:
+    default:
       break;
     }
   }
@@ -196,6 +197,9 @@ void Game::handleEvents() {
         // Todo(naum): remove on release
         case sf::Keyboard::Escape:
           window.close();
+        break;
+
+        default:
         break;
       }
     }

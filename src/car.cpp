@@ -169,6 +169,8 @@ void Car::tireTrackEmission() {
 
   if (!doTireTrackEmission) return;
 
+  game.audioSystem.slidefx.play();
+
   const auto transform = shape.getTransform();
 
   const sf::Vector2f bottomLeftPoint = transform.transformPoint(shape.getPoint(3));

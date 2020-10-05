@@ -7,7 +7,7 @@
 #include "circuit.hpp"
 #include "ghost.hpp"
 #include "ui.hpp"
-#include "audio.hpp"
+#include "audio-system.hpp"
 
 class Game {
 public:
@@ -38,10 +38,9 @@ public:
   State state = State::MAIN_MENU;
   bool onCountdown;
 
+  AudioSystem audioSystem;
   sf::RenderWindow window;
   UI ui;
-
-  Audio backgroundMusic;
 
   sf::View camera;
   float currentZoom = 10.0f;

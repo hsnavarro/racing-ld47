@@ -2,13 +2,12 @@
 
 #include "sfml.hpp"
 
-const std::string BACKGROUND_MUSIC_FILE = "./assets/music/background-music.wav";
-
 class Audio {
   public:
     Audio(std::string);
     void play();
     void setVolume(float);
+    bool isPlaying();
 
   private:
     sf::SoundBuffer audioBuffer;
