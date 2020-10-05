@@ -7,7 +7,9 @@ AudioSystem::AudioSystem(Game& _game) :
     handbrakefx { HANDBRAKE_FX_FILE }, 
     slidefx { SLIDE_FX_FILE }, 
     collisionfx1 { COLLISION_FX_FILE }, 
-    collisionfx2 { COLLISION_FX2_FILE } {
+    collisionfx2 { COLLISION_FX2_FILE }, 
+    enginefx { ENGINE_FX_FILE }, 
+    engineStartFx { ENGINE_START_FX_FILE } {
 
     //collisionfx  = { { COLLISION_FX_FILE }, { COLLISION_FX2_FILE } };
 }

@@ -33,8 +33,8 @@ void static applySound(Game& game) {
   auto& car = game.car;
 
   if (!car.isHardBraking()) {
-    const float volume = lerp(0.f, 30.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
-    game.audioSystem.slidefx.setVolume(volume);
+    const float slideVolume = lerp(0.f, 30.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+    game.audioSystem.slidefx.setVolume(slideVolume);
     game.audioSystem.slidefx.stop();
   } else {
     game.audioSystem.slidefx.play();
@@ -42,7 +42,7 @@ void static applySound(Game& game) {
 
   if (car.collided and
       car.collisionVelocity > 30.0f) {
-    const float volume = lerp(0.f, 30.f, static_cast<float>(car.collisionVelocity) / CAR_MAX_VELOCITY);
+    const float collisionVolume = lerp(0.f, 30.f, static_cast<float>(car.collisionVelocity) / CAR_MAX_VELOCITY);
 
     std::random_device randomDevice;
     std::mt19937 generator(randomDevice());
@@ -57,15 +57,19 @@ void static applySound(Game& game) {
     */
 
     if (collisionfxIndex == 1) {
-      game.audioSystem.collisionfx1.setVolume(volume);
+      game.audioSystem.collisionfx1.setVolume(collisionVolume);
       game.audioSystem.collisionfx1.play();
     } else {
-      game.audioSystem.collisionfx2.setVolume(volume);
+      game.audioSystem.collisionfx2.setVolume(collisionVolume);
       game.audioSystem.collisionfx2.play();
     }
 
     car.collided = false;
   }
+
+  const float engineVolume = lerp(30.f, 80.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+  game.audioSystem.enginefx.setVolume(engineVolume);
+  game.audioSystem.enginefx.play();
 }
 
 void Car::update(float deltaTime) {
