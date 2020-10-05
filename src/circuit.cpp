@@ -163,6 +163,36 @@ bool Circuit::loadFromFile(const std::string& path) {
   return true;
 }
 
+void Circuit::draw(sf::RenderTarget& renderTarget) {
+  if (tiles.empty()) return;
+
+  /*
+  const auto h = static_cast<int>(tiles.size() * CIRCUIT_TILE_SIZE);
+  const auto w = static_cast<int>(tiles[0].size() * CIRCUIT_TILE_SIZE);
+
+  // Render tiles to texture
+  if (!renderTexture.create(w, h)) {
+    printf("Could not create circuit render texture!\n");
+  }
+  renderTexture.clear(sf::Color::Transparent);
+  */
+
+  for (size_t i = 0; i < tiles.size(); i++) {
+    const auto& row = tiles[i];
+    for (size_t j = 0; j < row.size(); j++) {
+      const auto& tileType = row[j].type;
+
+      auto& tile = tileTypes[tileType];
+      tile.sprite.setPosition(
+        static_cast<float>(j * CIRCUIT_TILE_SIZE),
+        static_cast<float>(i * CIRCUIT_TILE_SIZE)
+      );
+
+      renderTarget.draw(tile.sprite);
+    }
+  }
+}
+
 void Circuit::setLapTimeLimit(float timeLimit) {
   lapTimeLimit = timeLimit;
 }
@@ -190,6 +220,7 @@ void Circuit::update(float) {
 void Circuit::render(const sf::View& view) const {
   game.window.setView(view);
 
+  /*
   // Todo(naum): save as a texture
   for (size_t i = 0; i < tiles.size(); i++) {
     const auto& row = tiles[i];
@@ -205,6 +236,7 @@ void Circuit::render(const sf::View& view) const {
       game.window.draw(tile.sprite);
     }
   }
+  */
 
   // render checkpoints
   for (size_t i = 0; i < checkpoints.size(); i++) {

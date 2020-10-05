@@ -58,6 +58,7 @@ public:
   void startRace();
 
   /**/ void setLapTimeLimit(float);
+  void draw(sf::RenderTarget&);
 
   static void loadAtlas();
 

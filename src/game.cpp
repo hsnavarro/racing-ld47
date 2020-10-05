@@ -56,43 +56,9 @@ void Game::setup() {
 
   // Circuits
   Circuit::loadAtlas();
+}
 
-  /* Test Physics
-
-  {
-    Circuit circuit {*this};
-    circuit.loadFromFile("assets/circuits/test-circuit.cir");
-    circuits.push_back(circuit);
-  }
-
-  */
-
-  /*
-  {
-    Circuit circuit {*this};
-    circuit.loadFromFile("assets/circuits/suzuka-circuit.cir");
-    circuits.push_back(circuit);
-  }
-
-  {
-    Circuit circuit{ *this };
-    circuit.loadFromFile("assets/circuits/progress-0.cir");
-    circuits.push_back(circuit);
-  }
-
-  {
-    Circuit circuit{ *this };
-    circuit.loadFromFile("assets/circuits/progress-1.cir");
-    circuits.push_back(circuit);
-  }
-
-  {
-    Circuit circuit{ *this };
-    circuit.loadFromFile("assets/circuits/progress-2.cir");
-    circuits.push_back(circuit);
-  }
-  */
-
+void Game::setupRacing() {
   Circuit circuit {*this};
   {
     circuit.loadFromFile("assets/circuits/back-forth-0.cir");
@@ -118,9 +84,20 @@ void Game::setup() {
     circuit.loadFromFile("assets/circuits/back-forth-5.cir");
     circuits.push_back(circuit);
   }
-}
 
-void Game::setupRacing() {
+  const auto w = static_cast<int>(circuits[0].tiles[0].size() * CIRCUIT_TILE_SIZE);
+  const auto h = static_cast<int>(circuits[0].tiles.size() * CIRCUIT_TILE_SIZE);
+
+  if (!circuitRenderTexture.create(w, h)) {
+    printf("Could not create circuit render texture!\n");
+  }
+
+  circuitRenderTexture.clear(sf::Color::Transparent);
+  circuits[0].draw(circuitRenderTexture);
+  circuitSprite.setTexture(circuitRenderTexture.getTexture());
+  circuitSprite.setTextureRect({ 0, h, w, -h });
+
+
   currentCircuit = &circuits[0];
   currentCircuit->startRace();
   placeCamera();
@@ -161,10 +138,7 @@ void Game::renderRacing() {
   window.clear();
 
   // Circuit
-  /*
-  for (size_t i = 0; i < currentCircuitIndex; i++)
-    circuits[i].render();
-    */
+  window.draw(circuitSprite);
 
   if (currentCircuit)
     currentCircuit->render(camera);
@@ -262,6 +236,13 @@ void Game::completeLap() {
       currentCircuit = nullptr;
     } else {
       currentCircuit = &circuits[currentCircuitIndex];
+
+      // apply circuit texture
+      circuitSprite.setColor({ 192, 192, 192, 255 });
+      circuitRenderTexture.draw(circuitSprite);
+      circuitSprite.setColor({ 255, 255, 255, 255 });
+
+      currentCircuit->draw(circuitRenderTexture);
     }
   }
 

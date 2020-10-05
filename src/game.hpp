@@ -55,6 +55,9 @@ public:
   std::vector<Circuit> circuits;
   size_t currentCircuitIndex = 0;
 
+  sf::RenderTexture circuitRenderTexture;
+  sf::Sprite circuitSprite;
+
   Ghost currentGhost;
   std::vector<Ghost> ghosts;
   std::vector<Ghost> newGhosts;
