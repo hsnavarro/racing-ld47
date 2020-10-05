@@ -52,14 +52,14 @@ and end in different positions)
 - [x] Camera
   - [x] Follow player car
 
-- [ ] Graphics
-  - [ ] Car
-  - [ ] Circuits
+- [x] Graphics
+  - [x] Car
+  - [x] Circuits
 
-- [ ] Sounds
-  - [ ] Car engine
-  - [ ] Car break
-  - [ ] Collision
+- [x] Sounds
+  - [x] Car engine
+  - [x] Car break
+  - [x] Collision
 
 # Extra ideas
 
