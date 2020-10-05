@@ -67,6 +67,9 @@ void Car::update(float deltaTime) {
     }
   }
 
+  if (!isGoingForward)
+    deltaAngularVelocity *= -1;
+
   bool wasSliding = isSliding();
   updateDriftingStatus();
   if constexpr (IS_DRIFTING_BURST_ENABLED) {
