@@ -102,7 +102,6 @@ void Game::setupRacing() {
 
   circuit.loadFromFile("assets/circuits/back-forth-0.cir");
   circuits.push_back(circuit);
-  /*
 
   circuit.loadFromFile("assets/circuits/back-forth-1.cir");
   circuits.push_back(circuit);
@@ -121,7 +120,6 @@ void Game::setupRacing() {
 
   circuit.loadFromFile("assets/circuits/back-forth-6.cir");
   circuits.push_back(circuit);
-  */
 
   // Render targets
   const auto w = static_cast<int>(circuits[0].tiles[0].size() * CIRCUIT_TILE_SIZE);

@@ -12,7 +12,9 @@ void Ghost::addState(const Game& game) {
   const Car& car = game.car;
   float currentLapTime = game.lapTime.getElapsedTime().asSeconds();
 
-  lastStates.push_back({ car.rigidbody, car.shape, currentLapTime });
+  auto shape = car.shape;
+  shape.setTexture(&car.ghostTexture);
+  lastStates.push_back({ car.rigidbody, shape, currentLapTime });
 }
 
 static sf::Vector2<f64> interpolateVectors(sf::Vector2<f64> currentFrameVector, sf::Vector2<f64> nextFrameVector, f64 interpolationRatio) {

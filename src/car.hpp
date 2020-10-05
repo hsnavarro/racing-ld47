@@ -54,6 +54,8 @@ public:
 public:
   Rigidbody rigidbody;
   sf::RectangleShape shape;
+  sf::Texture texture;
+  sf::Texture ghostTexture;
   sf::CircleShape icon;
   Game& game;
 

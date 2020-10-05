@@ -1,5 +1,6 @@
 #include "car.hpp"
 
+#include <cstdio>
 #include <cmath>
 #include <random>
 
@@ -7,12 +8,20 @@
 #include "particle-system.hpp"
 
 Car::Car(Game& game_) :
-  rigidbody{ CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
-  game{ game_ },
-  smokeParticles{ ParticleType::SMOKE, game_ },
-  leftTireTracks{ ParticleType::TIRE_TRACK , game_ },
-  rightTireTracks{ ParticleType::TIRE_TRACK, game_ } {
+    rigidbody{ CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
+    game{ game_ },
+    smokeParticles{ ParticleType::SMOKE, game_ },
+    leftTireTracks{ ParticleType::TIRE_TRACK , game_ },
+    rightTireTracks{ ParticleType::TIRE_TRACK, game_ }
+{
 
+  texture.loadFromFile("assets/gfx/car.png");
+  texture.setSmooth(true);
+
+  ghostTexture.loadFromFile("assets/gfx/ghost.png");
+  ghostTexture.setSmooth(true);
+
+  shape.setTexture(&texture);
   shape.setSize({ CAR_WIDTH, CAR_HEIGHT });
   shape.setOrigin({ CAR_WIDTH * 0.5, CAR_HEIGHT * 0.5 });
 
@@ -139,6 +148,7 @@ void Car::render(const sf::View& view) {
   smokeParticles.render();
 
   // debug
+  /*
   drawLine(
     { to_vector2f(rigidbody.position), to_vector2f(rigidbody.position + getUnitVector(rigidbody.direction) * 20.0) },
     sf::Color::Blue,
@@ -150,6 +160,7 @@ void Car::render(const sf::View& view) {
     sf::Color::Green,
     game.window
   );
+  */
 }
 
 void Car::renderIcon(const sf::View& view) {
