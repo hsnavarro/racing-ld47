@@ -16,6 +16,8 @@ public:
   void emissionFromPoint(const sf::Vector2f&, const sf::Vector2f&, float = 1.0f);
   void emissionFromLine(const sf::Vector2f&, const sf::Vector2f&, const sf::Vector2f&, float = 1.0f);
 
+  void emitToTexture(const sf::Vector2f&, sf::RenderTexture&);
+
   std::vector<Particle> particles;
   ParticleType particlesType;
 

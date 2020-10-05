@@ -59,6 +59,7 @@ void Game::setup() {
 }
 
 void Game::setupRacing() {
+  // Circuits
   Circuit circuit {*this};
   {
     circuit.loadFromFile("assets/circuits/back-forth-0.cir");
@@ -85,6 +86,7 @@ void Game::setupRacing() {
     circuits.push_back(circuit);
   }
 
+  // Render targets
   const auto w = static_cast<int>(circuits[0].tiles[0].size() * CIRCUIT_TILE_SIZE);
   const auto h = static_cast<int>(circuits[0].tiles.size() * CIRCUIT_TILE_SIZE);
 
@@ -92,12 +94,23 @@ void Game::setupRacing() {
     printf("Could not create circuit render texture!\n");
   }
 
+  circuitRenderTexture.setSmooth(true);
   circuitRenderTexture.clear(sf::Color::Transparent);
   circuits[0].draw(circuitRenderTexture);
   circuitSprite.setTexture(circuitRenderTexture.getTexture());
   circuitSprite.setTextureRect({ 0, h, w, -h });
 
+  if (!roadTopRenderTexture.create(w, h)) {
+    printf("Could not create roadTop render texture!\n");
+  }
 
+  roadTopRenderTexture.setSmooth(true);
+  roadTopRenderTexture.clear(sf::Color::Transparent);
+  roadTopSprite.setTexture(roadTopRenderTexture.getTexture());
+  roadTopSprite.setTextureRect({ 0, h, w, -h });
+
+
+  //
   currentCircuit = &circuits[0];
   currentCircuit->startRace();
   placeCamera();
@@ -139,6 +152,7 @@ void Game::renderRacing() {
 
   // Circuit
   window.draw(circuitSprite);
+  window.draw(roadTopSprite);
 
   if (currentCircuit)
     currentCircuit->render(camera);

@@ -66,6 +66,11 @@ void ParticleSystem::emissionFromPoint(const sf::Vector2f& point, const sf::Vect
   }
 }
 
+void ParticleSystem::emitToTexture(const sf::Vector2f& point, sf::RenderTexture& renderTexture) {
+  particles[0].setPosition(point);
+  renderTexture.draw(particles[0].shape());
+}
+
 void ParticleSystem::emissionFromLine(const sf::Vector2f& a, const sf::Vector2f& b, const sf::Vector2f& direction, float emissionRate) {
 
   const sf::Vector2f lineDirection = b - a;

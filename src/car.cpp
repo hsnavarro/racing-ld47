@@ -89,8 +89,6 @@ void Car::update(float deltaTime) {
 
 void Car::updateParticles(float deltaTime) {
   smokeParticles.update(deltaTime);
-  leftTireTracks.update(deltaTime);
-  rightTireTracks.update(deltaTime);
 
   smokeEmission();
   tireTrackEmission();
@@ -98,8 +96,6 @@ void Car::updateParticles(float deltaTime) {
 
 void Car::render(const sf::View& view) {
   game.window.setView(view);
-  leftTireTracks.render();
-  rightTireTracks.render();
   game.window.draw(shape);
   smokeParticles.render();
 
@@ -176,8 +172,8 @@ void Car::tireTrackEmission() {
   const sf::Vector2f bottomLeftPoint = transform.transformPoint(shape.getPoint(3));
   const sf::Vector2f bottomRightPoint = transform.transformPoint(shape.getPoint(2));
 
-  leftTireTracks.emissionFromPoint(bottomLeftPoint, -to_vector2f(rigidbody.direction));
-  rightTireTracks.emissionFromPoint(bottomRightPoint, -to_vector2f(rigidbody.direction));
+  leftTireTracks.emitToTexture(bottomLeftPoint, game.roadTopRenderTexture);
+  rightTireTracks.emitToTexture(bottomRightPoint, game.roadTopRenderTexture);
 }
 
 void Car::setPosition(sf::Vector2f pos) {

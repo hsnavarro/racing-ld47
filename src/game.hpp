@@ -58,6 +58,9 @@ public:
   sf::RenderTexture circuitRenderTexture;
   sf::Sprite circuitSprite;
 
+  sf::RenderTexture roadTopRenderTexture;
+  sf::Sprite roadTopSprite;
+
   Ghost currentGhost;
   std::vector<Ghost> ghosts;
   std::vector<Ghost> newGhosts;
