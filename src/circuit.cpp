@@ -220,23 +220,23 @@ void Circuit::update(float) {
 void Circuit::render(const sf::View& view) const {
   game.window.setView(view);
 
-  /*
-  // Todo(naum): save as a texture
-  for (size_t i = 0; i < tiles.size(); i++) {
-    const auto& row = tiles[i];
-    for (size_t j = 0; j < row.size(); j++) {
-      const auto& tileType = row[j].type;
+  if (game.state == Game::State::END_GAME) {
+    // Render one by one to not alocate a very large texture
+    for (size_t i = 0; i < tiles.size(); i++) {
+      const auto& row = tiles[i];
+      for (size_t j = 0; j < row.size(); j++) {
+        const auto& tileType = row[j].type;
 
-      auto& tile = tileTypes[tileType];
-      tile.sprite.setPosition(
-        static_cast<float>(j * CIRCUIT_TILE_SIZE),
-        static_cast<float>(i * CIRCUIT_TILE_SIZE)
-      );
+        auto& tile = tileTypes[tileType];
+        tile.sprite.setPosition(
+          static_cast<float>(j * CIRCUIT_TILE_SIZE),
+          static_cast<float>(i * CIRCUIT_TILE_SIZE)
+        );
 
-      game.window.draw(tile.sprite);
+        game.window.draw(tile.sprite);
+      }
     }
   }
-  */
 
   // render checkpoints
   for (size_t i = 0; i < checkpoints.size(); i++) {

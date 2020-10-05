@@ -49,8 +49,8 @@ void Game::setupEndGame() {
   circuit.checkpoints.push_back(checkpoint);
 
   circuits.push_back(circuit);
-  printf("%zu\n", circuits[0].walls.size());
 
+  /*
   const auto w = static_cast<int>(circuits[0].tiles[0].size() * CIRCUIT_TILE_SIZE);
   const auto h = static_cast<int>(circuits[0].tiles.size() * CIRCUIT_TILE_SIZE);
 
@@ -62,6 +62,7 @@ void Game::setupEndGame() {
   circuits[0].draw(circuitRenderTexture);
   circuitSprite.setTexture(circuitRenderTexture.getTexture());
   circuitSprite.setTextureRect({ 0, h, w, -h });
+  */
 
   roadTopRenderTexture.clear(sf::Color::Transparent);
 
@@ -101,6 +102,7 @@ void Game::setupRacing() {
 
   circuit.loadFromFile("assets/circuits/back-forth-0.cir");
   circuits.push_back(circuit);
+  /*
 
   circuit.loadFromFile("assets/circuits/back-forth-1.cir");
   circuits.push_back(circuit);
@@ -119,6 +121,7 @@ void Game::setupRacing() {
 
   circuit.loadFromFile("assets/circuits/back-forth-6.cir");
   circuits.push_back(circuit);
+  */
 
   // Render targets
   const auto w = static_cast<int>(circuits[0].tiles[0].size() * CIRCUIT_TILE_SIZE);
@@ -193,8 +196,10 @@ void Game::renderRacing() {
   window.clear();
 
   // Circuit
-  window.draw(circuitSprite);
-  window.draw(roadTopSprite);
+  if (state != State::END_GAME) {
+    window.draw(circuitSprite);
+    window.draw(roadTopSprite);
+  }
 
   if (currentCircuit)
     currentCircuit->render(camera);
