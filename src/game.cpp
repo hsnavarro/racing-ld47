@@ -67,6 +67,13 @@ void Game::setup() {
 
   */
 
+  /*
+  {
+    Circuit circuit {*this};
+    circuit.loadFromFile("assets/circuits/suzuka-circuit.cir");
+    circuits.push_back(circuit);
+  }
+
   {
     Circuit circuit{ *this };
     circuit.loadFromFile("assets/circuits/progress-0.cir");
@@ -82,6 +89,33 @@ void Game::setup() {
   {
     Circuit circuit{ *this };
     circuit.loadFromFile("assets/circuits/progress-2.cir");
+    circuits.push_back(circuit);
+  }
+  */
+
+  Circuit circuit {*this};
+  {
+    circuit.loadFromFile("assets/circuits/back-forth-0.cir");
+    circuits.push_back(circuit);
+  }
+  {
+    circuit.loadFromFile("assets/circuits/back-forth-1.cir");
+    circuits.push_back(circuit);
+  }
+  {
+    circuit.loadFromFile("assets/circuits/back-forth-2.cir");
+    circuits.push_back(circuit);
+  }
+  {
+    circuit.loadFromFile("assets/circuits/back-forth-3.cir");
+    circuits.push_back(circuit);
+  }
+  {
+    circuit.loadFromFile("assets/circuits/back-forth-4.cir");
+    circuits.push_back(circuit);
+  }
+  {
+    circuit.loadFromFile("assets/circuits/back-forth-5.cir");
     circuits.push_back(circuit);
   }
 }
