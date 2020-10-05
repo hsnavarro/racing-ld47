@@ -100,6 +100,9 @@ void Game::setupRacing() {
   // Circuits
   Circuit circuit {*this};
 
+  //circuit.loadFromFile("assets/circuits/test-circuit.cir");
+  //circuits.push_back(circuit);
+
   circuit.loadFromFile("assets/circuits/back-forth-0.cir");
   circuits.push_back(circuit);
 
@@ -157,7 +160,8 @@ void Game::setupRacing() {
 
 void Game::updateRacing() {
   
-  audioSystem.backgroundMusic.play();
+  //audioSystem.backgroundMusic.setVolume(70.f);
+  //audioSystem.backgroundMusic.play();
   ui.update();
 
   if (onCountdown) {
@@ -185,13 +189,13 @@ void Game::updateRacing() {
 }
 
 void Game::renderMainMenu() {
-  window.clear();
+  window.clear(sf::Color(0, 100, 0, 1));
   ui.render();
   window.setView(camera);
 }
 
 void Game::renderRacing() {
-  window.clear();
+  window.clear(sf::Color(0, 100, 0, 1));
 
   // Circuit
   if (state != State::END_GAME) {
@@ -240,7 +244,7 @@ void Game::handleEventRacing(sf::Event& event) {
       break;
 
     case sf::Keyboard::Space:
-      if (!car.isHandBrakeActive) audioSystem.handbrakefx.play();
+      if(!car.isHandBrakeActive) audioSystem.handbrakeFX.play(); 
       car.isHandBrakeActive = keepActive;
       break;
 

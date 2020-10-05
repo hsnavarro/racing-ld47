@@ -8,11 +8,11 @@
 #include "particle-system.hpp"
 
 Car::Car(Game& game_) :
-    rigidbody{ CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
-    game{ game_ },
-    smokeParticles{ ParticleType::SMOKE, game_ },
-    leftTireTracks{ ParticleType::TIRE_TRACK , game_ },
-    rightTireTracks{ ParticleType::TIRE_TRACK, game_ }
+  rigidbody{ CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
+  game{ game_ },
+  smokeParticles{ ParticleType::SMOKE, game_ },
+  leftTireTracks{ ParticleType::TIRE_TRACK , game_ },
+  rightTireTracks{ ParticleType::TIRE_TRACK, game_ }
 {
 
   texture.loadFromFile("assets/gfx/car.png");
@@ -43,42 +43,34 @@ void static applySound(Game& game) {
 
   if (!car.isHardBraking()) {
     const float slideVolume = lerp(0.f, 30.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
-    game.audioSystem.slidefx.setVolume(slideVolume);
-    game.audioSystem.slidefx.stop();
+    game.audioSystem.slideFX.setVolume(slideVolume);
+    game.audioSystem.slideFX.stop();
   } else {
-    game.audioSystem.slidefx.play();
+    game.audioSystem.slideFX.play();
   }
 
-  if (car.collided and
-      car.collisionVelocity > 30.0f) {
-    const float collisionVolume = lerp(0.f, 30.f, static_cast<float>(car.collisionVelocity) / CAR_MAX_VELOCITY);
+  if (car.collided) {
+      
+    const float volumeRatio = std::min(static_cast<float>(car.collisionVelocity) / (CAR_MAX_VELOCITY * 0.01f), 1.0f);
+    const float collisionVolume = lerp(0.f, 30.f, volumeRatio);
 
-    std::random_device randomDevice;
-    std::mt19937 generator(randomDevice());
-
-    int collisionfxIndex = generator() % 2;
-
-    /*
-    int collisionfxIndex = generator() % (int)game.audioSystem.collisionfx.size();
-    auto& collisionfxToPlay = game.audioSystem.collisionfx[collisionfxIndex];
-    collisionfxToPlay.setVolume(volume);
-    collisionfxToPlay.play();
-    */
-
-    if (collisionfxIndex == 1) {
-      game.audioSystem.collisionfx1.setVolume(collisionVolume);
-      game.audioSystem.collisionfx1.play();
-    } else {
-      game.audioSystem.collisionfx2.setVolume(collisionVolume);
-      game.audioSystem.collisionfx2.play();
-    }
+    game.audioSystem.collisionFX.setVolume(collisionVolume);
+    game.audioSystem.collisionFX.play();
 
     car.collided = false;
   }
 
   const float engineVolume = lerp(30.f, 80.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
-  game.audioSystem.enginefx.setVolume(engineVolume);
-  game.audioSystem.enginefx.play();
+  game.audioSystem.engineFX.setVolume(engineVolume);
+
+  game.audioSystem.engineStartFx.stop();
+  game.audioSystem.engineFX.play();
+
+  const float acceleratorVolume = lerp(0.f, 100.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+  game.audioSystem.acceleratorFX.setVolume(acceleratorVolume);
+  const float acceleratorPitchLevel = std::min(100.f, acceleratorVolume) / 50.f;
+  game.audioSystem.acceleratorFX.setPitch(acceleratorPitchLevel);
+  game.audioSystem.acceleratorFX.play();
 }
 
 void Car::update(float deltaTime) {
@@ -219,7 +211,7 @@ bool Car::isHardBraking() {
 void Car::tireTrackEmission() {
   if (!isHardBraking()) return;
 
-  game.audioSystem.slidefx.play();
+  game.audioSystem.slideFX.play();
 
   const auto transform = shape.getTransform();
 

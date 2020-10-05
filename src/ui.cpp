@@ -16,29 +16,30 @@ void drawTextCenter(sf::Text& text, float x, float y, sf::RenderWindow& window) 
   window.draw(text);
 };
 
-UI::UI(Game& game_) : game { game_ } {
+UI::UI(Game& game_) : game{ game_ } {
 
   if (!font.loadFromFile("assets/fonts/Monocons.ttf")) {
     printf("fail to load font!\n");
   }
 
   if constexpr (UI_MINIMAP_ENABLE) {
-    minimapView.setSize(2*SCREEN_WIDTH,2*SCREEN_HEIGHT);
-    minimapView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+    minimapView.setSize(2 * SCREEN_WIDTH, 2 * SCREEN_HEIGHT);
+    minimapView.setCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     minimapView.setViewport(sf::FloatRect(0.80f, 0.05f, 0.40f, 0.40f));
   }
 
-  uiView.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
-  uiView.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
+  uiView.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+  uiView.setCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
-  text = sf::Text { "", font, UI_LARGE_FONT_SIZE };
+  text = sf::Text{ "", font, UI_LARGE_FONT_SIZE };
   text.setOutlineColor(sf::Color::Black);
   text.setOutlineThickness(5);
 }
 
 void UI::setup() {
   clock.restart();
-  readyCountdown = 4;
+  finishedCountdown = false;
+  lastT = 0.0f;
   text.setString("GET READY");
   text.setScale({ 1.0f, 1.0f });
 }
@@ -46,37 +47,35 @@ void UI::setup() {
 void UI::update() {
   const auto t = clock.getElapsedTime().asSeconds();
 
-  if (readyCountdown == 0) {
+  if (t > 7.0f) return;
+
+  if(lastT <= 6.0f and t > 6.0f) {
+    finishedCountdown = true;
+    text.setString("");
+  } if (lastT <= 5.0f and t > 5.0f) {
     game.onCountdown = false;
     text.setString("GO!");
-    if (t >= 1.0f) {
-      readyCountdown--;
-    }
-  } else if (readyCountdown == 4) {
-    // GET READY / controls
-    /*
-    const auto scale = lerp(1.0f, 2.0f, t / 3.0f);
-    text.setScale({ scale, scale });
-    */
+    game.audioSystem.goSoundFx.play();
+  } else if (t <= 5.0f) {
+    for (int i = 3; i >= 1; i--) {
+      float exhibitionTime = 5.0f - float(i);
 
-    if (t >= 2.0f) {
-      readyCountdown--;
-      clock.restart();
-    }
-  } else {
-    char str[10];
-    snprintf(str, 10, "%d", readyCountdown);
+      if (lastT <= exhibitionTime and t > exhibitionTime) {
+        char str[10];
+        snprintf(str, 10, "%d", i);
 
-    text.setString(str);
+        text.setString(str);
+        game.audioSystem.countdownfx.play();
+      }
 
-    const auto scale = lerp(1.0f, 2.0f, t);
-    text.setScale({ scale, scale });
-
-    if (t >= 1.0f) {
-      readyCountdown--;
-      clock.restart();
+      if (t > exhibitionTime) {
+        const auto scale = lerp(1.0f, 2.0f, t - exhibitionTime);
+        text.setScale({ scale, scale });
+      }
     }
   }
+
+  lastT = t;
 }
 
 void UI::render() {
@@ -105,32 +104,48 @@ void UI::render() {
       return f - static_cast<int>(f / (d + w)) * (d + w) - w;
     };
 
-    sf::Text title1Text ("CIRCUIT", font, 42);
+    sf::Text title1Text("CIRCUIT", font, 42);
     auto width = title1Text.getLocalBounds().width;
     title1Text.setPosition(getPos(100.0f * cos(1.0f + t * 2.0f) + t * 330.0f, SCREEN_WIDTH, width), 100.0f);
+    title1Text.setOutlineColor(sf::Color::Black);
+    title1Text.setOutlineThickness(3);
     game.window.draw(title1Text);
 
-    sf::Text title2Text ("ESCAPE", font, 40);
+    sf::Text title2Text("ESCAPE", font, 40);
     width = title2Text.getLocalBounds().width;
     title2Text.setPosition(getPos(200.0f * sin(2.1f + t * 1.2f) + t * 415.0f, SCREEN_WIDTH, width), 150.0f);
+    title2Text.setOutlineColor(sf::Color::Black);
+    title2Text.setOutlineThickness(3);
     game.window.draw(title2Text);
 
     sf::Text inst0("W/I/N - accelerate", font, 20);
+    inst0.setOutlineColor(sf::Color::Black);
+    inst0.setOutlineThickness(2);
     drawTextCenter(inst0, SCREEN_WIDTH / 2 + 10.0f * cos(t), 340.0f, game.window);
 
     sf::Text inst1("S/K/M - break/reverse", font, 20);
+    inst1.setOutlineColor(sf::Color::Black);
+    inst1.setOutlineThickness(2);
     drawTextCenter(inst1, SCREEN_WIDTH / 2 + 10.0f * cos(0.1f + t * 0.2f), 370.0f + 2.7f * cos(0.2f + t * 0.1f), game.window);
 
     sf::Text inst2("A/J/X - turn left", font, 20);
+    inst2.setOutlineColor(sf::Color::Black);
+    inst2.setOutlineThickness(2);
     drawTextCenter(inst2, SCREEN_WIDTH / 2 + 10.2f * cos(1.1f + t * 1.7f), 400.0f + 2.1f * cos(1.7f + t * 3.1f), game.window);
 
     sf::Text inst3("D/L/C - turn right", font, 20);
+    inst3.setOutlineColor(sf::Color::Black);
+    inst3.setOutlineThickness(2);
     drawTextCenter(inst3, SCREEN_WIDTH / 2 + 13.0f * cos(0.8f + t * 2.2f), 430.0f + 2.3f * cos(8.8f + t * 1.1f), game.window);
 
     sf::Text inst4("space - handbrake", font, 20);
+    inst4.setOutlineColor(sf::Color::Black);
+    inst4.setOutlineThickness(2);
     drawTextCenter(inst4, SCREEN_WIDTH / 2 + 12.0f * cos(0.7f + t * 3.9f), 460.0f + 2.9f * cos(2.0f + t * 0.2f), game.window);
 
     sf::Text inst5("press 'space' to start", font, 20);
+    inst5.setOutlineColor(sf::Color::Black);
+    inst5.setOutlineThickness(2);
     drawTextCenter(inst5, SCREEN_WIDTH / 2 + 10.7f * cos(2.2f + t * 1.2f), 530.0f + 2.3f * cos(3.1f + t * 3.8f), game.window);
 
     return;
@@ -147,6 +162,8 @@ void UI::render() {
   // lap time
   snprintf(str, 30, "%.2fs", game.lapTime.getElapsedTime().asSeconds());
   sf::Text lapTimeText(str, font, UI_DEFAULT_FONT_SIZE);
+  lapTimeText.setOutlineColor(sf::Color::Black);
+  lapTimeText.setOutlineThickness(1);
   drawTextRight(lapTimeText, maximumSize, 10.0f, game.window);
 
   verticalOffset += UI_DEFAULT_MARGIN + lapTimeText.getLocalBounds().height;
@@ -155,6 +172,8 @@ void UI::render() {
   if (game.lastLapTime > 0.0f) {
     snprintf(str, 30, "%.2fs", game.lastLapTime);
     sf::Text lastLapText(str, font, UI_SMALL_FONT_SIZE);
+    lastLapText.setOutlineColor(sf::Color::Black);
+    lastLapText.setOutlineThickness(1);
     drawTextRight(lastLapText, maximumSize + maximumSize, 13.0f, game.window);
   }
 
@@ -162,15 +181,18 @@ void UI::render() {
   if (game.currentCircuit) {
     snprintf(str, 30, "%.2fs", game.currentCircuit->lapTimeLimit);
     sf::Text lapTimeLimitText(str, font, UI_DEFAULT_FONT_SIZE);
-    drawTextRight(lapTimeLimitText, maximumSize, 10.0f+verticalOffset, game.window);
+    lapTimeLimitText.setOutlineColor(sf::Color::Black);
+    lapTimeLimitText.setOutlineThickness(1);
+    drawTextRight(lapTimeLimitText, maximumSize, 10.0f + verticalOffset, game.window);
   }
 
   // speed
   snprintf(str, 30, "%.2f px/s", getMagnitude(game.car.rigidbody.linearVelocity));
   sf::Text speedText(str, font, UI_DEFAULT_FONT_SIZE);
+  speedText.setOutlineColor(sf::Color::Black);
+  speedText.setOutlineThickness(1);
   drawTextRight(speedText, SCREEN_WIDTH - 10.0f, SCREEN_HEIGHT - 40.0f, game.window);
 
   //
-  if (readyCountdown >= 0)
-    drawTextCenter(text, SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, game.window);
+  drawTextCenter(text, SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, game.window);
 }

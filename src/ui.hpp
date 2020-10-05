@@ -27,7 +27,8 @@ public:
 
   sf::Text text;
 
-  int readyCountdown;
+  float lastT;
+  bool finishedCountdown;
   sf::Clock clock;
 
   Game& game;

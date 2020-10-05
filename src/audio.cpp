@@ -21,6 +21,10 @@ void Audio::setVolume(float volume) {
   audio.setVolume(volume);
 }
 
+void Audio::setPitch(float pitch) {
+  audio.setPitch(pitch);
+}
+
 bool Audio::isPlaying() {
   return audio.getStatus() == sf::SoundSource::Playing;
 }

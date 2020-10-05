@@ -8,6 +8,7 @@ class Audio {
     void play();
     void stop();
     void setVolume(float);
+    void setPitch(float);
     bool isPlaying();
 
   private:
