@@ -187,7 +187,7 @@ void Game::updateRacing() {
 }
 
 void Game::renderMainMenu() {
-  window.clear(sf::Color(0, 100, 0, 1));
+  window.clear();
   ui.render();
   window.setView(camera);
 }

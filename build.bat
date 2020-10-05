@@ -1,6 +1,6 @@
 @ECHO OFF
 
-set OUT_EXE=ld47
+set OUT_EXE=circuit-escape-ld47
 
 set TARGET=x64
 
