@@ -130,7 +130,7 @@ bool Circuit::loadFromFile(const std::string& path) {
         };
 
         auto validPos = [this](int x, int y) {
-          return !(x < 0 or y < 0 or x >= tiles[0].size() or y >= tiles.size());
+          return !(x < 0 or y < 0 or x >= (int) tiles[0].size() or y >= (int) tiles.size());
         };
 
         if (tileType.exits[enter] & exit_dir) {
@@ -326,6 +326,7 @@ void Circuit::loadAtlas() {
 
   defer(fclose(file));
 
+  /*
   auto printTileType = [] (size_t type) {
     const auto& t = tileTypes[type];
     printf("type: %zu\n", type);
@@ -341,7 +342,7 @@ void Circuit::loadAtlas() {
              t.checkpoint[1].x, t.checkpoint[1].y);
     printf("\n");
   };
-
+  */
 
   // Read originals
   while (true) {

@@ -119,7 +119,6 @@ void Car::render(const sf::View& view) {
 
 void Car::renderIcon(const sf::View& view) {
   game.window.setView(view);
-  auto position = rigidbody.position;
   game.window.draw(icon);
 }
 
@@ -135,7 +134,8 @@ void Car::smokeEmission() {
 
   const sf::Vector2f bottomLeftPoint = transform.transformPoint(shape.getPoint(3));
   const sf::Vector2f bottomRightPoint = transform.transformPoint(shape.getPoint(2));
-  const float PARTICLES_EMISSION_RATIO = 1 / 2000.0f;
+  
+  //const float PARTICLES_EMISSION_RATIO = 1 / 2000.0f;
   //const float emissionRate = PARTICLES_EMISSION_RATIO * getMagnitude(to_vector2f(rigidbody.linearVelocity));
 
   const float emissionRate = lerp(0.06f, 0.4f, getMagnitude(to_vector2f(rigidbody.linearVelocity) / 200.0f));

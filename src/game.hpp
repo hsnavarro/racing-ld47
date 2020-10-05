@@ -7,6 +7,7 @@
 #include "circuit.hpp"
 #include "ghost.hpp"
 #include "ui.hpp"
+#include "audio.hpp"
 
 class Game {
 public:
@@ -23,6 +24,7 @@ public:
   void completeLap();
 
 public:
+  Audio backgroundMusic;
   sf::RenderWindow window;
   sf::Font font;
   UI ui;

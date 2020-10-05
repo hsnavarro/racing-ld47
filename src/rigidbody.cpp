@@ -30,9 +30,9 @@ void Rigidbody::update(f64 deltaTime,
   ::rotate(direction, angle);
 
   // translation
-  sf::Vector2<f64> accelerationVector = linearAcceleration * direction;
+  //sf::Vector2<f64> accelerationVector = linearAcceleration * direction;
 
-  const auto forwardUnit = getUnitVector(direction);
+  //const auto forwardUnit = getUnitVector(direction);
   const auto lateralUnit = getUnitVector(getPerpendicular(direction));
 
   const f64 forwardSpeed = dotProduct(linearVelocity, getUnitVector(direction));

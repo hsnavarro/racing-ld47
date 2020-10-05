@@ -7,13 +7,16 @@
 #include "algebra.hpp"
 #include "utils.hpp"
 
-Game::Game() : car { *this }, ui { *this } {}
+Game::Game() : backgroundMusic { BACKGROUND_MUSIC_FILE }, ui { *this }, car { *this } {}
 
 void Game::setup() {
   sf::ContextSettings settings;
   settings.antialiasingLevel = ANTI_ALIASING_LEVEL;
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
+
+  backgroundMusic.setVolume(75.f);
+  backgroundMusic.play();
 
   camera.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
   camera.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
