@@ -5,4 +5,5 @@ AudioSystem::AudioSystem(Game& _game) :
     game{ _game }, 
     backgroundMusic { BACKGROUND_MUSIC_FILE }, 
     handbrakefx { HANDBRAKE_FX_FILE }, 
-    slidefx { SLIDE_FX_FILE }{}
+    slidefx { SLIDE_FX_FILE }, 
+    collisionfx { COLLISION_FX_FILE } {}

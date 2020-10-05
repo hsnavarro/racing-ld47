@@ -64,6 +64,7 @@ public:
   bool goForward = false;
   bool goReverse = false;
   bool isHandBrakeActive = false;
+  bool collided = false;
   sf::Clock driftTime;
 
   // These are constants!

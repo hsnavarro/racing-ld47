@@ -104,6 +104,13 @@ void Car::update(float deltaTime) {
   } else {
    game.audioSystem.slidefx.play();
   }
+
+  if (collided) {
+    const float volume = lerp(0.f, 50.f, getMagnitude(to_vector2f(rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+    game.audioSystem.collisionfx.setVolume(volume);
+    game.audioSystem.collisionfx.play();
+    collided = false;
+  }
 }
 
 void Car::updateParticles(float deltaTime) {

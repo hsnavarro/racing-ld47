@@ -66,7 +66,7 @@ static std::optional<sf::Vector2f> getCollisionVector(const Car& car, sf::Line l
   return std::nullopt;
 }
 
-static std::optional<sf::Vector2f> carIntersectsGhost(const Car& car, const Ghost& ghost) {
+static std::optional<sf::Vector2f> carIntersectsGhost(Car& car, const Ghost& ghost) {
   // Generate points since SFML doesn't know how to do it...
   const auto& shape = ghost.getCurrentState().shape;
   const auto transform = shape.getTransform();
@@ -88,7 +88,10 @@ static std::optional<sf::Vector2f> carIntersectsGhost(const Car& car, const Ghos
     }
   }
 
-  if (collided) return collisionVector;
+  if (collided) {
+    car.collided = true;
+    return collisionVector;
+  }
   return std::nullopt;
 }
 
@@ -116,8 +119,8 @@ void resolveCollisions(Game& game) {
       }
     }
 
-
     if (!collided) break;
+    game.car.collided = true;
     game.car.resolveCollision(to_vector2f64(minimumCollisionVector));
   }
 
