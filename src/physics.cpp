@@ -9,15 +9,22 @@
 #include "consts.hpp"
 #include "algebra.hpp"
 
-bool carIntersectsLine(const Car& car, sf::Line line) {
-  // Generate points since SFML doesn't know how to do it...
-  const auto transform = car.shape.getTransform();
-  const sf::Vector2f points[4] = {
-    transform.transformPoint(car.shape.getPoint(0)),
-    transform.transformPoint(car.shape.getPoint(1)),
-    transform.transformPoint(car.shape.getPoint(2)),
-    transform.transformPoint(car.shape.getPoint(3))
+// Generate points since SFML doesn't know how to do it...
+static std::array<sf::Vector2f, 4> getShapePoints(const sf::Shape& shape) {
+  const auto transform = shape.getTransform();
+  const sf::Vector2f correctionY { 0.0f, 1.5f };
+  const sf::Vector2f correctionX { 1.0f, 0.0f };
+
+  return {
+    transform.transformPoint(shape.getPoint(0) + correctionX + correctionY),
+    transform.transformPoint(shape.getPoint(1) - correctionX + correctionY),
+    transform.transformPoint(shape.getPoint(2) - correctionX - correctionY),
+    transform.transformPoint(shape.getPoint(3) + correctionX - correctionY)
   };
+}
+
+bool carIntersectsLine(const Car& car, sf::Line line) {
+  const auto points = getShapePoints(car.shape);
 
   for (int i = 1; i <= 4; i++)
     if (linesIntersect({ points[i-1], points[i%4] }, { line[0], line[1] }))
@@ -25,6 +32,7 @@ bool carIntersectsLine(const Car& car, sf::Line line) {
 
   return false;
 }
+
 
 // This line divides the plane into two semiplanes
 // The "left" plane (CCW) is the region we don't want to be
@@ -35,14 +43,7 @@ static std::optional<sf::Vector2f> getCollisionVector(const Car& car, sf::Line l
 
   sf::Vector2f collisionVector;
 
-  // Generate points since SFML doesn't know how to do it...
-  const auto transform = car.shape.getTransform();
-  const sf::Vector2f points[4] = {
-    transform.transformPoint(car.shape.getPoint(0)),
-    transform.transformPoint(car.shape.getPoint(1)),
-    transform.transformPoint(car.shape.getPoint(2)),
-    transform.transformPoint(car.shape.getPoint(3))
-  };
+  const auto points = getShapePoints(car.shape);
 
   // Get the collision vector, but they not necessarily collide
   const auto lineDir = getUnitVector(line[1] - line[0]);
@@ -67,15 +68,7 @@ static std::optional<sf::Vector2f> getCollisionVector(const Car& car, sf::Line l
 }
 
 static std::optional<sf::Vector2f> carIntersectsGhost(Car& car, const Ghost& ghost) {
-  // Generate points since SFML doesn't know how to do it...
-  const auto& shape = ghost.getCurrentState().shape;
-  const auto transform = shape.getTransform();
-  const sf::Vector2f points[4] = {
-    transform.transformPoint(shape.getPoint(0)),
-    transform.transformPoint(shape.getPoint(1)),
-    transform.transformPoint(shape.getPoint(2)),
-    transform.transformPoint(shape.getPoint(3))
-  };
+  const auto points = getShapePoints(ghost.getCurrentState().shape);
 
   bool collided = false;
   sf::Vector2f collisionVector { 1e8f, 1e8f };
