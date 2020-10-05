@@ -16,7 +16,7 @@ void Game::setup() {
   window.setFramerateLimit(DISPLAY_FPS);
 
   backgroundMusic.setVolume(75.f);
-  backgroundMusic.play();
+  //backgroundMusic.play();
 
   camera.setSize(SCREEN_WIDTH,SCREEN_HEIGHT);
   camera.setCenter(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);

@@ -107,6 +107,7 @@ bool Circuit::loadFromFile(const std::string& path) {
 
     const auto type = tiles[pos_y][pos_x].type;
     const auto& tileType = tileTypes[type];
+    //printf("%d %d %u: ", pos_x, pos_y, enter);
 
     const sf::Vector2f shift = sf::Vector2f { static_cast<float>(pos_x), static_cast<float>(pos_y) } *
                                static_cast<float>(CIRCUIT_TILE_SIZE);
@@ -138,6 +139,7 @@ bool Circuit::loadFromFile(const std::string& path) {
           if (validPos(new_x, new_y) and
               !bfsVis[new_y][new_x][new_enter]) {
 
+            //printf("(%d %d %u) ", new_x, new_y, new_enter);
             bfsQueue.emplace(new_x, new_y, new_enter);
 
             u8 all_enters = static_cast<u8>(new_enter | tileTypes[tiles[new_y][new_x].type].exits[new_enter]);
@@ -154,6 +156,8 @@ bool Circuit::loadFromFile(const std::string& path) {
     tryMove(pos_x, pos_y+1, TileType::DIR_DOWN);
     tryMove(pos_x+1, pos_y, TileType::DIR_RIGHT);
     tryMove(pos_x-1, pos_y, TileType::DIR_LEFT);
+
+    //printf("\n");
   }
 
   return true;
@@ -202,14 +206,6 @@ void Circuit::render(const sf::View& view) const {
     }
   }
 
-  // render walls
-  /*
-  for (auto wall : walls) {
-    sf::Vertex verts[] = { { wall[0], sf::Color::White }, { wall[1], sf::Color::White } };
-    game.window.draw(verts, 2, sf::Lines);
-  }
-  */
-
   // render checkpoints
   for (size_t i = 0; i < checkpoints.size(); i++) {
     const auto& checkpoint = checkpoints[i];
@@ -226,33 +222,30 @@ void Circuit::render(const sf::View& view) const {
     game.window.draw(verts, 2, sf::Lines);
   }
 
-  // Render grid
   /*
-  sf::Vertex verts[2];
-  verts[0] = sf::Vertex({ 0.0f, 0.0f });
-  verts[1] = sf::Vertex({ static_cast<float>(CIRCUIT_TILE_SIZE * tiles.size()), 0.0f });
-  game.window.draw(verts, 2, sf::Lines);
-
-  for (size_t i = 0; i < tiles.size(); i++) {
-    const auto y = static_cast<float>(i * CIRCUIT_TILE_SIZE);
-    verts[0] = sf::Vertex({ 0.0f, y });
-    verts[1] = sf::Vertex({ static_cast<float>(CIRCUIT_TILE_SIZE * tiles.size()), y });
+  // DEBUG
+  // render walls
+  for (auto wall : walls) {
+    sf::Vertex verts[] = { { wall[0], sf::Color::White }, { wall[1], sf::Color::White } };
     game.window.draw(verts, 2, sf::Lines);
   }
 
-  verts[0] = sf::Vertex({ 0.0f, 0.0f });
-  verts[1] = sf::Vertex({ 0.0f, static_cast<float>(CIRCUIT_TILE_SIZE * tiles.size()) });
-  game.window.draw(verts, 2, sf::Lines);
+  // Render grid
+  sf::Vertex verts[2];
+  for (size_t i = 0; i <= tiles.size(); i++) {
+    const auto y = static_cast<float>(i * CIRCUIT_TILE_SIZE);
+    verts[0] = sf::Vertex({ 0.0f, y });
+    verts[1] = sf::Vertex({ static_cast<float>(CIRCUIT_TILE_SIZE * tiles[0].size()), y });
+    game.window.draw(verts, 2, sf::Lines);
+  }
 
-  for (size_t i = 0; i < tiles[0].size(); i++) {
+  for (size_t i = 0; i <= tiles[0].size(); i++) {
     const auto x = static_cast<float>(i * CIRCUIT_TILE_SIZE);
     verts[0] = sf::Vertex({ x, 0.0f });
     verts[1] = sf::Vertex({ x, static_cast<float>(CIRCUIT_TILE_SIZE * tiles.size()) });
     game.window.draw(verts, 2, sf::Lines);
   }
-  */
 
-  /*
   // Render atlas
   // Todo(naum): save as a texture
   for (size_t i = 0; i < tileTypes.size(); i++) {
