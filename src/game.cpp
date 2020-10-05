@@ -45,7 +45,7 @@ void Game::setup() {
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
-  //audioSystem.backgroundMusic.setVolume(50.f);
+  //audioSystem.backgroundMusic.setVolume(10.f);
   //audioSystem.backgroundMusic.play();
 
   camera.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);

@@ -7,6 +7,7 @@ const std::string SLIDE_FX_FILE = "./assets/sfx/slide-fx2.wav";
 const std::string ACCELERATOR_FX_FILE = "./assets/sfx/accelerator-fx.wav";
 const std::string HANDBRAKE_FX_FILE = "./assets/sfx/handbrake-fx.wav";
 const std::string COLLISION_FX_FILE = "./assets/sfx/collision-fx.wav";
+const std::string COLLISION_FX2_FILE = "./assets/sfx/collision-fx2.wav";
 
 class Game;
 
@@ -19,5 +20,7 @@ public:
   Audio backgroundMusic;
   Audio handbrakefx;
   Audio slidefx;
-  Audio collisionfx;
+  Audio collisionfx1;
+  Audio collisionfx2;
+  //std::vector<Audio> collisionfx;
 };

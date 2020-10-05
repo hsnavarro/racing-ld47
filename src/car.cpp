@@ -1,16 +1,17 @@
 #include "car.hpp"
 
 #include <cmath>
+#include <random>
 
 #include "game.hpp"
 #include "particle-system.hpp"
 
 Car::Car(Game& game_) :
-    rigidbody { CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
-    game { game_ },
-    smokeParticles { ParticleType::SMOKE, game_ },
-    leftTireTracks { ParticleType::TIRE_TRACK , game_ },
-    rightTireTracks { ParticleType::TIRE_TRACK, game_ } {
+  rigidbody{ CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
+  game{ game_ },
+  smokeParticles{ ParticleType::SMOKE, game_ },
+  leftTireTracks{ ParticleType::TIRE_TRACK , game_ },
+  rightTireTracks{ ParticleType::TIRE_TRACK, game_ } {
 
   shape.setSize({ CAR_WIDTH, CAR_HEIGHT });
   shape.setOrigin({ CAR_WIDTH * 0.5, CAR_HEIGHT * 0.5 });
@@ -28,6 +29,44 @@ bool Car::isReversing() {
   return goReverse;
 }
 
+void static applySound(Game& game) {
+  auto& car = game.car;
+
+  if (!car.isHardBraking()) {
+    const float volume = lerp(0.f, 100.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+    game.audioSystem.slidefx.setVolume(volume);
+    game.audioSystem.slidefx.stop();
+  } else {
+    game.audioSystem.slidefx.play();
+  }
+
+  if (car.collided) {
+    const float volume = lerp(0.f, 50.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+
+    std::random_device randomDevice;
+    std::mt19937 generator(randomDevice());
+
+    int collisionfxIndex = generator() % 2;
+
+    /*
+    int collisionfxIndex = generator() % (int)game.audioSystem.collisionfx.size();
+    auto& collisionfxToPlay = game.audioSystem.collisionfx[collisionfxIndex];
+    collisionfxToPlay.setVolume(volume);
+    collisionfxToPlay.play();
+    */
+
+    if (collisionfxIndex == 1) {
+      game.audioSystem.collisionfx1.setVolume(volume);
+      game.audioSystem.collisionfx1.play();
+    } else {
+      game.audioSystem.collisionfx2.setVolume(volume);
+      game.audioSystem.collisionfx2.play();
+    }
+
+    car.collided = false;
+  }
+}
+
 void Car::update(float deltaTime) {
   float accelerationValue = 0.0;
 
@@ -39,7 +78,7 @@ void Car::update(float deltaTime) {
     if (isGoingForward) accelerationValue = brakeAcceleration;
     else accelerationValue = reverseAcceleration;
   }
-  
+
   if (isAccelerating()) accelerationValue = engineAcceleration;
 
   if (isHandBrakeActive and isMoving) {
@@ -56,26 +95,8 @@ void Car::update(float deltaTime) {
   else rigidbody.kLateralDrag = lateralDrag;
 
   if (isMoving) {
-
-    if (turnLeft) {
-      deltaAngularVelocity = -angularVelocity;
-
-      if (isHandBrakeActive) {
-        deltaAngularVelocity = -angularVelocity;
-        //undoAngle = PI32 / 6.0f;
-        //::rotate(rigidbody.direction, undoAngle);
-      }
-
-    }
-    if (turnRight) {
-      deltaAngularVelocity = angularVelocity;
-
-      if (isHandBrakeActive) {
-        deltaAngularVelocity = angularVelocity;
-        //undoAngle = -PI32 / 6.0f;
-        //::rotate(rigidbody.direction, undoAngle);
-      }
-    }
+    if (turnLeft) deltaAngularVelocity = -angularVelocity;
+    if (turnRight) deltaAngularVelocity = angularVelocity;
   }
 
   if (!isGoingForward)
@@ -97,20 +118,7 @@ void Car::update(float deltaTime) {
   ::rotate(rigidbody.direction, -undoAngle);
   shape.setRotation(getRotation(to_vector2f(rigidbody.direction)));
 
-  if (!isHardBraking()) {
-    const float volume = lerp(0.f, 100.f, getMagnitude(to_vector2f(rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
-    game.audioSystem.slidefx.setVolume(volume);
-    game.audioSystem.slidefx.stop();
-  } else {
-   game.audioSystem.slidefx.play();
-  }
-
-  if (collided) {
-    const float volume = lerp(0.f, 50.f, getMagnitude(to_vector2f(rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
-    game.audioSystem.collisionfx.setVolume(volume);
-    game.audioSystem.collisionfx.play();
-    collided = false;
-  }
+  applySound(game);
 }
 
 void Car::updateParticles(float deltaTime) {
@@ -156,7 +164,7 @@ void Car::smokeEmission() {
 
   const sf::Vector2f bottomLeftPoint = transform.transformPoint(shape.getPoint(3));
   const sf::Vector2f bottomRightPoint = transform.transformPoint(shape.getPoint(2));
-  
+
   //const float PARTICLES_EMISSION_RATIO = 1 / 2000.0f;
   //const float emissionRate = PARTICLES_EMISSION_RATIO * getMagnitude(to_vector2f(rigidbody.linearVelocity));
 
@@ -176,7 +184,7 @@ void Car::updateDriftingStatus() {
 bool Car::isHardBraking() {
   if (getMagnitude(rigidbody.linearVelocity) < TIRE_TRACK_MIN_VELOCITY) return false;
 
-   bool isCarGoingForward = rigidbody.isGoingForward();
+  bool isCarGoingForward = rigidbody.isGoingForward();
 
   bool isHardBraking = false;
 
@@ -193,7 +201,7 @@ bool Car::isHardBraking() {
 }
 
 void Car::tireTrackEmission() {
-  if(!isHardBraking()) return;
+  if (!isHardBraking()) return;
 
   const auto transform = shape.getTransform();
 
