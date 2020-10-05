@@ -203,7 +203,7 @@ void Circuit::update(float) {
 
   if (carIntersectsLine(game.car, checkpoints[currentCheckpoint])) {
     currentCheckpoint++;
-    if(currentCheckpoint == 1) {
+    if (currentCheckpoint != checkpoints.size() - 1) {
       for (auto& ghost : game.newGhosts) {
         ghost.activateRendering();
         game.ghosts.push_back(std::move(ghost));

@@ -91,3 +91,7 @@ void Rigidbody::reset() {
   linearVelocity = { 0.0, 0.0 };
   angularVelocity = 0.0;
 }
+
+void Rigidbody::setForwardDrag(f64 drag) {
+  kForwardDrag = drag;
+}

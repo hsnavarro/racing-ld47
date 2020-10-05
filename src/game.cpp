@@ -13,30 +13,68 @@ void Game::run() {
   setup();
   while (window.isOpen()) {
     switch (state) {
-    case State::MAIN_MENU: {
-      printf("main menu!\n");
-      setupRacing();
-      state = State::RACING;
-    }
-                         break;
+      case State::MAIN_MENU: {
+        printf("main menu!\n");
+        setupRacing();
+        state = State::RACING;
+      }
+      break;
 
-    case State::RACING: {
-      handleEvents();
-      updateRacing();
-      renderRacing();
-    }
-                      break;
+      case State::RACING: {
+        handleEvents();
+        updateRacing();
+        renderRacing();
+      }
+      break;
 
-    case State::END_GAME: {
-      handleEvents();
-      //updateRacing();
-      renderRacing();
-    }
-                        break;
+      case State::END_GAME: {
+        handleEvents();
+        updateEndGame();
+        renderRacing();
+      }
+      break;
     }
 
     window.display();
   }
+}
+
+void Game::setupEndGame() {
+  circuits.clear();
+
+  Circuit circuit {*this};
+  circuit.loadFromFile("assets/circuits/escape.cir");
+
+  auto checkpoint = circuit.checkpoints.back();
+  circuit.checkpoints.clear();
+  circuit.checkpoints.push_back(checkpoint);
+
+  circuits.push_back(circuit);
+  printf("%zu\n", circuits[0].walls.size());
+
+  const auto w = static_cast<int>(circuits[0].tiles[0].size() * CIRCUIT_TILE_SIZE);
+  const auto h = static_cast<int>(circuits[0].tiles.size() * CIRCUIT_TILE_SIZE);
+
+  if (!circuitRenderTexture.create(w, h)) {
+    printf("Could not create circuit render texture!\n");
+  }
+
+  circuitRenderTexture.clear(sf::Color::Transparent);
+  circuits[0].draw(circuitRenderTexture);
+  circuitSprite.setTexture(circuitRenderTexture.getTexture());
+  circuitSprite.setTextureRect({ 0, h, w, -h });
+
+  roadTopRenderTexture.clear(sf::Color::Transparent);
+
+  currentCircuit = &circuits[0];
+  currentCircuit->startRace();
+  ghosts.clear();
+
+  car.rigidbody.setForwardDrag(0.0);
+}
+
+void Game::updateEndGame() {
+  updateRacing();
 }
 
 void Game::setup() {
@@ -61,30 +99,29 @@ void Game::setup() {
 void Game::setupRacing() {
   // Circuits
   Circuit circuit {*this};
-  {
-    circuit.loadFromFile("assets/circuits/back-forth-0.cir");
-    circuits.push_back(circuit);
-  }
-  {
-    circuit.loadFromFile("assets/circuits/back-forth-1.cir");
-    circuits.push_back(circuit);
-  }
-  {
-    circuit.loadFromFile("assets/circuits/back-forth-2.cir");
-    circuits.push_back(circuit);
-  }
-  {
-    circuit.loadFromFile("assets/circuits/back-forth-3.cir");
-    circuits.push_back(circuit);
-  }
-  {
-    circuit.loadFromFile("assets/circuits/back-forth-4.cir");
-    circuits.push_back(circuit);
-  }
-  {
-    circuit.loadFromFile("assets/circuits/back-forth-5.cir");
-    circuits.push_back(circuit);
-  }
+
+  circuit.loadFromFile("assets/circuits/back-forth-0.cir");
+  circuits.push_back(circuit);
+
+  /*
+  circuit.loadFromFile("assets/circuits/back-forth-1.cir");
+  circuits.push_back(circuit);
+
+  circuit.loadFromFile("assets/circuits/back-forth-2.cir");
+  circuits.push_back(circuit);
+
+  circuit.loadFromFile("assets/circuits/back-forth-3.cir");
+  circuits.push_back(circuit);
+
+  circuit.loadFromFile("assets/circuits/back-forth-4.cir");
+  circuits.push_back(circuit);
+
+  circuit.loadFromFile("assets/circuits/back-forth-5.cir");
+  circuits.push_back(circuit);
+
+  circuit.loadFromFile("assets/circuits/back-forth-6.cir");
+  circuits.push_back(circuit);
+  */
 
   // Render targets
   const auto w = static_cast<int>(circuits[0].tiles[0].size() * CIRCUIT_TILE_SIZE);
@@ -226,7 +263,7 @@ void Game::handleEvents() {
       }
     }
 
-    if (state == State::RACING and !onCountdown)
+    if ((state == State::RACING or state == State::END_GAME) and !onCountdown and !hasEscaped)
       handleEventRacing(event);
   }
 }
@@ -236,9 +273,13 @@ void Game::completeLap() {
 
   lastLapTime = lapTime.restart().asSeconds();
 
+  if (state == State::END_GAME) {
+    hasEscaped = true;
+    return;
+  }
+
   currentCircuit->resetCheckpoints();
   currentGhost.completeLap(lastLapTime);
-
 
   // successful lap
   if (lastLapTime <= currentCircuit->lapTimeLimit) {
@@ -246,8 +287,9 @@ void Game::completeLap() {
 
     currentCircuitIndex++;
     if (currentCircuitIndex == circuits.size()) {
+      setupEndGame();
       state = State::END_GAME;
-      currentCircuit = nullptr;
+
     } else {
       currentCircuit = &circuits[currentCircuitIndex];
 

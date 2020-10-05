@@ -30,6 +30,9 @@ public:
   void handleEvents();
   void handleEventRacing(sf::Event&);
 
+  void setupEndGame();
+  void updateEndGame();
+
   void completeLap();
 
   void placeCamera();
@@ -37,6 +40,7 @@ public:
 public:
   State state = State::MAIN_MENU;
   bool onCountdown;
+  bool hasEscaped = false;
 
   AudioSystem audioSystem;
   sf::RenderWindow window;
@@ -48,6 +52,7 @@ public:
   sf::Clock frameClock;
   sf::Clock lapTime;
   float lastLapTime = -1.0f;
+  float bestLapTime = -1.0f;
 
   Car car;
 

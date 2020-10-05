@@ -90,6 +90,13 @@ void UI::render() {
   char str[30];
   game.window.setView(uiView);
 
+  if (game.state == Game::State::END_GAME and game.hasEscaped) {
+    text.setString("Thank you for playing!");
+    text.setScale({ 1.0f, 1.0f });
+    drawTextCenter(text, SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, game.window);
+    return;
+  };
+
   float verticalOffset = 0.0f;
 
   const auto maximumSize = [this] {

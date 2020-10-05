@@ -22,6 +22,8 @@ public:
 
   void reset();
 
+  void setForwardDrag(f64 drag);
+
 public:
   sf::Vector2<f64> position = { 0.0, 0.0 };
   sf::Vector2<f64> direction = { 0.0, -1.0 };
