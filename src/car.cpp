@@ -61,7 +61,7 @@ void static applySound(Game& game) {
     car.collided = false;
   }
 
-  const float engineVolume = lerp(30.f, 80.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+  const float engineVolume = lerp(5.0f, 80.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
   game.audioSystem.engineFX.setVolume(engineVolume);
 
   game.audioSystem.engineStartFX.stop();

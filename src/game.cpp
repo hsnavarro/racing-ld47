@@ -83,6 +83,9 @@ void Game::setup() {
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
+  audioSystem.backgroundMusic.setVolume(70.f);
+  audioSystem.backgroundMusic.play();
+
   audioSystem.engineStartFX.setVolume(30.f);
   audioSystem.engineStartFX.play();
 
@@ -99,9 +102,6 @@ void Game::setup() {
 void Game::setupRacing() {
   // Circuits
   Circuit circuit {*this};
-
-  //circuit.loadFromFile("assets/circuits/test-circuit.cir");
-  //circuits.push_back(circuit);
 
   circuit.loadFromFile("assets/circuits/back-forth-0.cir");
   circuits.push_back(circuit);
@@ -159,9 +159,7 @@ void Game::setupRacing() {
 }
 
 void Game::updateRacing() {
-  
-  //audioSystem.backgroundMusic.setVolume(70.f);
-  //audioSystem.backgroundMusic.play();
+
   ui.update();
 
   if (onCountdown) {
@@ -296,6 +294,7 @@ void Game::completeLap() {
   lastLapTime = lapTime.restart().asSeconds();
 
   if (state == State::END_GAME) {
+    ui.clock.restart();
     hasEscaped = true;
     return;
   }

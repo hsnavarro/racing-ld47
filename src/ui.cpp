@@ -47,7 +47,7 @@ void UI::setup() {
 void UI::update() {
   const auto t = clock.getElapsedTime().asSeconds();
 
-  if (t > 7.0f) return;
+  if (t > 7.0f or game.hasEscaped) return;
 
   if(lastT <= 6.0f and t > 6.0f) {
     finishedCountdown = true;
@@ -91,8 +91,15 @@ void UI::render() {
 
   if (game.state == Game::State::END_GAME and game.hasEscaped) {
     text.setString("Thank you for playing!");
+
+    float timeUntilEscape = clock.getElapsedTime().asSeconds();
+    if (timeUntilEscape > 2.0f) {
+      text.setString("Developers:\n\nHenrique Navarro\n\nLuciano Barreira\n\nNaum Azeredo\n\nGithub:\n\n/hsnavarro/racing-ld47\n");
+    }
+
     text.setScale({ 1.0f, 1.0f });
     drawTextCenter(text, SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, game.window);
+
     return;
   };
 
