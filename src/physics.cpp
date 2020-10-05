@@ -90,6 +90,7 @@ static std::optional<sf::Vector2f> carIntersectsGhost(Car& car, const Ghost& gho
 
   if (collided) {
     car.collided = true;
+    car.collisionVelocity = getMagnitude(ghost.getCurrentState().rigidbody.linearVelocity - car.rigidbody.linearVelocity);
     return collisionVector;
   }
   return std::nullopt;
@@ -120,7 +121,11 @@ void resolveCollisions(Game& game) {
     }
 
     if (!collided) break;
+
     game.car.collided = true;
+    game.car.collisionVelocity = std::abs(dotProduct(getUnitVector(minimumCollisionVector),
+                                                     to_vector2f(game.car.rigidbody.linearVelocity)));
+
     game.car.resolveCollision(to_vector2f64(minimumCollisionVector));
   }
 

@@ -33,15 +33,16 @@ void static applySound(Game& game) {
   auto& car = game.car;
 
   if (!car.isHardBraking()) {
-    const float volume = lerp(0.f, 100.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+    const float volume = lerp(0.f, 30.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
     game.audioSystem.slidefx.setVolume(volume);
     game.audioSystem.slidefx.stop();
   } else {
     game.audioSystem.slidefx.play();
   }
 
-  if (car.collided) {
-    const float volume = lerp(0.f, 50.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+  if (car.collided and
+      car.collisionVelocity > 30.0f) {
+    const float volume = lerp(0.f, 30.f, static_cast<float>(car.collisionVelocity) / CAR_MAX_VELOCITY);
 
     std::random_device randomDevice;
     std::mt19937 generator(randomDevice());

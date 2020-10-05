@@ -59,6 +59,8 @@ public:
 
   ParticleSystem smokeParticles, leftTireTracks, rightTireTracks;
 
+  f64 collisionVelocity;
+
   bool turnRight = false;
   bool turnLeft = false;
   bool goForward = false;
