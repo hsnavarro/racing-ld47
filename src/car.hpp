@@ -7,9 +7,11 @@
 #include "particle-system.hpp"
 
 const float CAR_ENGINE_ACCELERATION  = 80;
-const float CAR_DRIFT_BRAKE_ACCELERATION = -90;
+const float CAR_DRIFT_BRAKE_ACCELERATION = -120;
 const float CAR_BRAKE_ACCELERATION   = -150;
 const float CAR_REVERSE_ACCELERATION = -60;
+
+const float CAR_MAX_VELOCITY = 220.f;
 
 const float MOVEMENT_TOLERANCE = 0.01f;
 
@@ -36,6 +38,10 @@ public:
   void renderIcon(const sf::View& view);
 
   void resolveCollision(sf::Vector2<f64> collisionVector);
+
+  bool isHardBraking();
+  bool isAccelerating();
+  bool isReversing();
 
   void smokeEmission();
   void tireTrackEmission();

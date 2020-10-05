@@ -15,7 +15,7 @@ const int DISPLAY_FPS         = 60;
 const int ANTI_ALIASING_LEVEL = 8;
 
 const float LIM_TIRE_TRACK_ANGLE = 21.5f;
-const float TIRE_TRACK_MIN_VELOCITY = 40.0f;
+const float TIRE_TRACK_MIN_VELOCITY = 20.0f;
 
 const bool IS_VARIABLE_ZOOM_ACTIVE = true;
 

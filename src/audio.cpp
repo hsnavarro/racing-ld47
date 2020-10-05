@@ -14,6 +14,11 @@ void Audio::play() {
   if(!isPlaying()) audio.play(); 
 }
 
+void Audio::stop() {
+  audio.pause();
+  audio.stop();
+}
+
 void Audio::setVolume(float volume) {
   audio.setVolume(volume);
 }

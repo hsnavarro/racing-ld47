@@ -6,6 +6,7 @@ class Audio {
   public:
     Audio(std::string);
     void play();
+    void stop();
     void setVolume(float);
     bool isPlaying();
 

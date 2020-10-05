@@ -19,6 +19,15 @@ Car::Car(Game& game_) :
   icon.setFillColor(ICON_COLOUR);
 }
 
+bool Car::isAccelerating() {
+  if (goReverse) return false;
+  return goForward;
+}
+
+bool Car::isReversing() {
+  return goReverse;
+}
+
 void Car::update(float deltaTime) {
   float accelerationValue = 0.0;
 
@@ -26,10 +35,12 @@ void Car::update(float deltaTime) {
 
   bool isMoving = getMagnitude(rigidbody.linearVelocity) > MOVEMENT_TOLERANCE;
 
-  if (goReverse) {
+  if (isReversing()) {
     if (isGoingForward) accelerationValue = brakeAcceleration;
     else accelerationValue = reverseAcceleration;
-  } else if (goForward) accelerationValue = engineAcceleration;
+  }
+  
+  if (isAccelerating()) accelerationValue = engineAcceleration;
 
   if (isHandBrakeActive and isMoving) {
     if (isGoingForward) accelerationValue += brakeDriftAcceleration;
@@ -85,6 +96,14 @@ void Car::update(float deltaTime) {
   icon.setPosition(to_vector2f(rigidbody.position));
   ::rotate(rigidbody.direction, -undoAngle);
   shape.setRotation(getRotation(to_vector2f(rigidbody.direction)));
+
+  if (!isHardBraking()) {
+    const float volume = lerp(0.f, 100.f, getMagnitude(to_vector2f(rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+    game.audioSystem.slidefx.setVolume(volume);
+    game.audioSystem.slidefx.stop();
+  } else {
+   game.audioSystem.slidefx.play();
+  }
 }
 
 void Car::updateParticles(float deltaTime) {
@@ -134,7 +153,7 @@ void Car::smokeEmission() {
   //const float PARTICLES_EMISSION_RATIO = 1 / 2000.0f;
   //const float emissionRate = PARTICLES_EMISSION_RATIO * getMagnitude(to_vector2f(rigidbody.linearVelocity));
 
-  const float emissionRate = lerp(0.06f, 0.4f, getMagnitude(to_vector2f(rigidbody.linearVelocity) / 200.0f));
+  const float emissionRate = lerp(0.06f, 0.4f, getMagnitude(to_vector2f(rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
 
   smokeParticles.emissionFromLine(bottomLeftPoint, bottomRightPoint, -to_vector2f(rigidbody.direction), emissionRate);
 }
@@ -147,25 +166,27 @@ void Car::updateDriftingStatus() {
   if (isSliding and !wasSliding) driftTime.restart();
 }
 
-void Car::tireTrackEmission() {
-  if (getMagnitude(rigidbody.linearVelocity) < TIRE_TRACK_MIN_VELOCITY and !isHandBrakeActive) return;
+bool Car::isHardBraking() {
+  if (getMagnitude(rigidbody.linearVelocity) < TIRE_TRACK_MIN_VELOCITY) return false;
 
-  bool isCarGoingForward = rigidbody.isGoingForward();
+   bool isCarGoingForward = rigidbody.isGoingForward();
 
-  bool doTireTrackEmission = false;
+  bool isHardBraking = false;
 
-  if (isHandBrakeActive) doTireTrackEmission = true;
+  if (isHandBrakeActive) isHardBraking = true;
 
   if (isCarGoingForward) {
-    if (goReverse) doTireTrackEmission = true;
-    if (isSliding()) doTireTrackEmission = true;
+    if (isReversing()) isHardBraking = true;
+    if (isSliding()) isHardBraking = true;
   }
 
-  if (!isCarGoingForward and goForward) doTireTrackEmission = true;
+  if (!isCarGoingForward and isAccelerating()) isHardBraking = true;
 
-  if (!doTireTrackEmission) return;
+  return isHardBraking;
+}
 
-  game.audioSystem.slidefx.play();
+void Car::tireTrackEmission() {
+  if(!isHardBraking()) return;
 
   const auto transform = shape.getTransform();
 
