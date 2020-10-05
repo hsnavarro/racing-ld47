@@ -14,9 +14,8 @@ void Game::run() {
   while (window.isOpen()) {
     switch (state) {
       case State::MAIN_MENU: {
-        printf("main menu!\n");
-        setupRacing();
-        state = State::RACING;
+        handleEvents();
+        renderMainMenu();
       }
       break;
 
@@ -184,6 +183,12 @@ void Game::updateRacing() {
   }
 }
 
+void Game::renderMainMenu() {
+  window.clear();
+  ui.render();
+  window.setView(camera);
+}
+
 void Game::renderRacing() {
   window.clear();
 
@@ -208,18 +213,26 @@ void Game::handleEventRacing(sf::Event& event) {
 
     switch (event.key.code) {
     case sf::Keyboard::W:
+    case sf::Keyboard::I:
+    case sf::Keyboard::N:
       car.goForward = keepActive;
       break;
 
     case sf::Keyboard::S:
+    case sf::Keyboard::K:
+    case sf::Keyboard::M:
       car.goReverse = keepActive;
       break;
 
     case sf::Keyboard::A:
+    case sf::Keyboard::J:
+    case sf::Keyboard::X:
       car.turnLeft = keepActive;
       break;
 
     case sf::Keyboard::D:
+    case sf::Keyboard::L:
+    case sf::Keyboard::C:
       car.turnRight = keepActive;
       break;
 
@@ -228,16 +241,27 @@ void Game::handleEventRacing(sf::Event& event) {
       car.isHandBrakeActive = keepActive;
       break;
 
-    case sf::Keyboard::J:
+    case sf::Keyboard::T:
       car.rigidbody.applyPointAngularVelocity(10.0f);
       break;
 
-    case sf::Keyboard::K:
+    case sf::Keyboard::Y:
       car.rigidbody.applyPointAngularVelocity(-10.0f);
       break;
 
-    case sf::Keyboard::R:
+    default:
+      break;
+    }
+  }
+}
+
+void Game::handleEventMainMenu(sf::Event& event) {
+  if (event.type == sf::Event::KeyPressed or event.type == sf::Event::KeyReleased) {
+
+    switch (event.key.code) {
+    case sf::Keyboard::Space:
       setupRacing();
+      state = State::RACING;
       break;
 
     default:
@@ -251,20 +275,11 @@ void Game::handleEvents() {
   while (window.pollEvent(event)) {
     if (event.type == sf::Event::Closed) window.close();
 
-    if (event.type == sf::Event::KeyPressed or event.type == sf::Event::KeyReleased) {
-      switch (event.key.code) {
-        // Todo(naum): remove on release
-        case sf::Keyboard::Escape:
-          window.close();
-        break;
-
-        default:
-        break;
-      }
-    }
-
     if ((state == State::RACING or state == State::END_GAME) and !onCountdown and !hasEscaped)
       handleEventRacing(event);
+
+    if (state == State::MAIN_MENU)
+      handleEventMainMenu(event);
   }
 }
 

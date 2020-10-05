@@ -1,5 +1,6 @@
 #include "ui.hpp"
 
+#include <cmath>
 #include "game.hpp"
 
 void drawTextRight(sf::Text& text, float x, float y, sf::RenderWindow& window) {
@@ -48,7 +49,7 @@ void UI::update() {
   if (readyCountdown == 0) {
     game.onCountdown = false;
     text.setString("GO!");
-    if (clock.getElapsedTime().asSeconds() >= 1.0f) {
+    if (t >= 1.0f) {
       readyCountdown--;
     }
   } else if (readyCountdown == 4) {
@@ -58,7 +59,7 @@ void UI::update() {
     text.setScale({ scale, scale });
     */
 
-    if (clock.getElapsedTime().asSeconds() >= 2.0f) {
+    if (t >= 2.0f) {
       readyCountdown--;
       clock.restart();
     }
@@ -94,6 +95,44 @@ void UI::render() {
     text.setString("Thank you for playing!");
     text.setScale({ 1.0f, 1.0f });
     drawTextCenter(text, SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, game.window);
+    return;
+  };
+
+  if (game.state == Game::State::MAIN_MENU) {
+    const auto t = clock.getElapsedTime().asSeconds();
+
+    auto getPos = [](float f, float d, float w) {
+      return f - static_cast<int>(f / (d + w)) * (d + w) - w;
+    };
+
+    sf::Text title1Text ("CIRCUIT", font, 42);
+    auto width = title1Text.getLocalBounds().width;
+    title1Text.setPosition(getPos(100.0f * cos(1.0f + t * 2.0f) + t * 330.0f, SCREEN_WIDTH, width), 100.0f);
+    game.window.draw(title1Text);
+
+    sf::Text title2Text ("ESCAPE", font, 40);
+    width = title2Text.getLocalBounds().width;
+    title2Text.setPosition(getPos(200.0f * sin(2.1f + t * 1.2f) + t * 415.0f, SCREEN_WIDTH, width), 150.0f);
+    game.window.draw(title2Text);
+
+    sf::Text inst0("W/I/N - accelerate", font, 20);
+    drawTextCenter(inst0, SCREEN_WIDTH / 2 + 10.0f * cos(t), 340.0f, game.window);
+
+    sf::Text inst1("S/K/M - break/reverse", font, 20);
+    drawTextCenter(inst1, SCREEN_WIDTH / 2 + 10.0f * cos(0.1f + t * 0.2f), 370.0f + 2.7f * cos(0.2f + t * 0.1f), game.window);
+
+    sf::Text inst2("A/J/X - turn left", font, 20);
+    drawTextCenter(inst2, SCREEN_WIDTH / 2 + 10.2f * cos(1.1f + t * 1.7f), 400.0f + 2.1f * cos(1.7f + t * 3.1f), game.window);
+
+    sf::Text inst3("D/L/C - turn right", font, 20);
+    drawTextCenter(inst3, SCREEN_WIDTH / 2 + 13.0f * cos(0.8f + t * 2.2f), 430.0f + 2.3f * cos(8.8f + t * 1.1f), game.window);
+
+    sf::Text inst4("space - handbrake", font, 20);
+    drawTextCenter(inst4, SCREEN_WIDTH / 2 + 12.0f * cos(0.7f + t * 3.9f), 460.0f + 2.9f * cos(2.0f + t * 0.2f), game.window);
+
+    sf::Text inst5("press 'space' to start", font, 20);
+    drawTextCenter(inst5, SCREEN_WIDTH / 2 + 10.7f * cos(2.2f + t * 1.2f), 530.0f + 2.3f * cos(3.1f + t * 3.8f), game.window);
+
     return;
   };
 

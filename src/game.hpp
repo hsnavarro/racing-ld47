@@ -23,12 +23,15 @@ public:
   void run();
   void setup();
 
+  void renderMainMenu();
+
   void setupRacing();
   void updateRacing();
   void renderRacing();
 
   void handleEvents();
   void handleEventRacing(sf::Event&);
+  void handleEventMainMenu(sf::Event&);
 
   void setupEndGame();
   void updateEndGame();
