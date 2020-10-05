@@ -8,10 +8,10 @@ AudioSystem::AudioSystem(Game& _game) :
     slideFX { SLIDE_FX_FILE }, 
     collisionFX { COLLISION_FX_FILE }, 
     engineFX { ENGINE_FX_FILE }, 
-    engineStartFx { ENGINE_START_FX_FILE }, 
+    engineStartFX { ENGINE_START_FX_FILE }, 
     acceleratorFX { ACCELERATOR_FX_FILE }, 
-    countdownfx { COUNTDOWN_FX_FILE }, 
-    goSoundFx { GO_SOUND_FX_FILE } {
+    countdownFX { COUNTDOWN_FX_FILE }, 
+    goSoundFX { GO_SOUND_FX_FILE } {
 
     //collisionfx  = { { COLLISION_FX_FILE }, { COLLISION_FX2_FILE } };
 }

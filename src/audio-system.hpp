@@ -25,9 +25,9 @@ public:
   Audio slideFX;
   Audio collisionFX;
   Audio engineFX;
-  Audio engineStartFx;
+  Audio engineStartFX;
   Audio acceleratorFX;
-  Audio countdownfx;
-  Audio goSoundFx;
+  Audio countdownFX;
+  Audio goSoundFX;
   //std::vector<Audio> collisionfx;
 };

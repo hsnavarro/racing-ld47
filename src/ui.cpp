@@ -51,11 +51,10 @@ void UI::update() {
 
   if(lastT <= 6.0f and t > 6.0f) {
     finishedCountdown = true;
-    text.setString("");
   } if (lastT <= 5.0f and t > 5.0f) {
     game.onCountdown = false;
     text.setString("GO!");
-    game.audioSystem.goSoundFx.play();
+    game.audioSystem.goSoundFX.play();
   } else if (t <= 5.0f) {
     for (int i = 3; i >= 1; i--) {
       float exhibitionTime = 5.0f - float(i);
@@ -65,7 +64,7 @@ void UI::update() {
         snprintf(str, 10, "%d", i);
 
         text.setString(str);
-        game.audioSystem.countdownfx.play();
+        game.audioSystem.countdownFX.play();
       }
 
       if (t > exhibitionTime) {
@@ -194,5 +193,5 @@ void UI::render() {
   drawTextRight(speedText, SCREEN_WIDTH - 10.0f, SCREEN_HEIGHT - 40.0f, game.window);
 
   //
-  drawTextCenter(text, SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, game.window);
+  if(!finishedCountdown) drawTextCenter(text, SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, game.window);
 }

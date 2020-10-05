@@ -83,8 +83,8 @@ void Game::setup() {
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
-  audioSystem.engineStartFx.setVolume(30.f);
-  audioSystem.engineStartFx.play();
+  audioSystem.engineStartFX.setVolume(30.f);
+  audioSystem.engineStartFX.play();
 
   camera.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
   camera.setCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
