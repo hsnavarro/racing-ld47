@@ -23,38 +23,55 @@ void Car::update(float deltaTime) {
 
   bool isGoingForward = rigidbody.isGoingForward();
 
+  bool isMoving = getMagnitude(rigidbody.linearVelocity) > MOVEMENT_TOLERANCE;
+
   if (goReverse) {
     if (isGoingForward) accelerationValue = brakeAcceleration;
     else accelerationValue = reverseAcceleration;
-  } else if (goForward) {
-    if (isDriftActive) accelerationValue = engineDriftAcceleration;
-    else accelerationValue = engineAcceleration;
+  } else if (goForward) accelerationValue = engineAcceleration;
+
+  if (isHandBrakeActive and isMoving) {
+    if (isGoingForward) accelerationValue += brakeDriftAcceleration;
+    else accelerationValue -= brakeDriftAcceleration;
   }
 
   float undoAngle = 0.0f;
 
   float deltaAngularVelocity = 0.0f;
-  if (turnLeft) {
-    if (isDriftActive) {
-      deltaAngularVelocity = -angularDriftVelocity;
-      undoAngle = PI32 / 6.0f;
-      ::rotate(rigidbody.direction, undoAngle);
-    } else deltaAngularVelocity = -angularVelocity;
-  }
-  if (turnRight) {
-    if (isDriftActive) {
-      deltaAngularVelocity = angularDriftVelocity;
-      undoAngle = -PI32 / 6.0f;
-      ::rotate(rigidbody.direction, undoAngle);
-    } else deltaAngularVelocity = angularVelocity;
+
+  // create timer
+  if (isHandBrakeActive) rigidbody.kLateralDrag = lateralDriftDrag;
+  else rigidbody.kLateralDrag = lateralDrag;
+
+  if (isMoving) {
+
+    if (turnLeft) {
+      deltaAngularVelocity = -angularVelocity;
+
+      if (isHandBrakeActive) {
+        deltaAngularVelocity = -angularVelocity;
+        //undoAngle = PI32 / 6.0f;
+        //::rotate(rigidbody.direction, undoAngle);
+      }
+
+    }
+    if (turnRight) {
+      deltaAngularVelocity = angularVelocity;
+
+      if (isHandBrakeActive) {
+        deltaAngularVelocity = angularVelocity;
+        //undoAngle = -PI32 / 6.0f;
+        //::rotate(rigidbody.direction, undoAngle);
+      }
+    }
   }
 
-  bool wasDrifting = isDrifting;
+  bool wasSliding = isSliding();
   updateDriftingStatus();
   if constexpr (IS_DRIFTING_BURST_ENABLED) {
-    if (!isDrifting and wasDrifting and driftTime.getElapsedTime().asSeconds() > DRIFT_BURST_TIME_THRESHOLD) {
+    if (!isSliding() and wasSliding and driftTime.getElapsedTime().asSeconds() > DRIFT_BURST_TIME_THRESHOLD) {
       auto const unit = getUnitVector(rigidbody.direction);
-      rigidbody.applyPointLinearVelocity(BURST_FORCE*unit);
+      rigidbody.applyPointLinearVelocity(BURST_FORCE * unit);
     }
   }
 
@@ -123,17 +140,30 @@ void Car::smokeEmission() {
 }
 
 void Car::updateDriftingStatus() {
-  const bool wasDrifting = isDrifting;
+  const bool wasSliding = isSliding();
   const auto angle = to_deg64(acos(dotProduct(getUnitVector(rigidbody.direction), getUnitVector(rigidbody.linearVelocity))));
-  isDrifting = angle > DRIFT_ANGLE and getMagnitude(rigidbody.linearVelocity) > DRIFT_MIN_VELOCITY;
+  const bool isSliding = angle > LIM_TIRE_TRACK_ANGLE;
 
-  if (isDrifting and !wasDrifting) {
-    driftTime.restart();
-  }
+  if (isSliding and !wasSliding) driftTime.restart();
 }
 
 void Car::tireTrackEmission() {
-  if (!goReverse and !isDrifting) return;
+  if (getMagnitude(rigidbody.linearVelocity) < TIRE_TRACK_MIN_VELOCITY and !isHandBrakeActive) return;
+
+  bool isCarGoingForward = rigidbody.isGoingForward();
+
+  bool doTireTrackEmission = false;
+
+  if (isHandBrakeActive) doTireTrackEmission = true;
+
+  if (isCarGoingForward) {
+    if (goReverse) doTireTrackEmission = true;
+    if (isSliding()) doTireTrackEmission = true;
+  }
+
+  if (!isCarGoingForward and goForward) doTireTrackEmission = true;
+
+  if (!doTireTrackEmission) return;
 
   const auto transform = shape.getTransform();
 
@@ -152,4 +182,9 @@ void Car::setPosition(sf::Vector2f pos) {
 void Car::move(sf::Vector2f deltaPos) {
   rigidbody.position += to_vector2f64(deltaPos);
   shape.setPosition(to_vector2f(rigidbody.position));
+}
+
+bool Car::isSliding() {
+  const auto angle = to_deg64(acos(dotProduct(getUnitVector(rigidbody.direction), getUnitVector(rigidbody.linearVelocity))));
+  return angle > LIM_TIRE_TRACK_ANGLE;
 }

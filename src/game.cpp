@@ -46,6 +46,16 @@ Game::Game() :
   // Circuits
   Circuit::loadAtlas();
 
+  /* Test Physics
+
+  {
+    Circuit circuit {*this};
+    circuit.loadFromFile("assets/circuits/test-circuit.cir");
+    circuits.push_back(circuit);
+  }
+
+  */
+
   {
     Circuit circuit {*this};
     circuit.loadFromFile("assets/circuits/progress-0.cir");
@@ -154,9 +164,12 @@ void Game::render() {
 void Game::placeCamera() {
   camera.setCenter(to_vector2f(car.rigidbody.position));
 
-  //TODO(Naum): add sigmoid
-  float targetZoom = static_cast<float>(0.002 * getMagnitude(car.rigidbody.linearVelocity) + 0.5);
-  currentZoom = lerp(currentZoom, targetZoom, 0.2f);
+  if(IS_VARIABLE_ZOOM_ACTIVE) {
+    //TODO(Naum): add sigmoid
+    float targetZoom = static_cast<float>(0.002 * getMagnitude(car.rigidbody.linearVelocity) + 0.5);
+    currentZoom = lerp(currentZoom, targetZoom, 0.2f);
+  } else currentZoom = 0.5;
+
   camera.setSize(currentZoom * SCREEN_SIZE);
 }
 
@@ -187,7 +200,7 @@ void Game::handleEvents() {
         break;
 
         case sf::Keyboard::Space:
-          car.isDriftActive = keepActive;
+          car.isHandBrakeActive = keepActive;
         break;
 
         // Todo(naum): remove on release
