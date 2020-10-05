@@ -8,7 +8,7 @@ Particle::Particle(float _lifeTime, float particleWidth, float particleHeight, P
     circleShape.setFillColor({ 0, 0, 0, 92 });
   } else {
     rectangleShape.setSize({ particleWidth, particleHeight });
-    rectangleShape.setFillColor({ 0, 0, 0, 192 });
+    rectangleShape.setFillColor({ 0, 0, 0, 128 });
   }
 }
 
