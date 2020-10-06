@@ -80,7 +80,7 @@ void Game::updateEndGame() {
 void Game::setup() {
   sf::ContextSettings settings;
   settings.antialiasingLevel = ANTI_ALIASING_LEVEL;
-  window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Default, settings);
+  window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Titlebar | sf::Style::Close, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
   audioSystem.backgroundMusic.setVolume(70.f);

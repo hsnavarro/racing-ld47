@@ -8,8 +8,8 @@ const f32 EPS = 1e-9f;
 const s32 SIMULATION_FPS = 120;
 const f32 SIMULATION_DELTA_TIME = 1.0f / static_cast<f32>(SIMULATION_FPS);
 
-const int SCREEN_WIDTH        = 800;
-const int SCREEN_HEIGHT       = 600;
+const int SCREEN_WIDTH        = 1280;
+const int SCREEN_HEIGHT       = 960;
 const sf::Vector2f SCREEN_SIZE { SCREEN_WIDTH, SCREEN_HEIGHT };
 const int DISPLAY_FPS         = 60;
 const int ANTI_ALIASING_LEVEL = 8;
