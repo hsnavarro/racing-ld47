@@ -110,16 +110,16 @@ void UI::render() {
       return f - static_cast<int>(f / (d + w)) * (d + w) - w;
     };
 
-    sf::Text title1Text("CIRCUIT", font, 42);
+    sf::Text title1Text("CIRCUIT", font, 60);
     auto width = title1Text.getLocalBounds().width;
-    title1Text.setPosition(getPos(100.0f * cos(1.0f + t * 2.0f) + t * 330.0f, SCREEN_WIDTH, width), 100.0f);
+    title1Text.setPosition(getPos(100.0f * cos(1.0f + t * 2.0f) + t * 330.0f, SCREEN_WIDTH, width), 200.0f);
     title1Text.setOutlineColor(sf::Color::Black);
     title1Text.setOutlineThickness(3);
     game.window.draw(title1Text);
 
-    sf::Text title2Text("ESCAPE", font, 40);
+    sf::Text title2Text("ESCAPE", font, 55);
     width = title2Text.getLocalBounds().width;
-    title2Text.setPosition(getPos(200.0f * sin(2.1f + t * 1.2f) + t * 415.0f, SCREEN_WIDTH, width), 150.0f);
+    title2Text.setPosition(getPos(200.0f * sin(2.1f + t * 1.2f) + t * 415.0f, SCREEN_WIDTH, width), 300.0f);
     title2Text.setOutlineColor(sf::Color::Black);
     title2Text.setOutlineThickness(3);
     game.window.draw(title2Text);
@@ -127,32 +127,32 @@ void UI::render() {
     sf::Text inst0("W/I/N - accelerate", font, 20);
     inst0.setOutlineColor(sf::Color::Black);
     inst0.setOutlineThickness(2);
-    drawTextCenter(inst0, SCREEN_WIDTH / 2 + 10.0f * cos(t), 340.0f, game.window);
+    drawTextCenter(inst0, SCREEN_WIDTH / 2 + 10.0f * cos(t), 360.0f + 340.0f + 2.1f * cos(0.6f + t * 0.4f), game.window);
 
     sf::Text inst1("S/K/M - break/reverse", font, 20);
     inst1.setOutlineColor(sf::Color::Black);
     inst1.setOutlineThickness(2);
-    drawTextCenter(inst1, SCREEN_WIDTH / 2 + 10.0f * cos(0.1f + t * 0.2f), 370.0f + 2.7f * cos(0.2f + t * 0.1f), game.window);
+    drawTextCenter(inst1, SCREEN_WIDTH / 2 + 10.0f * cos(0.1f + t * 0.2f), 360.0f + 370.0f + 2.7f * cos(0.2f + t * 0.1f), game.window);
 
     sf::Text inst2("A/J/X - turn left", font, 20);
     inst2.setOutlineColor(sf::Color::Black);
     inst2.setOutlineThickness(2);
-    drawTextCenter(inst2, SCREEN_WIDTH / 2 + 10.2f * cos(1.1f + t * 1.7f), 400.0f + 2.1f * cos(1.7f + t * 3.1f), game.window);
+    drawTextCenter(inst2, SCREEN_WIDTH / 2 + 10.2f * cos(1.1f + t * 1.7f), 360.0f + 400.0f + 2.1f * cos(1.7f + t * 3.1f), game.window);
 
     sf::Text inst3("D/L/C - turn right", font, 20);
     inst3.setOutlineColor(sf::Color::Black);
     inst3.setOutlineThickness(2);
-    drawTextCenter(inst3, SCREEN_WIDTH / 2 + 13.0f * cos(0.8f + t * 2.2f), 430.0f + 2.3f * cos(8.8f + t * 1.1f), game.window);
+    drawTextCenter(inst3, SCREEN_WIDTH / 2 + 13.0f * cos(0.8f + t * 2.2f), 360.0f + 430.0f + 2.3f * cos(8.8f + t * 1.1f), game.window);
 
     sf::Text inst4("space - handbrake", font, 20);
     inst4.setOutlineColor(sf::Color::Black);
     inst4.setOutlineThickness(2);
-    drawTextCenter(inst4, SCREEN_WIDTH / 2 + 12.0f * cos(0.7f + t * 3.9f), 460.0f + 2.9f * cos(2.0f + t * 0.2f), game.window);
+    drawTextCenter(inst4, SCREEN_WIDTH / 2 + 12.0f * cos(0.7f + t * 3.9f), 360.0f + 460.0f + 2.9f * cos(2.0f + t * 0.2f), game.window);
 
     sf::Text inst5("press 'space' to start", font, 20);
     inst5.setOutlineColor(sf::Color::Black);
     inst5.setOutlineThickness(2);
-    drawTextCenter(inst5, SCREEN_WIDTH / 2 + 10.7f * cos(2.2f + t * 1.2f), 530.0f + 2.3f * cos(3.1f + t * 3.8f), game.window);
+    drawTextCenter(inst5, SCREEN_WIDTH / 2 + 10.7f * cos(2.2f + t * 1.2f), 360.0f + 530.0f + 2.3f * cos(3.1f + t * 3.8f), game.window);
 
     return;
   };
