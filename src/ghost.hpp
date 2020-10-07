@@ -16,17 +16,17 @@ class Ghost {
 public:
   Ghost();
 
-  CarState interpolateStates(CarState&, CarState&, f64) const;
+  CarState interpolateStates(const CarState&, const CarState&, const f64) const;
   void addState(const Game&);
-  CarState getState(float) const;
+  CarState getState(const float) const;
   CarState getCurrentState() const;
 
   void activateRendering();
-  void render(sf::RenderWindow&);
+  void render(sf::RenderWindow&) const;
   void reset();
 
   void clear();
-  void completeLap(float);
+  void completeLap(const float);
 
 public:
   std::vector<CarState> lastStates;

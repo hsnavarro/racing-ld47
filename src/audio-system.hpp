@@ -16,10 +16,9 @@ class Game;
 
 class AudioSystem {
 public:
-  AudioSystem(Game&);
+  AudioSystem();
 
 public:
-  Game& game;
   Audio backgroundMusic;
   Audio handbrakeFX;
   Audio slideFX;
@@ -29,5 +28,4 @@ public:
   Audio acceleratorFX;
   Audio countdownFX;
   Audio goSoundFX;
-  //std::vector<Audio> collisionfx;
 };

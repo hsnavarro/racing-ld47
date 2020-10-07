@@ -3,13 +3,13 @@
 #include <cmath>
 #include "game.hpp"
 
-void drawTextRight(sf::Text& text, float x, float y, sf::RenderWindow& window) {
+void static drawTextRight(sf::Text& text, const float x, const float y, sf::RenderWindow& window) {
   const auto size = text.getLocalBounds().width;
   text.setPosition(x - size, y);
   window.draw(text);
 };
 
-void drawTextCenter(sf::Text& text, float x, float y, sf::RenderWindow& window) {
+void static drawTextCenter(sf::Text& text, const float x, const float y, sf::RenderWindow& window) {
   const auto w = text.getLocalBounds().width;
   const auto h = text.getLocalBounds().height;
   text.setPosition(x - w / 2, y - h / 2);

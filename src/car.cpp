@@ -10,10 +10,10 @@
 Car::Car(Game& game_) :
   rigidbody{ CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
   game{ game_ },
-  leftSmokeParticles{ ParticleType::SMOKE, game_ },
-  rightSmokeParticles{ ParticleType::SMOKE, game_ },
-  leftTireTracks{ ParticleType::TIRE_TRACK , game_ },
-  rightTireTracks{ ParticleType::TIRE_TRACK, game_ }
+  leftSmokeParticles{ ParticleType::SMOKE, game_, MAX_NUM_PARTICLES},
+  rightSmokeParticles{ ParticleType::SMOKE, game_, MAX_NUM_PARTICLES},
+  leftTireTracks{ ParticleType::TIRE_TRACK , game_, 1},
+  rightTireTracks{ ParticleType::TIRE_TRACK, game_, 1}
 {
 
   texture.loadFromFile("assets/gfx/car3.png");
@@ -30,35 +30,33 @@ Car::Car(Game& game_) :
   icon.setFillColor(ICON_COLOUR);
 }
 
-bool Car::isAccelerating() {
+bool Car::isAccelerating() const {
   if (goReverse) return false;
   return goForward;
 }
 
-bool Car::isReversing() {
+bool Car::isReversing() const {
   return goReverse;
 }
 
-void static applySound(Game& game) {
-  auto& car = game.car;
-
-  if (!car.isHardBraking()) {
-    const float slideVolume = lerp(0.f, 30.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+void Car::applySound() {
+  if (!isHardBraking()) {
+    const float slideVolume = lerp(0.f, 30.f, getMagnitude(to_vector2f(rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
     game.audioSystem.slideFX.setVolume(slideVolume);
     game.audioSystem.slideFX.stop();
   } else {
     game.audioSystem.slideFX.play();
   }
 
-  if (car.collided) {
+  if (collided) {
       
-    const float volumeRatio = std::min(static_cast<float>(car.collisionVelocity) / (CAR_MAX_VELOCITY * 0.01f), 1.0f);
+    const float volumeRatio = std::min(static_cast<float>(collisionVelocity) / (CAR_MAX_VELOCITY * 0.01f), 1.0f);
     const float collisionVolume = lerp(0.f, 30.f, volumeRatio);
 
     game.audioSystem.collisionFX.setVolume(collisionVolume);
     game.audioSystem.collisionFX.play();
 
-    car.collided = false;
+    collided = false;
   }
 
   game.audioSystem.engineFX.setVolume(30.0f);
@@ -66,14 +64,14 @@ void static applySound(Game& game) {
   game.audioSystem.engineStartFX.stop();
   game.audioSystem.engineFX.play();
 
-  const float acceleratorVolume = lerp(0.f, 100.f, getMagnitude(to_vector2f(car.rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
+  const float acceleratorVolume = lerp(0.f, 100.f, getMagnitude(to_vector2f(rigidbody.linearVelocity) / CAR_MAX_VELOCITY));
   game.audioSystem.acceleratorFX.setVolume(acceleratorVolume);
   const float acceleratorPitchLevel = std::min(100.f, acceleratorVolume) / 50.f;
   game.audioSystem.acceleratorFX.setPitch(acceleratorPitchLevel);
   game.audioSystem.acceleratorFX.play();
 }
 
-void Car::update(float deltaTime) {
+void Car::update(const float deltaTime) {
   float accelerationValue = 0.0;
 
   bool isGoingForward = rigidbody.isGoingForward();
@@ -97,8 +95,8 @@ void Car::update(float deltaTime) {
   float deltaAngularVelocity = 0.0f;
 
   // create timer
-  if (isHandBrakeActive) rigidbody.kLateralDrag = lateralDriftDrag;
-  else rigidbody.kLateralDrag = lateralDrag;
+  if (isHandBrakeActive) rigidbody.lateralDrag = lateralDriftDrag;
+  else rigidbody.lateralDrag = lateralDrag;
 
   if (isMoving) {
     if (turnLeft) deltaAngularVelocity = -angularVelocity;
@@ -108,15 +106,6 @@ void Car::update(float deltaTime) {
   if (!isGoingForward)
     deltaAngularVelocity *= -1;
 
-  bool wasSliding = isSliding();
-  updateDriftingStatus();
-  if constexpr (IS_DRIFTING_BURST_ENABLED) {
-    if (!isSliding() and wasSliding and driftTime.getElapsedTime().asSeconds() > DRIFT_BURST_TIME_THRESHOLD) {
-      auto const unit = getUnitVector(rigidbody.direction);
-      rigidbody.applyPointLinearVelocity(BURST_FORCE * unit);
-    }
-  }
-
   rigidbody.update(deltaTime, accelerationValue, deltaAngularVelocity);
 
   shape.setPosition(to_vector2f(rigidbody.position));
@@ -124,7 +113,7 @@ void Car::update(float deltaTime) {
   ::rotate(rigidbody.direction, -undoAngle);
   shape.setRotation(getRotation(to_vector2f(rigidbody.direction)));
 
-  applySound(game);
+  applySound();
 }
 
 void Car::updateParticles(float deltaTime) {
@@ -157,12 +146,12 @@ void Car::render(const sf::View& view) {
   */
 }
 
-void Car::renderIcon(const sf::View& view) {
+void Car::renderIcon(const sf::View& view) const {
   game.window.setView(view);
   game.window.draw(icon);
 }
 
-void Car::resolveCollision(sf::Vector2<f64> collisionVector) {
+void Car::resolveCollision(const sf::Vector2<f64>& collisionVector) {
   rigidbody.resolveCollision(collisionVector);
 
   shape.setPosition(to_vector2f(rigidbody.position));
@@ -185,15 +174,7 @@ void Car::smokeEmission() {
   rightSmokeParticles.emissionFromPoint(bottomRightPoint - direction * 0.3f , -to_vector2f(rigidbody.direction), emissionRate);
 }
 
-void Car::updateDriftingStatus() {
-  const bool wasSliding = isSliding();
-  const auto angle = to_deg64(acos(dotProduct(getUnitVector(rigidbody.direction), getUnitVector(rigidbody.linearVelocity))));
-  const bool isSliding = angle > LIM_TIRE_TRACK_ANGLE;
-
-  if (isSliding and !wasSliding) driftTime.restart();
-}
-
-bool Car::isHardBraking() {
+bool Car::isHardBraking() const {
   if (getMagnitude(rigidbody.linearVelocity) < TIRE_TRACK_MIN_VELOCITY) return false;
 
   bool isCarGoingForward = rigidbody.isGoingForward();
@@ -228,7 +209,7 @@ void Car::tireTrackEmission() {
   rightTireTracks.emitToTexture(bottomRightPoint - direction * 0.2f, game.roadTopRenderTexture);
 }
 
-void Car::setPosition(sf::Vector2f pos) {
+void Car::setPosition(const sf::Vector2f& pos) {
   rigidbody.reset();
 
   shape.setPosition(pos);
@@ -236,12 +217,12 @@ void Car::setPosition(sf::Vector2f pos) {
   rigidbody.position = to_vector2f64(pos);
 }
 
-void Car::move(sf::Vector2f deltaPos) {
+void Car::move(const sf::Vector2f& deltaPos) {
   rigidbody.position += to_vector2f64(deltaPos);
   shape.setPosition(to_vector2f(rigidbody.position));
 }
 
-bool Car::isSliding() {
+bool Car::isSliding() const {
   const auto angle = to_deg64(acos(dotProduct(getUnitVector(rigidbody.direction), getUnitVector(rigidbody.linearVelocity))));
   return angle > LIM_TIRE_TRACK_ANGLE;
 }

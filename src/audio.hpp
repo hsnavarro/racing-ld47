@@ -4,12 +4,12 @@
 
 class Audio {
   public:
-    Audio(std::string);
+    Audio(const std::string&);
     void play();
     void stop();
-    void setVolume(float);
-    void setPitch(float);
-    bool isPlaying();
+    void setVolume(const float);
+    void setPitch(const float);
+    bool isPlaying() const;
 
   private:
     sf::SoundBuffer audioBuffer;

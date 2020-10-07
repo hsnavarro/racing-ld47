@@ -25,7 +25,3 @@ const auto BURST_FORCE = 100.0;
 
 const float ICON_RADIUS = 30.0f;
 const sf::Color ICON_COLOUR{255,0,0,255};
-
-// For testing
-const sf::Vector2f INITIAL_CAR_POSITION = { SCREEN_WIDTH * 0.5, SCREEN_HEIGHT * 0.5 };
-const sf::Vector2f INITIAL_CAR_DIRECTION = { 0, -1 };

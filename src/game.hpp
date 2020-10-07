@@ -30,8 +30,8 @@ public:
   void renderRacing();
 
   void handleEvents();
-  void handleEventRacing(sf::Event&);
-  void handleEventMainMenu(sf::Event&);
+  void handleEventRacing(const sf::Event&);
+  void handleEventMainMenu(const sf::Event&);
 
   void setupEndGame();
   void updateEndGame();

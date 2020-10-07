@@ -5,9 +5,8 @@
 #include "sfml.hpp"
 #include "physics.hpp"
 #include "algebra.hpp"
-#include "utils.hpp"
 
-Game::Game() : audioSystem{ *this }, ui{ *this }, car{ *this } {}
+Game::Game() : ui{ *this }, car{ *this } {}
 
 void Game::run() {
   setup();
@@ -177,7 +176,7 @@ void Game::updateRacing() {
 
       physics::resolveCollisions(*this);
       if (currentCircuit)
-        currentCircuit->update(deltaTime);
+        currentCircuit->update();
 
       displayDeltaTime -= deltaTime;
     }
@@ -213,7 +212,7 @@ void Game::renderRacing() {
   window.setView(camera);
 }
 
-void Game::handleEventRacing(sf::Event& event) {
+void Game::handleEventRacing(const sf::Event& event) {
   if (event.type == sf::Event::KeyPressed or event.type == sf::Event::KeyReleased) {
     bool keepActive = (event.type == sf::Event::KeyPressed);
 
@@ -261,7 +260,7 @@ void Game::handleEventRacing(sf::Event& event) {
   }
 }
 
-void Game::handleEventMainMenu(sf::Event& event) {
+void Game::handleEventMainMenu(const sf::Event& event) {
   if (event.type == sf::Event::KeyPressed or event.type == sf::Event::KeyReleased) {
 
     switch (event.key.code) {

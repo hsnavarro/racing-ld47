@@ -31,25 +31,26 @@ class Car {
 public:
   Car(Game&);
 
-  void update(float);
-  void updateParticles(float);
-  void updateDriftingStatus();
-  void render(const sf::View& view);
-  void renderIcon(const sf::View& view);
+  void update(const float);
+  void updateParticles(const float);
+  void render(const sf::View&);
+  void renderIcon(const sf::View&) const;
 
-  void resolveCollision(sf::Vector2<f64> collisionVector);
+  void resolveCollision(const sf::Vector2<f64>&);
 
-  bool isHardBraking();
-  bool isAccelerating();
-  bool isReversing();
+  bool isHardBraking() const;
+  bool isAccelerating() const;
+  bool isReversing() const;
+  bool isSliding() const;
 
   void smokeEmission();
   void tireTrackEmission();
 
-  void setPosition(sf::Vector2f);
-  void move(sf::Vector2f);
+  void setPosition(const sf::Vector2f&);
+  void move(const sf::Vector2f&);
 
-  bool isSliding();
+private:
+  void applySound();
 
 public:
   Rigidbody rigidbody;
@@ -71,12 +72,11 @@ public:
   bool collided = false;
   sf::Clock driftTime;
 
-  // These are constants!
-  float lateralDrag = CAR_LATERAL_DRAG;
-  float lateralDriftDrag = CAR_LATERAL_DRIFT_DRAG;
-  float engineAcceleration = CAR_ENGINE_ACCELERATION;
-  float brakeDriftAcceleration = CAR_DRIFT_BRAKE_ACCELERATION;
-  float brakeAcceleration = CAR_BRAKE_ACCELERATION;
-  float reverseAcceleration = CAR_REVERSE_ACCELERATION;
-  float angularVelocity = CAR_ANGULAR_VELOCITY;
+  const float lateralDrag = CAR_LATERAL_DRAG;
+  const float lateralDriftDrag = CAR_LATERAL_DRIFT_DRAG;
+  const float engineAcceleration = CAR_ENGINE_ACCELERATION;
+  const float brakeDriftAcceleration = CAR_DRIFT_BRAKE_ACCELERATION;
+  const float brakeAcceleration = CAR_BRAKE_ACCELERATION;
+  const float reverseAcceleration = CAR_REVERSE_ACCELERATION;
+  const float angularVelocity = CAR_ANGULAR_VELOCITY;
 };

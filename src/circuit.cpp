@@ -197,7 +197,7 @@ void Circuit::setLapTimeLimit(float timeLimit) {
   lapTimeLimit = timeLimit;
 }
 
-void Circuit::update(float) {
+void Circuit::update() {
   if (currentCheckpoint >= checkpoints.size())
     return;
 

@@ -3,7 +3,7 @@
 
 #include <random>
 
-Particle createParticle(ParticleType type) {
+Particle createParticle(const ParticleType type) {
 
   if (type == ParticleType::SMOKE) {
     std::random_device randomDevice;
@@ -26,28 +26,44 @@ Particle createParticle(ParticleType type) {
   }
 }
 
-ParticleSystem::ParticleSystem(ParticleType type, Game& _game) : particlesType{ type }, game{ _game } {
-  while (particles.size() != MAX_NUM_PARTICLES_GENERATED) {
-    particles.push_back(createParticle(particlesType));
+ParticleSystem::ParticleSystem(const ParticleType type, Game& _game, const int maxNumParticles) : particlesType{ type }, game{ _game } {
+  particles.resize(maxNumParticles);
+
+  for (int i = 0; i < MAX_NUM_PARTICLES_GENERATED; i++) {
+    particles[i] = createParticle(particlesType);
+    indexOfLastActiveParticle = i;
   }
+}
+
+void ParticleSystem::updateIndex() {
+  while (indexOfLastActiveParticle >= 0 and
+    particles[indexOfLastActiveParticle].isExpired) indexOfLastActiveParticle--;
 }
 
 void ParticleSystem::update(float deltaTime) {
-  for (auto& particle : particles) particle.update(deltaTime);
+  for (int i = 0; i <= indexOfLastActiveParticle; i++) particles[i].update(deltaTime);
 
-  std::vector<Particle> newParticles;
-  for (auto& particle : particles)
-    if (!particle.isExpired) newParticles.push_back(particle);
+  updateIndex();
 
-  for(int i = 0; i < MAX_NUM_PARTICLES_GENERATED; i++) {
-    if(MAX_NUM_PARTICLES == (int) newParticles.size() ) break;
-    newParticles.push_back(createParticle(particlesType));
+  for (int i = 0; i < indexOfLastActiveParticle; i++) {
+
+    if (particles[i].isExpired) {
+      std::swap(particles[i], particles[indexOfLastActiveParticle]);
+      indexOfLastActiveParticle--;
+
+      updateIndex();
+    }
   }
 
-  particles = newParticles;
+  for (int i = 0; i < MAX_NUM_PARTICLES_GENERATED; i++) {
+    if (indexOfLastActiveParticle + 1 == static_cast<int>(particles.size())) break;
+    indexOfLastActiveParticle++;
+
+    particles[indexOfLastActiveParticle] = createParticle(particlesType);
+  }
 }
 
-void ParticleSystem::emissionFromPoint(const sf::Vector2f& point, const sf::Vector2f& direction, float emissionRate) {
+void ParticleSystem::emissionFromPoint(const sf::Vector2f& point, const sf::Vector2f& direction, const float emissionRate) {
 
   int numberOfParticles = static_cast<int>(particles.size());
   int particlesLaunched = static_cast<int>(emissionRate * numberOfParticles);
@@ -71,7 +87,7 @@ void ParticleSystem::emitToTexture(const sf::Vector2f& point, sf::RenderTexture&
   renderTexture.draw(particles[0].shape());
 }
 
-void ParticleSystem::emissionFromLine(const sf::Vector2f& a, const sf::Vector2f& b, const sf::Vector2f& direction, float emissionRate) {
+void ParticleSystem::emissionFromLine(const sf::Vector2f& a, const sf::Vector2f& b, const sf::Vector2f& direction, const float emissionRate) {
 
   const sf::Vector2f lineDirection = b - a;
 
@@ -79,7 +95,7 @@ void ParticleSystem::emissionFromLine(const sf::Vector2f& a, const sf::Vector2f&
   std::mt19937 generator(randomDevice());
   std::uniform_real_distribution<> doubleRand(0.0, 1.0);
 
-  int numberOfParticles = static_cast<int>(particles.size());
+  int numberOfParticles = static_cast<int>(indexOfLastActiveParticle + 1);
   int particlesLaunched = static_cast<int>(emissionRate * numberOfParticles);
 
   for (auto& particle : particles) {
@@ -99,7 +115,6 @@ void ParticleSystem::emissionFromLine(const sf::Vector2f& a, const sf::Vector2f&
 }
 
 void ParticleSystem::render() {
-  for (auto& particle : particles) {
-    if (particle.wasLaunched) game.window.draw(particle.shape());
-  }
+  for (int i = 0; i <= indexOfLastActiveParticle; i++)
+    game.window.draw(particles[i].shape());
 }

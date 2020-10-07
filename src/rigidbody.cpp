@@ -6,19 +6,17 @@
 
 #include <cstdio>
 
-Rigidbody::Rigidbody() {}
-
-Rigidbody::Rigidbody(f64 forwardDrag,
-                     f64 lateralDrag,
-                     f64 angularDrag) :
-    kForwardDrag { forwardDrag },
-    kLateralDrag { lateralDrag },
+Rigidbody::Rigidbody(const f64 forwardDrag,
+                     const f64 lateralDrag,
+                     const f64 angularDrag) :
+    forwardDrag { forwardDrag },
+    lateralDrag { lateralDrag },
     kAngularDrag { angularDrag }
 {}
 
-void Rigidbody::update(f64 deltaTime,
-                       f64 linearAcceleration,
-                       f64 deltaAngularVelocity) {
+void Rigidbody::update(const f64 deltaTime,
+                       const f64 linearAcceleration,
+                       const f64 deltaAngularVelocity) {
 
 
   // rotation
@@ -38,8 +36,8 @@ void Rigidbody::update(f64 deltaTime,
   const f64 forwardSpeed = dotProduct(linearVelocity, getUnitVector(direction));
   const f64 lateralSpeed = crossProduct(linearVelocity, getUnitVector(direction));
 
-  const f64 forwardAccel = linearAcceleration - kForwardDrag * forwardSpeed;
-  const f64 lateralAccel = - kLateralDrag * lateralSpeed;
+  const f64 forwardAccel = linearAcceleration - forwardDrag * forwardSpeed;
+  const f64 lateralAccel = - lateralDrag * lateralSpeed;
 
   linearVelocity =
     (forwardSpeed + forwardAccel * deltaTime) * direction +
@@ -48,15 +46,15 @@ void Rigidbody::update(f64 deltaTime,
   position += linearVelocity * deltaTime;
 }
 
-void Rigidbody::applyPointAngularVelocity(f64 deltaAngularVelocity) {
+void Rigidbody::applyPointAngularVelocity(const f64 deltaAngularVelocity) {
   angularVelocity += deltaAngularVelocity;
 }
 
-void Rigidbody::applyPointLinearVelocity(sf::Vector2<f64> deltaLinearVelocity) {
+void Rigidbody::applyPointLinearVelocity(const sf::Vector2<f64>& deltaLinearVelocity) {
   linearVelocity += deltaLinearVelocity;
 }
 
-void Rigidbody::resolveCollision(sf::Vector2<f64> collisionVector) {
+void Rigidbody::resolveCollision(const sf::Vector2<f64>& collisionVector) {
   position += collisionVector;
 
   const auto alignedCollisionAmount =
@@ -92,6 +90,6 @@ void Rigidbody::reset() {
   angularVelocity = 0.0;
 }
 
-void Rigidbody::setForwardDrag(f64 drag) {
-  kForwardDrag = drag;
+void Rigidbody::setForwardDrag(const f64 drag) {
+  forwardDrag = drag;
 }

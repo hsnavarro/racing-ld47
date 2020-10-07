@@ -23,7 +23,7 @@ static std::array<sf::Vector2f, 4> getShapePoints(const sf::Shape& shape) {
   };
 }
 
-bool carIntersectsLine(const Car& car, sf::Line line) {
+bool carIntersectsLine(const Car& car, const sf::Line& line) {
   const auto points = getShapePoints(car.shape);
 
   for (int i = 1; i <= 4; i++)

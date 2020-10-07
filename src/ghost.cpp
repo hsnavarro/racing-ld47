@@ -17,16 +17,16 @@ void Ghost::addState(const Game& game) {
   lastStates.push_back({ car.rigidbody, shape, currentLapTime });
 }
 
-static sf::Vector2<f64> interpolateVectors(sf::Vector2<f64> currentFrameVector, sf::Vector2<f64> nextFrameVector, f64 interpolationRatio) {
+static sf::Vector2<f64> interpolateVectors(const sf::Vector2<f64>& currentFrameVector,const sf::Vector2<f64>& nextFrameVector, const f64 interpolationRatio) {
   return interpolationRatio * nextFrameVector + (1 - interpolationRatio) * currentFrameVector;
 }
 
-void applyTransformation(sf::RectangleShape& shape, sf::Vector2<f64>& position, sf::Vector2<f64>& direction) {
+static void applyTransformation(sf::RectangleShape& shape, const sf::Vector2<f64>& position, const sf::Vector2<f64>& direction) {
   shape.setPosition(to_vector2f(position));
   shape.setRotation(getRotation(to_vector2f(direction)));
 }
 
-CarState Ghost::interpolateStates(CarState& currentFrame, CarState& nextFrame, f64 interpolationTime) const {
+CarState Ghost::interpolateStates(const CarState& currentFrame, const CarState& nextFrame, const f64 interpolationTime) const {
 
   f64 interpolationRatio = (interpolationTime - currentFrame.time) / (nextFrame.time - currentFrame.time);
 
@@ -51,7 +51,7 @@ CarState Ghost::interpolateStates(CarState& currentFrame, CarState& nextFrame, f
 
 enum Direction { FUTURE, PAST };
 
-static CarState predictState(const CarState& currentState, f64 deltaTime, Direction direction) {
+static CarState predictState(const CarState& currentState, const f64 deltaTime, const Direction direction) {
 
   f64 multiplier = direction == FUTURE ? 1.0 : -1.0;
 
@@ -73,7 +73,7 @@ static CarState predictState(const CarState& currentState, f64 deltaTime, Direct
   return statePredicted;
 }
 
-CarState Ghost::getState(float lapTime) const {
+CarState Ghost::getState(const float lapTime) const {
 
   int futureFrameIndex = (int)lastStates.size();
 
@@ -117,7 +117,7 @@ void Ghost::clear() {
   lastStates.clear();
 }
 
-void Ghost::completeLap(float timeTaken) {
+void Ghost::completeLap(const float timeTaken) {
   timeToCompleteLap = timeTaken;
 }
 
@@ -126,7 +126,7 @@ void Ghost::activateRendering() {
   timeActive.restart();
 }
 
-void Ghost::render(sf::RenderWindow& window) {
+void Ghost::render(sf::RenderWindow& window) const {
   if (!isRendered) return;
 
   CarState state = getCurrentState();

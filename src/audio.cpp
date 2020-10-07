@@ -2,14 +2,16 @@
 
 #include "audio.hpp"
 
-Audio::Audio(std::string fileName) {
+Audio::Audio(const std::string& fileName) {
   if (audioBuffer.loadFromFile(fileName)) {
     audio.setBuffer(audioBuffer);
-  } else printf("Could not load file\n");
+  } else {
+    printf("Could not load file\n");
+  }
 }
 
 void Audio::play() {
-  if(!isPlaying()) audio.play(); 
+  if(!isPlaying()) audio.play();  
 }
 
 void Audio::stop() {
@@ -17,14 +19,14 @@ void Audio::stop() {
   audio.stop();
 }
 
-void Audio::setVolume(float volume) {
-  audio.setVolume(volume);
+void Audio::setVolume(const float volume) { 
+  audio.setVolume(volume); 
+  }
+
+void Audio::setPitch(const float pitch) { 
+  audio.setPitch(pitch); 
 }
 
-void Audio::setPitch(float pitch) {
-  audio.setPitch(pitch);
-}
-
-bool Audio::isPlaying() {
-  return audio.getStatus() == sf::SoundSource::Playing;
+bool Audio::isPlaying() const { 
+  return audio.getStatus() == sf::SoundSource::Playing; 
 }

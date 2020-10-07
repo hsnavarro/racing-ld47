@@ -11,10 +11,10 @@ const size_t COLLISION_CHECKS_MAX = 10;
 class Game;
 class Car;
 
-bool carIntersectsLine(const Car&, sf::Line);
+bool carIntersectsLine(const Car&, const sf::Line&);
 
 namespace physics {
 
-void resolveCollisions(Game&);
+  void resolveCollisions(Game&);
 
 };

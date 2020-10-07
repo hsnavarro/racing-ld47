@@ -4,16 +4,16 @@
 #include "algebra.hpp"
 #include "consts.hpp"
 
-const float MAX_PARTICLE_SIZE = 2.5;
-const float MAX_PARTICLE_LIFE_TIME = 0.5;
+const float MAX_PARTICLE_SIZE = 2.5f;
+const float MAX_PARTICLE_LIFE_TIME = 0.2f;
 
-enum class ParticleType { SMOKE, TIRE_TRACK };
+enum class ParticleType { SMOKE, TIRE_TRACK, NOT_DEFINED };
 
 class Particle {
 public:
-  Particle(float, float, float, ParticleType);
+  Particle(const float = 0.0f, const float = 0.0f, const float = 0.0f, const ParticleType = ParticleType::NOT_DEFINED);
 
-  void update(float);
+  void update(const float);
   sf::Shape& shape();
 
   void setPosition(const sf::Vector2f&);

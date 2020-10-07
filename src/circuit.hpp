@@ -51,7 +51,7 @@ public:
 
   bool loadFromFile(const std::string&);
 
-  void update(float);
+  void update();
   void render(const sf::View&) const;
 
   void resetCheckpoints();

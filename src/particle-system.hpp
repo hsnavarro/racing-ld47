@@ -9,14 +9,18 @@ class Game;
 
 class ParticleSystem {
 public:
-  ParticleSystem(ParticleType, Game&);
+  ParticleSystem(ParticleType, Game&, const int);
 
   void update(float);
+  void updateIndex();
   void render();
-  void emissionFromPoint(const sf::Vector2f&, const sf::Vector2f&, float = 1.0f);
-  void emissionFromLine(const sf::Vector2f&, const sf::Vector2f&, const sf::Vector2f&, float = 1.0f);
+  void emissionFromPoint(const sf::Vector2f&, const sf::Vector2f&, const float = 1.0f);
+  void emissionFromLine(const sf::Vector2f&, const sf::Vector2f&, const sf::Vector2f&, const float = 1.0f);
 
   void emitToTexture(const sf::Vector2f&, sf::RenderTexture&);
+
+public:
+  int indexOfLastActiveParticle = -1;
 
   std::vector<Particle> particles;
   ParticleType particlesType;

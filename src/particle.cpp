@@ -2,7 +2,9 @@
 
 #include <random>
 
-Particle::Particle(float _lifeTime, float particleWidth, float particleHeight, ParticleType _type) : type{ _type } , lifeTime{ _lifeTime } {
+Particle::Particle(const float _lifeTime, const float particleWidth, const float particleHeight, const ParticleType _type) 
+  : type{ _type } , lifeTime{ _lifeTime } {
+
   if (_type == ParticleType::SMOKE) {
     circleShape.setRadius(particleWidth);
     circleShape.setOrigin(particleWidth, particleWidth);
@@ -12,9 +14,10 @@ Particle::Particle(float _lifeTime, float particleWidth, float particleHeight, P
     rectangleShape.setOrigin(particleWidth * 0.5f, particleHeight * 0.5f);
     rectangleShape.setFillColor({ 0, 0, 0, 128 });
   }
+  
 }
 
-void Particle::update(float timeElapsed) {
+void Particle::update(const float timeElapsed) {
   lifeTime -= timeElapsed;
   if (lifeTime < 0.0f) isExpired = true;
 }
@@ -24,7 +27,7 @@ sf::Shape& Particle::shape() {
   return rectangleShape;
 }
 
-void Particle::setPosition(const sf::Vector2f& position) {
+void Particle::setPosition(const sf::Vector2f &position) {
   if (type == ParticleType::SMOKE) {
     const float circleRadius = circleShape.getRadius();
     circleShape.setOrigin(circleRadius, circleRadius);
