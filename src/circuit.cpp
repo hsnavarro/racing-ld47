@@ -7,11 +7,11 @@
 #include "game.hpp"
 #include "types.hpp"
 
-sf::Texture Circuit::textureAtlas {};
-std::vector<Circuit::TileType> Circuit::tileTypes {};
+sf::Texture Circuit::textureAtlas{};
+std::vector<Circuit::TileType> Circuit::tileTypes{};
 
-Circuit::Circuit(Game& _game) : game { _game }
-{}
+Circuit::Circuit(Game& _game) : game{ _game } {
+}
 
 bool Circuit::loadFromFile(const std::string& path) {
   FILE* file;
@@ -20,10 +20,10 @@ bool Circuit::loadFromFile(const std::string& path) {
   auto err = fopen_s(&file, path.c_str(), "r");
   if (!file) {
 
-    #pragma warning(push)
-    #pragma warning(disable:4996)
+#pragma warning(push)
+#pragma warning(disable:4996)
     printf("Could not load circuit: %s. Error: %s\n", path.c_str(), strerror(err));
-    #pragma warning(pop)
+#pragma warning(pop)
 
     return false;
   }
@@ -83,21 +83,21 @@ bool Circuit::loadFromFile(const std::string& path) {
   walls.clear();
   checkpoints.clear();
 
-  std::vector<std::vector<std::vector<u8>>> bfsVis (
+  std::vector<std::vector<std::vector<u8>>> bfsVis(
     tiles.size(),
     std::vector<std::vector<u8>>(
       tiles[0].size(),
       std::vector<u8>(
         16,
         0
+        )
       )
-    )
   );
 
   std::queue<std::tuple<int, int, TileType::Direction>> bfsQueue;
   bfsQueue.emplace(
     static_cast<int>(initialPosX),
-    static_cast<int>(initialPosY)-1,
+    static_cast<int>(initialPosY) - 1,
     TileType::DIR_DOWN
   );
 
@@ -109,8 +109,8 @@ bool Circuit::loadFromFile(const std::string& path) {
     const auto& tileType = tileTypes[type];
     //printf("%d %d %u: ", pos_x, pos_y, enter);
 
-    const sf::Vector2f shift = sf::Vector2f { static_cast<float>(pos_x), static_cast<float>(pos_y) } *
-                               static_cast<float>(CIRCUIT_TILE_SIZE);
+    const sf::Vector2f shift = sf::Vector2f{ static_cast<float>(pos_x), static_cast<float>(pos_y) } *
+      static_cast<float>(CIRCUIT_TILE_SIZE);
 
     // Add walls
     for (const auto& wall : tileType.walls)
@@ -124,38 +124,38 @@ bool Circuit::loadFromFile(const std::string& path) {
 
     auto tryMove =
       [enter, &tileType, &bfsVis, &bfsQueue, this]
-      (int new_x, int new_y, TileType::Direction exit_dir) {
+    (int new_x, int new_y, TileType::Direction exit_dir) {
 
-        auto flipDir = [](u8 dir) {
-          return ((dir & 0x5) << 1) | ((dir & 0xa) >> 1);
-        };
+      auto flipDir = [](u8 dir) {
+        return ((dir & 0x5) << 1) | ((dir & 0xa) >> 1);
+      };
 
-        auto validPos = [this](int x, int y) {
-          return !(x < 0 or y < 0 or x >= (int) tiles[0].size() or y >= (int) tiles.size());
-        };
+      auto validPos = [this](int x, int y) {
+        return !(x < 0 or y < 0 or x >= (int)tiles[0].size() or y >= (int)tiles.size());
+      };
 
-        if (tileType.exits[enter] & exit_dir) {
-          const auto new_enter = static_cast<TileType::Direction>(flipDir(static_cast<u8>(exit_dir)));
-          if (validPos(new_x, new_y) and
-              !bfsVis[new_y][new_x][new_enter]) {
+      if (tileType.exits[enter] & exit_dir) {
+        const auto new_enter = static_cast<TileType::Direction>(flipDir(static_cast<u8>(exit_dir)));
+        if (validPos(new_x, new_y) and
+          !bfsVis[new_y][new_x][new_enter]) {
 
-            //printf("(%d %d %u) ", new_x, new_y, new_enter);
-            bfsQueue.emplace(new_x, new_y, new_enter);
+          //printf("(%d %d %u) ", new_x, new_y, new_enter);
+          bfsQueue.emplace(new_x, new_y, new_enter);
 
-            u8 all_enters = static_cast<u8>(new_enter | tileTypes[tiles[new_y][new_x].type].exits[new_enter]);
-            if (all_enters & 1) bfsVis[new_y][new_x][1] = 1;
-            if (all_enters & 2) bfsVis[new_y][new_x][2] = 1;
-            if (all_enters & 4) bfsVis[new_y][new_x][4] = 1;
-            if (all_enters & 8) bfsVis[new_y][new_x][8] = 1;
-          }
+          u8 all_enters = static_cast<u8>(new_enter | tileTypes[tiles[new_y][new_x].type].exits[new_enter]);
+          if (all_enters & 1) bfsVis[new_y][new_x][1] = 1;
+          if (all_enters & 2) bfsVis[new_y][new_x][2] = 1;
+          if (all_enters & 4) bfsVis[new_y][new_x][4] = 1;
+          if (all_enters & 8) bfsVis[new_y][new_x][8] = 1;
         }
       }
+    }
     ;
 
-    tryMove(pos_x, pos_y-1, TileType::DIR_UP);
-    tryMove(pos_x, pos_y+1, TileType::DIR_DOWN);
-    tryMove(pos_x+1, pos_y, TileType::DIR_RIGHT);
-    tryMove(pos_x-1, pos_y, TileType::DIR_LEFT);
+    tryMove(pos_x, pos_y - 1, TileType::DIR_UP);
+    tryMove(pos_x, pos_y + 1, TileType::DIR_DOWN);
+    tryMove(pos_x + 1, pos_y, TileType::DIR_RIGHT);
+    tryMove(pos_x - 1, pos_y, TileType::DIR_LEFT);
 
     //printf("\n");
   }
@@ -242,8 +242,8 @@ void Circuit::render(const sf::View& view) const {
   for (size_t i = 0; i < checkpoints.size(); i++) {
     const auto& checkpoint = checkpoints[i];
 
-    sf::Color color { 0, 0, 0, 192 };
-    if (currentCheckpoint >  i) color = sf::Color::Green;
+    sf::Color color{ 0, 0, 0, 192 };
+    if (currentCheckpoint > i) color = sf::Color::Green;
     if (currentCheckpoint == i) color = sf::Color::Blue;
 
     sf::Vertex verts[] = {
@@ -308,13 +308,13 @@ void Circuit::startRace() {
 }
 
 void Circuit::loadAtlas() {
-  if(textureAtlas.loadFromFile("assets/gfx/circuit-atlas-border.png")) {
+  if (textureAtlas.loadFromFile("assets/gfx/circuit-atlas-border.png")) {
     textureAtlas.setSmooth(true);
   }
 
   const auto textureSize = textureAtlas.getSize();
-  const auto width  = textureSize.x / (CIRCUIT_TILE_SIZE+2);
-  const auto height = textureSize.y / (CIRCUIT_TILE_SIZE+2);
+  const auto width = textureSize.x / (CIRCUIT_TILE_SIZE + 2);
+  const auto height = textureSize.y / (CIRCUIT_TILE_SIZE + 2);
 
   // Todo(naum): add all this info to a text file and load
   tileTypes.resize(width * height);
@@ -334,10 +334,10 @@ void Circuit::loadAtlas() {
   auto err = fopen_s(&file, "assets/circuits/atlas.map", "r");
   if (!file) {
 
-    #pragma warning(push)
-    #pragma warning(disable:4996)
+#pragma warning(push)
+#pragma warning(disable:4996)
     printf("Could not load atlas map. Error: %s\n", strerror(err));
-    #pragma warning(pop)
+#pragma warning(pop)
 
     return;
   }
@@ -395,11 +395,11 @@ void Circuit::loadAtlas() {
     // Get exits
     size_t upExits, downExits, rightExits, leftExits;
     fscanf_s(file,
-             "%zu %zu %zu %zu",
-             &upExits,
-             &downExits,
-             &rightExits,
-             &leftExits);
+      "%zu %zu %zu %zu",
+      &upExits,
+      &downExits,
+      &rightExits,
+      &leftExits);
 
 
     tileType.exits[1] = static_cast<u8>(upExits);
@@ -416,15 +416,15 @@ void Circuit::loadAtlas() {
     for (size_t i = 0; i < wallCount; i++) {
       size_t a_x, a_y, b_x, b_y;
       fscanf_s(file,
-               "%zu %zu %zu %zu",
-               &a_x, &a_y,
-               &b_x, &b_y);
+        "%zu %zu %zu %zu",
+        &a_x, &a_y,
+        &b_x, &b_y);
 
       walls.push_back(
-        {{
+        { {
           { static_cast<float>(a_x), static_cast<float>(a_y) },
           { static_cast<float>(b_x), static_cast<float>(b_y) }
-        }}
+        } }
       );
     }
 
@@ -439,16 +439,16 @@ void Circuit::loadAtlas() {
     if (hasCheckpoint) {
       size_t a_x, a_y, b_x, b_y;
       fscanf_s(file,
-               "%zu %zu %zu %zu",
-               &a_x, &a_y,
-               &b_x, &b_y);
+        "%zu %zu %zu %zu",
+        &a_x, &a_y,
+        &b_x, &b_y);
 
 
       tileType.checkpoint =
-        {{
-          { static_cast<float>(a_x), static_cast<float>(a_y) },
-          { static_cast<float>(b_x), static_cast<float>(b_y) }
-        }}
+      { {
+        { static_cast<float>(a_x), static_cast<float>(a_y) },
+        { static_cast<float>(b_x), static_cast<float>(b_y) }
+      } }
       ;
     }
   }
@@ -458,7 +458,7 @@ void Circuit::loadAtlas() {
   while (true) {
     size_t type;
 
-    while (fgetc(file) != '[' and !feof(file)) ;
+    while (fgetc(file) != '[' and !feof(file));
 
     fscanf_s(file, "%zu]", &type);
     if (feof(file))
@@ -522,7 +522,7 @@ void Circuit::loadAtlas() {
   while (true) {
     size_t type;
 
-    while (fgetc(file) != '[' and !feof(file)) ;
+    while (fgetc(file) != '[' and !feof(file));
 
     fscanf_s(file, "%zu]", &type);
     if (feof(file))
@@ -530,7 +530,7 @@ void Circuit::loadAtlas() {
 
     auto& tileType = tileTypes[type];
     // Check if it's a merge
-    size_t typeA, typeB; 
+    size_t typeA, typeB;
     if (fscanf_s(file, " m %zu %zu", &typeA, &typeB) != 2)
       continue;
 

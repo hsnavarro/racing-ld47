@@ -11,7 +11,7 @@ Audio::Audio(const std::string& fileName) {
 }
 
 void Audio::play() {
-  if(!isPlaying()) audio.play();  
+  if (!isPlaying()) audio.play();
 }
 
 void Audio::stop() {
@@ -19,14 +19,14 @@ void Audio::stop() {
   audio.stop();
 }
 
-void Audio::setVolume(const float volume) { 
-  audio.setVolume(volume); 
-  }
-
-void Audio::setPitch(const float pitch) { 
-  audio.setPitch(pitch); 
+void Audio::setVolume(const float volume) {
+  audio.setVolume(volume);
 }
 
-bool Audio::isPlaying() const { 
-  return audio.getStatus() == sf::SoundSource::Playing; 
+void Audio::setPitch(const float pitch) {
+  audio.setPitch(pitch);
+}
+
+bool Audio::isPlaying() const {
+  return audio.getStatus() == sf::SoundSource::Playing;
 }

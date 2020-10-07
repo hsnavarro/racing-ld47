@@ -16,11 +16,11 @@ private:
 
   struct TileType {
     enum Direction {
-      DIR_NONE  = 0x0,
-      DIR_UP    = 0x1,
-      DIR_DOWN  = 0x2,
+      DIR_NONE = 0x0,
+      DIR_UP = 0x1,
+      DIR_DOWN = 0x2,
       DIR_RIGHT = 0x4,
-      DIR_LEFT  = 0x8,
+      DIR_LEFT = 0x8,
     };
 
     sf::Sprite sprite;

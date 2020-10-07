@@ -12,25 +12,25 @@ void Game::run() {
   setup();
   while (window.isOpen()) {
     switch (state) {
-      case State::MAIN_MENU: {
-        handleEvents();
-        renderMainMenu();
-      }
-      break;
+    case State::MAIN_MENU: {
+      handleEvents();
+      renderMainMenu();
+    }
+                         break;
 
-      case State::RACING: {
-        handleEvents();
-        updateRacing();
-        renderRacing();
-      }
-      break;
+    case State::RACING: {
+      handleEvents();
+      updateRacing();
+      renderRacing();
+    }
+                      break;
 
-      case State::END_GAME: {
-        handleEvents();
-        updateEndGame();
-        renderRacing();
-      }
-      break;
+    case State::END_GAME: {
+      handleEvents();
+      updateEndGame();
+      renderRacing();
+    }
+                        break;
     }
 
     window.display();
@@ -40,7 +40,7 @@ void Game::run() {
 void Game::setupEndGame() {
   circuits.clear();
 
-  Circuit circuit {*this};
+  Circuit circuit{ *this };
   circuit.loadFromFile("assets/circuits/escape.cir");
 
   auto checkpoint = circuit.checkpoints.back();
@@ -100,7 +100,7 @@ void Game::setup() {
 
 void Game::setupRacing() {
   // Circuits
-  Circuit circuit {*this};
+  Circuit circuit{ *this };
 
   circuit.loadFromFile("assets/circuits/back-forth-0.cir");
   circuits.push_back(circuit);
@@ -242,7 +242,7 @@ void Game::handleEventRacing(const sf::Event& event) {
       break;
 
     case sf::Keyboard::Space:
-      if(!car.isHandBrakeActive) audioSystem.handbrakeFX.play(); 
+      if (!car.isHandBrakeActive) audioSystem.handbrakeFX.play();
       car.isHandBrakeActive = keepActive;
       break;
 

@@ -6,9 +6,9 @@
 #include "consts.hpp"
 #include "particle-system.hpp"
 
-const float CAR_ENGINE_ACCELERATION  = 80;
+const float CAR_ENGINE_ACCELERATION = 80;
 const float CAR_DRIFT_BRAKE_ACCELERATION = -120;
-const float CAR_BRAKE_ACCELERATION   = -150;
+const float CAR_BRAKE_ACCELERATION = -150;
 const float CAR_REVERSE_ACCELERATION = -60;
 
 const float CAR_MAX_VELOCITY = 220.f;
@@ -22,7 +22,7 @@ const f64 CAR_LATERAL_DRAG = 5;
 const f64 CAR_LATERAL_DRIFT_DRAG = 2;
 const f64 CAR_ANGULAR_DRAG = 1;
 
-const int CAR_WIDTH  = 10;
+const int CAR_WIDTH = 10;
 const int CAR_HEIGHT = 20;
 
 class Game;

@@ -8,7 +8,7 @@
 
 namespace sf {
 
-using Line = std::array<sf::Vector2f, 2>;
+  using Line = std::array<sf::Vector2f, 2>;
 
 }
 
@@ -18,8 +18,8 @@ inline s32 sign(const f64 f) { return (f > EPS) - (f < -EPS); }
 inline f32 crossProduct(const sf::Vector2f& lhs, const sf::Vector2f& rhs) { return lhs.x * rhs.y - lhs.y * rhs.x; }
 inline f64 crossProduct(const sf::Vector2<f64>& lhs, const sf::Vector2<f64>& rhs) { return lhs.x * rhs.y - lhs.y * rhs.x; }
 
-inline f32 dotProduct (const sf::Vector2f& a, const sf::Vector2f& b) { return a.x * b.x + a.y * b.y; }
-inline f64 dotProduct (const sf::Vector2<f64>& a, const sf::Vector2<f64>& b) { return a.x * b.x + a.y * b.y; }
+inline f32 dotProduct(const sf::Vector2f& a, const sf::Vector2f& b) { return a.x * b.x + a.y * b.y; }
+inline f64 dotProduct(const sf::Vector2<f64>& a, const sf::Vector2<f64>& b) { return a.x * b.x + a.y * b.y; }
 
 inline f32 getMagnitude(const sf::Vector2f& v) { return std::hypot(v.x, v.y); }
 inline f64 getMagnitude(const sf::Vector2<f64>& v) { return std::hypot(v.x, v.y); }
@@ -61,4 +61,4 @@ inline void drawLine(const sf::Line& line, const sf::Color& color, sf::RenderWin
 inline sf::Vector2f to_vector2f(const sf::Vector2<f64>& v) { return { static_cast<float>(v.x), static_cast<float>(v.y) }; }
 inline sf::Vector2<f64> to_vector2f64(const sf::Vector2f& v) { return { static_cast<f64>(v.x), static_cast<f64>(v.y) }; }
 
-inline float lerp(const float a, const float b, const float t) { return a + t * (b-a); }
+inline float lerp(const float a, const float b, const float t) { return a + t * (b - a); }

@@ -49,7 +49,7 @@ void UI::update() {
 
   if (t > 7.0f or game.hasEscaped) return;
 
-  if(lastT <= 6.0f and t > 6.0f) {
+  if (lastT <= 6.0f and t > 6.0f) {
     finishedCountdown = true;
   } if (lastT <= 5.0f and t > 5.0f) {
     game.onCountdown = false;
@@ -200,5 +200,5 @@ void UI::render() {
   drawTextRight(speedText, SCREEN_WIDTH - 10.0f, SCREEN_HEIGHT - 40.0f, game.window);
 
   //
-  if(!finishedCountdown) drawTextCenter(text, SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, game.window);
+  if (!finishedCountdown) drawTextCenter(text, SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, game.window);
 }

@@ -17,7 +17,7 @@ void Ghost::addState(const Game& game) {
   lastStates.push_back({ car.rigidbody, shape, currentLapTime });
 }
 
-static sf::Vector2<f64> interpolateVectors(const sf::Vector2<f64>& currentFrameVector,const sf::Vector2<f64>& nextFrameVector, const f64 interpolationRatio) {
+static sf::Vector2<f64> interpolateVectors(const sf::Vector2<f64>& currentFrameVector, const sf::Vector2<f64>& nextFrameVector, const f64 interpolationRatio) {
   return interpolationRatio * nextFrameVector + (1 - interpolationRatio) * currentFrameVector;
 }
 

@@ -10,10 +10,10 @@
 Car::Car(Game& game_) :
   rigidbody{ CAR_FORWARD_DRAG, CAR_LATERAL_DRAG, CAR_ANGULAR_DRAG },
   game{ game_ },
-  leftSmokeParticles{ ParticleType::SMOKE, game_, MAX_NUM_PARTICLES},
-  rightSmokeParticles{ ParticleType::SMOKE, game_, MAX_NUM_PARTICLES},
-  leftTireTracks{ ParticleType::TIRE_TRACK , game_, 1},
-  rightTireTracks{ ParticleType::TIRE_TRACK, game_, 1}
+  leftSmokeParticles{ ParticleType::SMOKE, game_, MAX_NUM_PARTICLES },
+  rightSmokeParticles{ ParticleType::SMOKE, game_, MAX_NUM_PARTICLES },
+  leftTireTracks{ ParticleType::TIRE_TRACK , game_, 1 },
+  rightTireTracks{ ParticleType::TIRE_TRACK, game_, 1 }
 {
 
   texture.loadFromFile("assets/gfx/car3.png");
@@ -49,7 +49,7 @@ void Car::applySound() {
   }
 
   if (collided) {
-      
+
     const float volumeRatio = std::min(static_cast<float>(collisionVelocity) / (CAR_MAX_VELOCITY * 0.01f), 1.0f);
     const float collisionVolume = lerp(0.f, 30.f, volumeRatio);
 
@@ -171,7 +171,7 @@ void Car::smokeEmission() {
 
   const sf::Vector2f direction = bottomRightPoint - bottomLeftPoint;
   leftSmokeParticles.emissionFromPoint(bottomLeftPoint + direction * 0.3f, -to_vector2f(rigidbody.direction), emissionRate);
-  rightSmokeParticles.emissionFromPoint(bottomRightPoint - direction * 0.3f , -to_vector2f(rigidbody.direction), emissionRate);
+  rightSmokeParticles.emissionFromPoint(bottomRightPoint - direction * 0.3f, -to_vector2f(rigidbody.direction), emissionRate);
 }
 
 bool Car::isHardBraking() const {
