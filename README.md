@@ -74,3 +74,8 @@ and end in different positions)
 - x Power ups? attacks?
 - x Track grass
 - x Realistic car movement
+
+# Post Ludum Dare 
+
+- [ ] Reset button
+- [ ] Resize window
