@@ -82,7 +82,7 @@ void Game::setup() {
   window.create(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Racing Game", sf::Style::Titlebar | sf::Style::Close, settings);
   window.setFramerateLimit(DISPLAY_FPS);
 
-  audioSystem.backgroundMusic.setVolume(70.f);
+  audioSystem.backgroundMusic.setVolume(20.f);
   audioSystem.backgroundMusic.play();
 
   audioSystem.engineStartFX.setVolume(30.f);
@@ -158,7 +158,6 @@ void Game::setupRacing() {
 }
 
 void Game::updateRacing() {
-  audioSystem.backgroundMusic.setVolume(70.f);
   audioSystem.backgroundMusic.play();
   ui.update();
 
