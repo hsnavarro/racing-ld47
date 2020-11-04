@@ -59,8 +59,6 @@ void Car::applySound() {
     collided = false;
   }
 
-  game.audioSystem.engineFX.setVolume(30.0f);
-
   game.audioSystem.engineStartFX.stop();
   game.audioSystem.engineFX.play();
 
@@ -79,18 +77,16 @@ void Car::update(const float deltaTime) {
   bool isMoving = getMagnitude(rigidbody.linearVelocity) > MOVEMENT_TOLERANCE;
 
   if (isReversing()) {
-    if (isGoingForward) accelerationValue = brakeAcceleration;
-    else accelerationValue = reverseAcceleration;
+    if (isGoingForward) accelerationValue = goReverseRatio * brakeAcceleration;
+    else accelerationValue = goReverseRatio * reverseAcceleration;
   }
 
-  if (isAccelerating()) accelerationValue = engineAcceleration;
+  if (isAccelerating()) accelerationValue = goForwardRatio * engineAcceleration;
 
   if (isHandBrakeActive and isMoving) {
     if (isGoingForward) accelerationValue += brakeDriftAcceleration;
     else accelerationValue -= brakeDriftAcceleration;
   }
-
-  float undoAngle = 0.0f;
 
   float deltaAngularVelocity = 0.0f;
 
@@ -99,8 +95,8 @@ void Car::update(const float deltaTime) {
   else rigidbody.lateralDrag = lateralDrag;
 
   if (isMoving) {
-    if (turnLeft) deltaAngularVelocity = -angularVelocity;
-    if (turnRight) deltaAngularVelocity = angularVelocity;
+    if (turnLeft) deltaAngularVelocity += -turnLeftRatio * angularVelocity;
+    if (turnRight) deltaAngularVelocity += turnRightRatio * angularVelocity;
   }
 
   if (!isGoingForward)
@@ -110,7 +106,6 @@ void Car::update(const float deltaTime) {
 
   shape.setPosition(to_vector2f(rigidbody.position));
   icon.setPosition(to_vector2f(rigidbody.position));
-  ::rotate(rigidbody.direction, -undoAngle);
   shape.setRotation(getRotation(to_vector2f(rigidbody.direction)));
 
   applySound();
@@ -220,6 +215,26 @@ void Car::setPosition(const sf::Vector2f& pos) {
 void Car::move(const sf::Vector2f& deltaPos) {
   rigidbody.position += to_vector2f64(deltaPos);
   shape.setPosition(to_vector2f(rigidbody.position));
+}
+
+void Car::applyTurnRight(const float ratio) {
+  turnRight = ratio > 0.f;
+  turnRightRatio = ratio;
+}
+
+void Car::applyTurnLeft(const float ratio) {
+  turnLeft = ratio > 0.f;
+  turnLeftRatio = ratio;
+}
+
+void Car::applyGoForward(const float ratio) {
+  goForward = ratio > 0.f;
+  goForwardRatio = ratio;
+}
+
+void Car::applyGoReverse(const float ratio) {
+  goReverse = ratio > 0.f;
+  goReverseRatio = ratio;
 }
 
 bool Car::isSliding() const {

@@ -88,6 +88,8 @@ void Game::setup() {
   audioSystem.engineStartFX.setVolume(30.f);
   audioSystem.engineStartFX.play();
 
+  audioSystem.engineFX.setVolume(30.0f);
+
   camera.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
   camera.setCenter(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
@@ -211,33 +213,75 @@ void Game::renderRacing() {
   window.setView(camera);
 }
 
+// A -> handbrake
+// left stick -> turn left / right
+// LT -> accelerate
+// RT -> break / reverse
+
 void Game::handleEventRacing(const sf::Event& event) {
+  if (event.type == sf::Event::JoystickButtonPressed or event.type == sf::Event::JoystickButtonReleased) {
+
+    const bool keepActive = event.type == sf::Event::JoystickButtonPressed;
+
+    switch (event.joystickButton.button) {
+    case XBOX_BUTTONS::A:
+      if (!car.isHandBrakeActive) audioSystem.handbrakeFX.play();
+      car.isHandBrakeActive = keepActive;
+      break;
+    }
+  }
+
+  if (event.type == sf::Event::JoystickMoved) {
+    float leftStick = sf::Joystick::getAxisPosition(JOYSTICK_ID, sf::Joystick::X);
+    float leftTrigger = sf::Joystick::getAxisPosition(JOYSTICK_ID, sf::Joystick::Z);
+    float rightTrigger = sf::Joystick::getAxisPosition(JOYSTICK_ID, sf::Joystick::R);
+
+    car.applyGoForward(getRatio(-100.f, 100.f, rightTrigger));
+    car.applyGoReverse(getRatio(-100.f, 100.f, leftTrigger));
+
+
+    if(leftStick < 0.0f) {
+      car.applyTurnLeft(getRatio(0.f, 100.f, fabs(leftStick)));
+    }
+
+    if(leftStick > 0.0f) {
+      car.applyTurnRight(getRatio(0.f, 100.f, leftStick));
+    }
+
+    if(fabs(leftStick) < ANALOG_TOLERANCE) {
+      car.applyTurnRight(0.f);
+      car.applyTurnLeft(0.f);
+    }
+  }
+
   if (event.type == sf::Event::KeyPressed or event.type == sf::Event::KeyReleased) {
-    bool keepActive = (event.type == sf::Event::KeyPressed);
+
+    const bool keepActive = event.type == sf::Event::KeyPressed;
+    const float ratio = keepActive ? 1.f : 0.f;
 
     switch (event.key.code) {
     case sf::Keyboard::W:
     case sf::Keyboard::I:
     case sf::Keyboard::N:
-      car.goForward = keepActive;
+      car.applyGoForward(ratio);
       break;
 
     case sf::Keyboard::S:
     case sf::Keyboard::K:
     case sf::Keyboard::M:
-      car.goReverse = keepActive;
+      car.applyGoReverse(ratio);
       break;
 
     case sf::Keyboard::A:
     case sf::Keyboard::J:
     case sf::Keyboard::X:
-      car.turnLeft = keepActive;
+      car.applyTurnLeft(ratio);
       break;
 
     case sf::Keyboard::D:
     case sf::Keyboard::L:
     case sf::Keyboard::C:
-      car.turnRight = keepActive;
+      car.applyTurnRight(ratio);
       break;
 
     case sf::Keyboard::Space:
@@ -260,10 +304,25 @@ void Game::handleEventRacing(const sf::Event& event) {
 }
 
 void Game::handleEventMainMenu(const sf::Event& event) {
-  if (event.type == sf::Event::KeyPressed or event.type == sf::Event::KeyReleased) {
+  if (event.type == sf::Event::JoystickButtonPressed) {
+
+    switch (event.joystickButton.button) {
+    case XBOX_BUTTONS::A:
+    case XBOX_BUTTONS::START:
+      setupRacing();
+      state = State::RACING;
+      break;
+
+    default:
+      break;
+    }
+  }
+
+  if (event.type == sf::Event::KeyPressed) {
 
     switch (event.key.code) {
     case sf::Keyboard::Space:
+    case sf::Keyboard::Enter:
       setupRacing();
       state = State::RACING;
       break;
@@ -278,6 +337,10 @@ void Game::handleEvents() {
   sf::Event event;
   while (window.pollEvent(event)) {
     if (event.type == sf::Event::Closed) window.close();
+
+    if (event.type == sf::Event::KeyPressed) {
+      if (event.key.code == sf::Keyboard::P) audioSystem.toggleMute();
+    }
 
     if ((state == State::RACING or state == State::END_GAME) and !onCountdown and !hasEscaped)
       handleEventRacing(event);

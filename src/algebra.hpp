@@ -62,3 +62,6 @@ inline sf::Vector2f to_vector2f(const sf::Vector2<f64>& v) { return { static_cas
 inline sf::Vector2<f64> to_vector2f64(const sf::Vector2f& v) { return { static_cast<f64>(v.x), static_cast<f64>(v.y) }; }
 
 inline float lerp(const float a, const float b, const float t) { return a + t * (b - a); }
+inline float getRatio(const float minValue, const float maxValue, const float measuredValue) { 
+  return (measuredValue - minValue) / (maxValue - minValue);
+}

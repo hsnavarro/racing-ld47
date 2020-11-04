@@ -11,3 +11,15 @@ AudioSystem::AudioSystem() :
     acceleratorFX{ ACCELERATOR_FX_FILE },
     countdownFX{ COUNTDOWN_FX_FILE },
     goSoundFX{ GO_SOUND_FX_FILE } {}
+
+void AudioSystem::toggleMute() {
+ backgroundMusic.toggleMute();
+ handbrakeFX.toggleMute();
+ slideFX.toggleMute();
+ collisionFX.toggleMute();
+ engineFX.toggleMute();
+ engineStartFX.toggleMute();
+ acceleratorFX.toggleMute();
+ countdownFX.toggleMute();
+ goSoundFX.toggleMute();
+}

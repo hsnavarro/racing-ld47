@@ -49,6 +49,11 @@ public:
   void setPosition(const sf::Vector2f&);
   void move(const sf::Vector2f&);
 
+  void applyTurnRight(const float);
+  void applyTurnLeft(const float);
+  void applyGoForward(const float);
+  void applyGoReverse(const float);
+
 private:
   void applySound();
 
@@ -63,6 +68,11 @@ public:
   ParticleSystem leftSmokeParticles, rightSmokeParticles, leftTireTracks, rightTireTracks;
 
   f64 collisionVelocity;
+
+  float turnRightRatio = 0.f;
+  float turnLeftRatio = 0.f;
+  float goForwardRatio = 0.f;
+  float goReverseRatio = 0.f;
 
   bool turnRight = false;
   bool turnLeft = false;

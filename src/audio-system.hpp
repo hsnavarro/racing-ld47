@@ -17,6 +17,7 @@ class Game;
 class AudioSystem {
 public:
   AudioSystem();
+  void toggleMute();
 
 public:
   Audio backgroundMusic;

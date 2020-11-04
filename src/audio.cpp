@@ -19,8 +19,16 @@ void Audio::stop() {
   audio.stop();
 }
 
+void Audio::toggleMute() {
+  isMute ^= true;
+
+  if (isMute) audio.setVolume(0.f);
+  else setVolume(volume); 
+}
+
 void Audio::setVolume(const float volume) {
-  audio.setVolume(volume);
+  this->volume = volume;
+  if (!isMute) audio.setVolume(volume);
 }
 
 void Audio::setPitch(const float pitch) {

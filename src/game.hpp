@@ -9,6 +9,12 @@
 #include "ui.hpp"
 #include "audio-system.hpp"
 
+const float ANALOG_TOLERANCE = 25.f;
+
+const unsigned short JOYSTICK_ID = 0;
+
+enum XBOX_BUTTONS { A, B, START = 7 };
+
 class Game {
 public:
   enum class State {
