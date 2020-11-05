@@ -99,8 +99,6 @@ void Game::setup() {
 
   // Circuits
   Circuit::loadAtlas();
-
-  audioSystem.toggleMute();
 }
 
 void Game::setupRacing() {
