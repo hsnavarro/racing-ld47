@@ -123,7 +123,7 @@ bool Circuit::loadFromFile(const std::string& path) {
     }
 
     auto tryMove =
-      [enter, &tileType, &bfsVis, &bfsQueue, this]
+      [enter = enter, &tileType, &bfsVis, &bfsQueue, this]
     (int new_x, int new_y, TileType::Direction exit_dir) {
 
       auto flipDir = [](u8 dir) {
@@ -149,8 +149,7 @@ bool Circuit::loadFromFile(const std::string& path) {
           if (all_enters & 8) bfsVis[new_y][new_x][8] = 1;
         }
       }
-    }
-    ;
+    };
 
     tryMove(pos_x, pos_y - 1, TileType::DIR_UP);
     tryMove(pos_x, pos_y + 1, TileType::DIR_DOWN);
