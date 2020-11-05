@@ -253,24 +253,28 @@ void Game::handleEventRacing(const sf::Event& event) {
     case sf::Keyboard::W:
     case sf::Keyboard::I:
     case sf::Keyboard::N:
+    case sf::Keyboard::Up:
       car.applyGoForward(ratio);
       break;
 
     case sf::Keyboard::S:
     case sf::Keyboard::K:
     case sf::Keyboard::M:
+    case sf::Keyboard::Down:
       car.applyGoReverse(ratio);
       break;
 
     case sf::Keyboard::A:
     case sf::Keyboard::J:
     case sf::Keyboard::X:
+    case sf::Keyboard::Left:
       car.applyTurn(-ratio);
       break;
 
     case sf::Keyboard::D:
     case sf::Keyboard::L:
     case sf::Keyboard::C:
+    case sf::Keyboard::Right:
       car.applyTurn(ratio);
       break;
 
