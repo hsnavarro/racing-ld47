@@ -1,6 +1,7 @@
 #include "game.hpp"
 
 #include <cstdio>
+#include <iostream>
 
 #include "sfml.hpp"
 #include "physics.hpp"
@@ -98,6 +99,8 @@ void Game::setup() {
 
   // Circuits
   Circuit::loadAtlas();
+
+  audioSystem.toggleMute();
 }
 
 void Game::setupRacing() {
@@ -236,22 +239,11 @@ void Game::handleEventRacing(const sf::Event& event) {
     float leftTrigger = sf::Joystick::getAxisPosition(JOYSTICK_ID, sf::Joystick::Z);
     float rightTrigger = sf::Joystick::getAxisPosition(JOYSTICK_ID, sf::Joystick::R);
 
-    car.applyGoForward(getRatio(-100.f, 100.f, rightTrigger));
-    car.applyGoReverse(getRatio(-100.f, 100.f, leftTrigger));
+    car.applyGoForward(::getRatio(-100.f, 100.f, rightTrigger));
+    car.applyGoReverse(::getRatio(-100.f, 100.f, leftTrigger));
+    car.applyTurn(leftStick/100.f);
 
-
-    if(leftStick < 0.0f) {
-      car.applyTurnLeft(getRatio(0.f, 100.f, fabs(leftStick)));
-    }
-
-    if(leftStick > 0.0f) {
-      car.applyTurnRight(getRatio(0.f, 100.f, leftStick));
-    }
-
-    if(fabs(leftStick) < ANALOG_TOLERANCE) {
-      car.applyTurnRight(0.f);
-      car.applyTurnLeft(0.f);
-    }
+    if (fabs(leftStick) < ANALOG_TOLERANCE) car.applyTurn(0.f);
   }
 
   if (event.type == sf::Event::KeyPressed or event.type == sf::Event::KeyReleased) {
@@ -275,13 +267,13 @@ void Game::handleEventRacing(const sf::Event& event) {
     case sf::Keyboard::A:
     case sf::Keyboard::J:
     case sf::Keyboard::X:
-      car.applyTurnLeft(ratio);
+      car.applyTurn(-ratio);
       break;
 
     case sf::Keyboard::D:
     case sf::Keyboard::L:
     case sf::Keyboard::C:
-      car.applyTurnRight(ratio);
+      car.applyTurn(ratio);
       break;
 
     case sf::Keyboard::Space:

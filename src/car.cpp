@@ -31,12 +31,11 @@ Car::Car(Game& game_) :
 }
 
 bool Car::isAccelerating() const {
-  if (goReverse) return false;
-  return goForward;
+  return goForwardRatio > 0.f;
 }
 
 bool Car::isReversing() const {
-  return goReverse;
+  return goReverseRatio > 0.f;
 }
 
 void Car::applySound() {
@@ -70,34 +69,33 @@ void Car::applySound() {
 }
 
 void Car::update(const float deltaTime) {
-  float accelerationValue = 0.0;
 
   bool isGoingForward = rigidbody.isGoingForward();
 
   bool isMoving = getMagnitude(rigidbody.linearVelocity) > MOVEMENT_TOLERANCE;
 
+  float accelerationValue = 0.f;
+
   if (isReversing()) {
-    if (isGoingForward) accelerationValue = goReverseRatio * brakeAcceleration;
-    else accelerationValue = goReverseRatio * reverseAcceleration;
+    if (isGoingForward) accelerationValue += goReverseRatio * brakeAcceleration;
+    else accelerationValue += goReverseRatio * reverseAcceleration;
   }
 
-  if (isAccelerating()) accelerationValue = goForwardRatio * engineAcceleration;
+  if (isAccelerating()) accelerationValue += goForwardRatio * engineAcceleration;
 
   if (isHandBrakeActive and isMoving) {
     if (isGoingForward) accelerationValue += brakeDriftAcceleration;
     else accelerationValue -= brakeDriftAcceleration;
   }
 
-  float deltaAngularVelocity = 0.0f;
+  float deltaAngularVelocity = 0.f;
 
   // create timer
   if (isHandBrakeActive) rigidbody.lateralDrag = lateralDriftDrag;
   else rigidbody.lateralDrag = lateralDrag;
 
-  if (isMoving) {
-    if (turnLeft) deltaAngularVelocity += -turnLeftRatio * angularVelocity;
-    if (turnRight) deltaAngularVelocity += turnRightRatio * angularVelocity;
-  }
+  if (isMoving)
+    deltaAngularVelocity = turnRatio * angularVelocity;
 
   if (!isGoingForward)
     deltaAngularVelocity *= -1;
@@ -217,23 +215,15 @@ void Car::move(const sf::Vector2f& deltaPos) {
   shape.setPosition(to_vector2f(rigidbody.position));
 }
 
-void Car::applyTurnRight(const float ratio) {
-  turnRight = ratio > 0.f;
-  turnRightRatio = ratio;
-}
-
-void Car::applyTurnLeft(const float ratio) {
-  turnLeft = ratio > 0.f;
-  turnLeftRatio = ratio;
+void Car::applyTurn(const float ratio) {
+  turnRatio = ratio;
 }
 
 void Car::applyGoForward(const float ratio) {
-  goForward = ratio > 0.f;
   goForwardRatio = ratio;
 }
 
 void Car::applyGoReverse(const float ratio) {
-  goReverse = ratio > 0.f;
   goReverseRatio = ratio;
 }
 

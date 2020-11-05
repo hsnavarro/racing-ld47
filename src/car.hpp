@@ -13,7 +13,7 @@ const float CAR_REVERSE_ACCELERATION = -60;
 
 const float CAR_MAX_VELOCITY = 220.f;
 
-const float MOVEMENT_TOLERANCE = 0.01f;
+const float MOVEMENT_TOLERANCE = 1.f;
 
 const float CAR_ANGULAR_VELOCITY = 2;
 
@@ -49,8 +49,7 @@ public:
   void setPosition(const sf::Vector2f&);
   void move(const sf::Vector2f&);
 
-  void applyTurnRight(const float);
-  void applyTurnLeft(const float);
+  void applyTurn(const float);
   void applyGoForward(const float);
   void applyGoReverse(const float);
 
@@ -69,15 +68,10 @@ public:
 
   f64 collisionVelocity;
 
-  float turnRightRatio = 0.f;
-  float turnLeftRatio = 0.f;
+  float turnRatio = 0.f;
   float goForwardRatio = 0.f;
   float goReverseRatio = 0.f;
 
-  bool turnRight = false;
-  bool turnLeft = false;
-  bool goForward = false;
-  bool goReverse = false;
   bool isHandBrakeActive = false;
   bool collided = false;
   sf::Clock driftTime;
