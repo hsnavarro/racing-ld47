@@ -79,3 +79,7 @@ and end in different positions)
 
 - [ ] Reset button
 - [ ] Resize window
+- [ ] DS4, DS3 support
+- [ ] XBOX 360, One support
+- [ ] Improve acceleration sound
+- [ ] Improve collision sound
