@@ -83,3 +83,4 @@ and end in different positions)
 - [ ] XBOX 360, One support
 - [ ] Improve acceleration sound
 - [ ] Improve collision sound
+- [ ] Improve environment graphics (trees, buildings, etc)
